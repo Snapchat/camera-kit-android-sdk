@@ -1,0 +1,3 @@
+rootProject.name = 'camera-kit-sample-kotlin'
+
+include ':app'
