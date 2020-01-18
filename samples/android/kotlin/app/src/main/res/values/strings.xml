@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CameraKit Sample Kotlin</string>
+    <string name="available_lenses">Available lenses</string>
 </resources>
