@@ -1,7 +1,7 @@
 allprojects {
     ext {
         kotlinVersion = '1.3.61'
-        cameraKitVersion = '0.0.1-975dbf4.5'
+        cameraKitVersion = '0.0.1-297ed61.8'
     }
 
     buildscript {

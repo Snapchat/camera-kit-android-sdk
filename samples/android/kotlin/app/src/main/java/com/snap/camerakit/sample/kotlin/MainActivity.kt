@@ -26,6 +26,7 @@ import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.query
 import com.snap.camerakit.lenses.whenHasFirst
 import com.snap.camerakit.lenses.whenHasSome
+import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import java.io.Closeable
 
 private const val TAG = "MainActivity"
@@ -40,6 +41,7 @@ private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var mainLayout: ViewGroup
+    private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var cameraKit: CameraKit
 
     private var cameraFacingFront: Boolean = true
@@ -57,7 +59,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // This sample implements camera Source through the use of CameraX library which simplifies quite a bit
         // of things related to Android camera management. CameraX is one of many options to implement Source,
         // anything that can provide image frames through a SurfaceTexture can be used by CameraKit.
-        val imageProcessorSource = NoopImageProcessorSource
+        imageProcessorSource = CameraXImageProcessorSource(
+            context = this, lifecycleOwner =  this
+        )
 
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
@@ -158,6 +162,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     private fun startPreviewForCurrentCameraFacing() {
-       //TODO: add CameraX based ImageProcessor source control
+        imageProcessorSource.startPreview(cameraFacingFront)
     }
 }
