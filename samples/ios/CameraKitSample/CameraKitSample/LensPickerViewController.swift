@@ -75,7 +75,7 @@ class LensPickerViewController: UIViewController {
                 return
             }
 
-            self.bundledLenses = lenses.sorted { $0.id < $1.id }
+            self.bundledLenses = lenses.sorted { $0.name ?? $0.id < $1.name ?? $1.id }
             self.tableView.reloadData()
         }
     }
@@ -97,10 +97,11 @@ extension LensPickerViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) ?? UITableViewCell(style: .default, reuseIdentifier: Constants.cellIdentifier)
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.cellIdentifier) ?? UITableViewCell(style: .subtitle, reuseIdentifier: Constants.cellIdentifier)
 
         let lens = bundledLenses[indexPath.row]
-        cell.textLabel?.text = lens.id
+        cell.textLabel?.text = lens.name
+        cell.detailTextLabel?.text = lens.id
         cell.accessoryType = lens.id == currentLens?.id ? .checkmark : .none
 
         return cell

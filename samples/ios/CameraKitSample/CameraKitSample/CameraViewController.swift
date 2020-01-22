@@ -58,7 +58,7 @@ extension CameraViewController {
         // Get all lenses from the repository and apply the first to the processor.
         // The lenses repository will query `lenses` folder bundled in the app.
         cameraKit.lenses.repository.availableLenses { (lenses, error) in
-            guard let lens = lenses?.sorted(by: { $0.id < $1.id }).first else {
+            guard let lens = lenses?.sorted(by: { $0.name ?? $0.id < $1.name ?? $1.id }).first else {
                 print("Failed to get available lenses with error: \(String(describing: error))")
                 return
             }
