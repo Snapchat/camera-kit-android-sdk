@@ -1,0 +1,176 @@
+//  Copyright Snap Inc. All rights reserved.
+//  CameraKitSample
+
+import UIKit
+import AVFoundation
+import CameraKit
+
+class CameraViewController: UIViewController {
+    // Standard camera pipeline stuff
+    fileprivate let session = AVCaptureSession()
+    fileprivate var input: AVCaptureInput?
+    fileprivate var position = AVCaptureDevice.Position.front {
+        didSet {
+            configureDevice()
+        }
+    }
+
+    // CameraKit Classes
+    fileprivate let previewView = PreviewView()
+    fileprivate let cameraKit = CameraKit()
+    fileprivate var currentLens: Lens?
+
+    fileprivate let lensPickerButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setup()
+    }
+
+}
+
+// MARK: Lenses Setup
+
+extension CameraViewController {
+
+    fileprivate func setupLenses() {
+
+        // Create a CameraKit input. AVSessionInput is an input that CameraKit provides that wraps up lens-specific
+        // details of AVCaptureSession configuration (such as setting the pixel format).
+        // You are still responsible for normal configuration of the session (adding the AVCaptureDevice, etc).
+        let input = AVSessionInput(session: session)
+
+        // Start the actual CameraKit session. Once the session is started, CameraKit will begin processing frames and
+        // sending output. The lens processor (cameraKit.lenses.processor) will be instantiated at this point, and
+        // you can start sending commands to it (such as applying/clearing lenses).
+        cameraKit.start(with: input)
+
+        // CameraKit has "outputs." When you send frames from an input (like the camera), CameraKit will process them
+        // and output them. CameraKit provides a preview view that knows how to handle output automatically. You can
+        // also add any other protocol-conforming instance as an output, such as a video recording output, or a
+        // framerate counter.
+        cameraKit.add(output: previewView)
+
+        // Get all lenses from the repository and apply the first to the processor.
+        // The lenses repository will query `lenses` folder bundled in the app.
+        cameraKit.lenses.repository.availableLenses { (lenses, error) in
+            guard let lens = lenses?.sorted(by: { $0.id < $1.id }).first else {
+                print("Failed to get available lenses with error: \(String(describing: error))")
+                return
+            }
+
+            self.applyLens(lens)
+        }
+    }
+
+    fileprivate func applyLens(_ lens: Lens) {
+        cameraKit.lenses.processor?.apply(lens: lens) { success in
+            if success {
+                self.currentLens = lens
+                print("Lens Applied")
+            } else {
+                print("Lens failed to apply")
+            }
+        }
+    }
+}
+
+// MARK: General Camera Setup
+
+extension CameraViewController {
+
+    fileprivate func setup() {
+        setupPreview()
+        setupLensPicker()
+        promptForAccessIfNeeded {
+            self.setupSession()
+            self.setupLenses()
+        }
+    }
+
+    fileprivate func setupPreview() {
+        view.addSubview(previewView)
+        previewView.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraints([
+            previewView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        previewView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        previewView.topAnchor.constraint(equalTo: view.topAnchor),
+        previewView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(flip(sender:)))
+        doubleTap.numberOfTapsRequired = 2
+        previewView.addGestureRecognizer(doubleTap)
+        previewView.automaticallyConfiguresTouchHandler = true
+    }
+
+    fileprivate func promptForAccessIfNeeded(completion: @escaping () -> Void) {
+        guard AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined else { completion(); return }
+        AVCaptureDevice.requestAccess(for: .video) { _ in
+            completion()
+        }
+    }
+
+    fileprivate func setupSession() {
+        session.beginConfiguration()
+        configureDevice()
+        session.commitConfiguration()
+        session.startRunning()
+    }
+
+    fileprivate func configureDevice() {
+        if let existing = input {
+            session.removeInput(existing)
+        }
+        let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: position)!
+        let input = try! AVCaptureDeviceInput(device: device)
+        if session.canAddInput(input) {
+            session.addInput(input)
+            self.input = input
+        }
+    }
+
+    @objc fileprivate func flip(sender: UITapGestureRecognizer) {
+        position = position == .back ? .front : .back
+    }
+
+}
+
+// MARK: Lens Picker
+
+extension CameraViewController: LensPickerViewControllerDelegate {
+
+    private struct Constants {
+        static let lensPickerImage = "lens_preview_button"
+    }
+
+    fileprivate func setupLensPicker() {
+        lensPickerButton.setImage(UIImage(named: Constants.lensPickerImage), for: .normal)
+        lensPickerButton.addTarget(self, action: #selector(self.showLensPicker(_:)), for: .touchUpInside)
+
+        view.addSubview(lensPickerButton)
+
+        NSLayoutConstraint.activate([
+            lensPickerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
+            lensPickerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0)
+        ])
+    }
+
+    @objc private func showLensPicker(_ sender: UIButton) {
+        let viewController = LensPickerViewController(repository: cameraKit.lenses.repository, currentLens: currentLens)
+        viewController.delegate = self
+        let navController = UINavigationController(rootViewController: viewController)
+        present(navController, animated: true, completion: nil)
+    }
+
+    // MARK: Lens Picker Delegate
+
+    func lensPicker(_ viewController: LensPickerViewController, didSelect lens: Lens) {
+        applyLens(lens)
+        viewController.dismiss(animated: true, completion: nil)
+    }
+
+}

@@ -1,0 +1,5 @@
+source "git@github.sc-corp.net:Snapchat/camera-kit-ios-pod-repo.git"
+
+target 'CameraKitSample' do
+	pod 'CameraKit'
+end
