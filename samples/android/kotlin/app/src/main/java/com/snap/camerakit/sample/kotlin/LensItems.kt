@@ -1,5 +1,6 @@
 package com.snap.camerakit.sample.kotlin
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,10 +10,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.snap.camerakit.common.Consumer
 import com.snap.camerakit.lenses.LensesComponent
+data class LensItem(val id: String, val title: String?)
 
-data class LensItem(val id: String)
-
-fun List<LensesComponent.Lens>.toLensItems(): List<LensItem> = map { LensItem(it.id) }
+fun List<LensesComponent.Lens>.toLensItems(): List<LensItem> = map { LensItem(it.id, it.name) }
 
 class LensItemListAdapter(
     private val onItemSelected: Consumer<LensItem>
@@ -31,7 +31,7 @@ class LensItemListAdapter(
         holder.itemView.isSelected = selectedPosition == position
     }
 
-    inner class ViewHolder(private val view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view), View.OnClickListener {
 
         init {
             view.setOnClickListener(this)
@@ -39,8 +39,9 @@ class LensItemListAdapter(
 
         private val title = view.findViewById<TextView>(R.id.title)
 
+        @SuppressLint("SetTextI18n")
         fun bindTo(lensItem: LensItem) {
-            title.text = lensItem.id
+            title.text = "${lensItem.id}${if (lensItem.title != null) " : ${lensItem.title}" else ""}"
         }
 
         override fun onClick(v: View) {
