@@ -1,0 +1,3 @@
+target 'CameraKitSample' do
+	pod 'CameraKit', :path => 'camera-kit-ios-releases'
+end

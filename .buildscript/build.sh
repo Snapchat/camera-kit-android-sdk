@@ -33,6 +33,11 @@ main() {
             echo ""
         elif [ "${platform}" == "ios" ]; then
             echo "Building platform: ${platform}"
+
+            pushd "${script_dir}/ios"
+            source build.sh
+            popd
+
             echo ""
         else
             echo "Unrecognized platform: ${platform}"
