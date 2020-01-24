@@ -12,7 +12,7 @@ protocol LensPickerViewControllerDelegate: class {
 class LensPickerViewController: UIViewController {
     weak var delegate: LensPickerViewControllerDelegate?
 
-    private let repository: LensRepository
+    private let lensHolder: LensHolder
     private var bundledLenses = [Lens]()
     var currentLens: Lens?
 
@@ -23,8 +23,8 @@ class LensPickerViewController: UIViewController {
         return tableView
     }()
 
-    init(repository: LensRepository, currentLens: Lens?) {
-        self.repository = repository
+    init(lensHolder: LensHolder, currentLens: Lens?) {
+        self.lensHolder = lensHolder
         self.currentLens = currentLens
         super.init(nibName: nil, bundle: nil)
     }
@@ -70,7 +70,7 @@ class LensPickerViewController: UIViewController {
     // MARK: load
 
     private func loadLenses() {
-        repository.availableLenses { (lenses, _) in
+        lensHolder.getAvailableLenses { (lenses, _) in
             guard let lenses = lenses else {
                 return
             }

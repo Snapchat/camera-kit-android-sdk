@@ -18,12 +18,21 @@ class CameraViewController: UIViewController {
     // CameraKit Classes
     fileprivate let previewView = PreviewView()
     fileprivate let cameraKit = CameraKit()
+    fileprivate lazy var lensHolder = LensHolder(repository: cameraKit.lenses.repository)
     fileprivate var currentLens: Lens?
 
-    fileprivate let lensPickerButton: UIButton = {
-        let button = UIButton(type: .custom)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
+    fileprivate let lensPickerButton = UIButton(type: .custom)
+    fileprivate let prevLensButton = UIButton(type: .custom)
+    fileprivate let nextLensButton = UIButton(type: .custom)
+    lazy var lensButtonStackView: UIStackView = {
+        let stackView = UIStackView(arrangedSubviews: [prevLensButton, lensPickerButton, nextLensButton])
+        stackView.alignment = .center
+        stackView.axis = .horizontal
+        stackView.distribution = .fill
+        stackView.spacing = 8.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        return stackView
     }()
 
     override func viewDidLoad() {
@@ -55,10 +64,14 @@ extension CameraViewController {
         // framerate counter.
         cameraKit.add(output: previewView)
 
+        applyFirstLens()
+    }
+
+    fileprivate func applyFirstLens() {
         // Get all lenses from the repository and apply the first to the processor.
         // The lenses repository will query `lenses` folder bundled in the app.
-        cameraKit.lenses.repository.availableLenses { (lenses, error) in
-            guard let lens = lenses?.sorted(by: { $0.name ?? $0.id < $1.name ?? $1.id }).first else {
+        lensHolder.getAvailableLenses { (lenses, error) in
+            guard let lens = lenses?.first else {
                 print("Failed to get available lenses with error: \(String(describing: error))")
                 return
             }
@@ -71,7 +84,7 @@ extension CameraViewController {
         cameraKit.lenses.processor?.apply(lens: lens) { success in
             if success {
                 self.currentLens = lens
-                print("Lens Applied")
+                print("\(lens.name ?? lens.id) Applied")
             } else {
                 print("Lens failed to apply")
             }
@@ -145,25 +158,59 @@ extension CameraViewController: LensPickerViewControllerDelegate {
 
     private struct Constants {
         static let lensPickerImage = "lens_preview_button"
+        static let nextArrowImage = "arrow_right"
+        static let prevArrowImage = "arrow_left"
     }
 
     fileprivate func setupLensPicker() {
         lensPickerButton.setImage(UIImage(named: Constants.lensPickerImage), for: .normal)
         lensPickerButton.addTarget(self, action: #selector(self.showLensPicker(_:)), for: .touchUpInside)
 
-        view.addSubview(lensPickerButton)
+        prevLensButton.setImage(UIImage(named: Constants.prevArrowImage), for: .normal)
+        prevLensButton.addTarget(self, action: #selector(self.showPrevLens(_:)), for: .touchUpInside)
+
+        nextLensButton.setImage(UIImage(named: Constants.nextArrowImage), for: .normal)
+        nextLensButton.addTarget(self, action: #selector(self.showNextLens(_:)), for: .touchUpInside)
+
+        view.addSubview(lensButtonStackView)
 
         NSLayoutConstraint.activate([
-            lensPickerButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
-            lensPickerButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0)
+            lensButtonStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
+            lensButtonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0)
         ])
     }
 
+    // MARK: Actions
+
     @objc private func showLensPicker(_ sender: UIButton) {
-        let viewController = LensPickerViewController(repository: cameraKit.lenses.repository, currentLens: currentLens)
+        let viewController = LensPickerViewController(lensHolder: lensHolder, currentLens: currentLens)
         viewController.delegate = self
         let navController = UINavigationController(rootViewController: viewController)
         present(navController, animated: true, completion: nil)
+    }
+
+    @objc private func showPrevLens(_ sender: UIButton) {
+        guard let curr = currentLens else {
+            applyFirstLens()
+            return
+        }
+
+        lensHolder.lens(before: curr) { lens in
+            guard let lens = lens else { return }
+            self.applyLens(lens)
+        }
+    }
+
+    @objc private func showNextLens(_ sender: UIButton) {
+        guard let curr = currentLens else {
+            applyFirstLens()
+            return
+        }
+
+        lensHolder.lens(after: curr) { lens in
+            guard let lens = lens else { return }
+            self.applyLens(lens)
+        }
     }
 
     // MARK: Lens Picker Delegate

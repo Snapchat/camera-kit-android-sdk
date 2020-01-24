@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0CAE665353D577C59F2F123C /* libPods-CameraKitSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3456462B9BE4A00F17BDA95 /* libPods-CameraKitSample.a */; };
+		0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */; };
 		0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */; };
 		0FF07ED723D79DC500CFFA3F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED623D79DC500CFFA3F /* Assets.xcassets */; };
 		0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		054357438A7F882D3517D734 /* Pods-CameraKitSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample.debug.xcconfig"; path = "Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample.debug.xcconfig"; sourceTree = "<group>"; };
+		0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LensHolder.swift; sourceTree = "<group>"; };
 		0FF07ECA23D79DC400CFFA3F /* CameraKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0FF07ED623D79DC500CFFA3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,6 +83,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0F3EE03123DA7D38002BE1F0 /* Lens */ = {
+			isa = PBXGroup;
+			children = (
+				0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */,
+				0FF07EFF23D7BDC200CFFA3F /* LensPickerViewController.swift */,
+			);
+			path = Lens;
+			sourceTree = "<group>";
+		};
 		0FF07EC123D79DC400CFFA3F = {
 			isa = PBXGroup;
 			children = (
@@ -106,9 +117,9 @@
 		0FF07ECC23D79DC400CFFA3F /* CameraKitSample */ = {
 			isa = PBXGroup;
 			children = (
+				0F3EE03123DA7D38002BE1F0 /* Lens */,
 				0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */,
 				0FF07EFD23D7BD8200CFFA3F /* CameraViewController.swift */,
-				0FF07EFF23D7BDC200CFFA3F /* LensPickerViewController.swift */,
 				0FF07ED623D79DC500CFFA3F /* Assets.xcassets */,
 				0FF07F0123D7BFC100CFFA3F /* lenses */,
 				0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */,
@@ -348,6 +359,7 @@
 				0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */,
 				0FF07F0023D7BDC200CFFA3F /* LensPickerViewController.swift in Sources */,
 				0FF07EFE23D7BD8200CFFA3F /* CameraViewController.swift in Sources */,
+				0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
