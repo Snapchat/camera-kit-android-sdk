@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.snap.camerakit.CameraKit
+import com.snap.camerakit.Session
 import com.snap.camerakit.configureLenses
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.invoke
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var mainLayout: ViewGroup
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
-    private lateinit var cameraKit: CameraKit
+    private lateinit var cameraKitSession: Session
 
     private var cameraFacingFront: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
-        cameraKit = CameraKit(this) {
+        cameraKitSession = Session(this) {
             attachTo(imageProcessorSource)
             attachTo(cameraKitStub)
             configureLenses {
@@ -76,9 +76,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We create a RecyclerView adapter that notifies when a lens item in the list is selected. Using the selected
         // lens ID we query for matching Lens in LensComponent and if one is found we submit a request to apply it.
         val lensItemListAdapter = LensItemListAdapter { lensItem ->
-            cameraKit.lenses.repository.query(ById(lensItem.id)) { result ->
+            cameraKitSession.lenses.repository.query(ById(lensItem.id)) { result ->
                 result.whenHasFirst { lens ->
-                    cameraKit.lenses.processor.apply(lens) { result ->
+                    cameraKitSession.lenses.processor.apply(lens) { result ->
                         Log.d(TAG, "Apply lens [$lens] success: $result")
                     }
                 }
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // Working with the CameraKit's lenses component we query for all lenses that are available and the first found
         // is applied as soon as possible.
-        cameraKit.lenses.repository.query(Available) { available ->
+        cameraKitSession.lenses.repository.query(Available) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 mainLayout.post {
@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 }
             }
             available.whenHasFirst { lens ->
-                cameraKit.lenses.processor.apply(lens) { result ->
+                cameraKitSession.lenses.processor.apply(lens) { result ->
                     Log.d(TAG, "Apply lens [$lens] success: $result")
                 }
             }
@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // While CameraKit is capable (and does) render camera preview into an internal view, this demonstrates how
         // to connect another TextureView as rendering output.
         val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
-        miniPreviewOutput = cameraKit.processor.connectOutput(miniPreview)
+        miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
     }
 
     override fun onResume() {
@@ -121,7 +121,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onDestroy() {
         miniPreviewOutput.close()
-        cameraKit.close()
+        cameraKitSession.close()
         super.onDestroy()
     }
 
