@@ -10,17 +10,30 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.snap.camerakit.common.Consumer
 import com.snap.camerakit.lenses.LensesComponent
+
 data class LensItem(val id: String, val title: String?)
 
-fun List<LensesComponent.Lens>.toLensItems(): List<LensItem> = map { LensItem(it.id, it.name) }
+fun LensesComponent.Lens.toLensItem() = LensItem(id, name)
+
+fun List<LensesComponent.Lens>.toLensItems(): List<LensItem> = map { it.toLensItem() }
 
 class LensItemListAdapter(
-    private val onItemSelected: Consumer<LensItem>
+    private val onItemClicked: Consumer<LensItem>
 ) : ListAdapter<LensItem, LensItemListAdapter.ViewHolder>(DIFF_CALLBACK) {
 
-    constructor(onItemSelected: (LensItem) -> Unit) : this(Consumer { onItemSelected(it) })
+    constructor(onItemClicked: (LensItem) -> Unit) : this(Consumer { onItemClicked(it) })
 
     private var selectedPosition = 0
+
+    fun select(lensItem: LensItem) {
+        val position = currentList.indexOf(lensItem)
+        if (position != -1) {
+            val previousPosition = selectedPosition
+            selectedPosition = position
+            notifyItemChanged(selectedPosition)
+            notifyItemChanged(previousPosition)
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.lens_item, parent, false))
@@ -49,7 +62,7 @@ class LensItemListAdapter(
             if (position != RecyclerView.NO_POSITION) {
                 selectedPosition = position
                 notifyDataSetChanged()
-                onItemSelected.accept(getItem(position))
+                onItemClicked.accept(getItem(position))
             }
         }
     }
