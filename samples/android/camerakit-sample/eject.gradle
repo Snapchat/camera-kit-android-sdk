@@ -44,6 +44,7 @@ task eject(type: Copy) {
     exclude gitignoreToList(file('.gitignore'))
     exclude 'eject.gradle'
     exclude '**/*proguard-mapping*'
+    exclude 'jarRepositories.xml'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")

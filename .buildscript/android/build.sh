@@ -15,7 +15,7 @@ readonly eject_to_directory=$(mktemp -d -t camerakit-eject-XXXXXXXXXX)
 source prepare_build_environment.sh
 echo "Android SDK root: ${ANDROID_SDK_ROOT}"
 
-pushd "${samples_android_root}/kotlin"
+pushd "${samples_android_root}/camerakit-sample"
 ./gradlew check assembleDebug
 ./gradlew eject -PoutputDir="${eject_to_directory}"
 popd
