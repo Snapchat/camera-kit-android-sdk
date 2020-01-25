@@ -12,6 +12,7 @@ set -o xtrace
 readonly samples_ios_root="../../samples/ios/CameraKitSample"
 
 pushd "${samples_ios_root}"
+rm -rf camera-kit-ios-releases
 git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
 rm -f Podfile
 mv Podfile.ci Podfile
