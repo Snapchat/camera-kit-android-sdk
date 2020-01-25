@@ -1,0 +1,72 @@
+import java.util.regex.Pattern
+
+// Copies all the necessary CameraKit artifacts into an internal maven repository,
+// which gets packaged within the "ejected" project so that external partners don't need to
+// worry about downloading artifacts from some protected repository.
+task copyCameraKitDependenciesToBundledRepo() {
+    def modules = [
+            'camerakit-partner',
+            'camerakit-kotlin',
+            'lenses-bundle-partner',
+            'support-camerax'
+    ]
+    def baseUri = "${snapMavenUri.replace('gcs', 'gs')}/com/snap/camerakit"
+    def baseOutputDir = new File(bundledMavenRepo, '/com/snap/camerakit')
+
+    doFirst {
+        modules.each { module ->
+            new File(baseOutputDir, module).mkdirs()
+        }
+    }
+    doLast {
+        modules.each { module ->
+            project.exec {
+                commandLine 'gsutil',
+                        'cp',
+                        '-r',
+                        "$baseUri/$module/$cameraKitVersion",
+                        new File(baseOutputDir, module).absolutePath
+            }
+        }
+
+    }
+}
+
+task eject(type: Copy) {
+    dependsOn copyCameraKitDependenciesToBundledRepo
+
+    def outputDir = project.hasProperty('outputDir') ?
+            project.getProperty('outputDir') :
+            "$buildDir/eject"
+
+    from rootProject.projectDir
+    into outputDir
+    exclude gitignoreToList(file('.gitignore'))
+    exclude 'eject.gradle'
+
+    doFirst {
+        logger.lifecycle("Ejecting to $outputDir")
+    }
+    doLast {
+        def fileToStrip = new File(outputDir, 'build.gradle')
+        def stripped = stripBlockWithin(fileToStrip.text)
+        fileToStrip.write(stripped)
+    }
+}
+
+def static gitignoreToList(File file) {
+    def ignores = []
+    file.eachLine { line ->
+        if (!line.startsWith('#') && !line.isEmpty()) {
+            ignores.add(line)
+        }
+    }
+    return ignores
+}
+
+def static stripBlockWithin(String text, String start = '//internal>', String end = '//<internal') {
+    def d1 = Pattern.quote(start)
+    def d2 = Pattern.quote(end)
+    def r = Pattern.compile("""(?s)$d1.*?$d2""")
+    return text.replaceAll(r, "")
+}
