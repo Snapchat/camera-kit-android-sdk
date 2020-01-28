@@ -5,7 +5,15 @@ allprojects {
         //<internal
         bundledMavenRepo = rootProject.file('maven')
         kotlinVersion = '1.3.61'
-        cameraKitVersion = '0.0.1-7b639e1.23'
+        cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
+        cameraKitDistributionCode = 1
+        //internal>
+        def refCount = 'git rev-list master --count'.execute().text.trim()
+        if (refCount && refCount.isInteger()) {
+            cameraKitDistributionCode = refCount.toInteger()
+        }
+        //<internal
+        cameraKitVersion = "$cameraKitDistributionVersion-7b639e1.23"
     }
 
     buildscript {
