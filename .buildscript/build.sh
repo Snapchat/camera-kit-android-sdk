@@ -11,9 +11,11 @@ set -o xtrace
 
 readonly script_name=$(basename "${0}")
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly repo_root="${script_dir}/.."
 readonly samples_root="${script_dir}/../samples"
 readonly distribution_archive_basename="camerakit-distribution"
 readonly program_name=$0
+readonly version_name=$( cat "${repo_root}/VERSION" | tr -d " \t\n\r" )
 
 usage() {
     echo "usage: ${program_name} [-p --platform <platforms>]"
@@ -68,6 +70,8 @@ main() {
     local distribution_dir="${distribution_basedir}/${distribution_archive_basename}"
     local distribution_zip="${distribution_basedir}/${distribution_archive_basename}.zip"
     mv "${eject_dir}" "${distribution_dir}"
+    cp -r "${repo_root}/.doc" "${distribution_dir}"
+    sed -e "s/\${version}/${version_name}/" "${repo_root}/README.partner.md" > "${distribution_dir}/README.md"
 
     pushd "${distribution_basedir}"
     zip -r "${distribution_zip}" ./*
