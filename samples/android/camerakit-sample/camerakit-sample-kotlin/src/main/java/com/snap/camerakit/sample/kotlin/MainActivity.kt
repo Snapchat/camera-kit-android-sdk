@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.TextureView
 import android.view.ViewGroup
@@ -12,8 +13,10 @@ import android.view.ViewStub
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -56,7 +59,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_main)
-        mainLayout = findViewById(R.id.main_layout)
+        val rootLayout = findViewById<DrawerLayout>(R.id.root_layout)
+        mainLayout = rootLayout.findViewById(R.id.main_layout)
 
         // This ViewStub is provided to CameraKit to inflate its views into when attached
         val cameraKitStub = findViewById<ViewStub>(R.id.camerakit_stub)
@@ -113,6 +117,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // Simple previous/next button binding that finds lens in availableLenses list and applies it.
         val previousButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_previous)
         val nextButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_next)
+        val lensButton = mainLayout.findViewById<AppCompatImageView>(R.id.button_lens)
         previousButton.setOnClickListener {
             val index = availableLenses.indexOf(appliedLens)
             if (index != -1 && availableLenses.isNotEmpty()) {
@@ -132,6 +137,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 ]
                 applyLens(next)
             }
+        }
+        lensButton.setOnClickListener {
+            rootLayout.openDrawer(Gravity.LEFT)
         }
 
         // We create a RecyclerView adapter that notifies when a lens item in the list is selected. Using the clicked
