@@ -9,13 +9,48 @@ set -o pipefail
 # trace what gets executed
 set -o xtrace
 
-readonly samples_android_root="../../samples/android"
-readonly eject_to_directory=$(mktemp -d -t camerakit-eject-XXXXXXXXXX)
+readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly samples_android_root="${script_dir}/../../samples/android"
+readonly program_name=$0
 
-source prepare_build_environment.sh
-echo "Android SDK root: ${ANDROID_SDK_ROOT}"
+usage() {
+    echo "usage: ${program_name} [-e --eject-to path]"
+    echo "  -e eject-to path [optional] specify filesystem path to eject publishable project sources to"
+    echo "                   Default: none, build only, no sources are ejected"
+}
 
-pushd "${samples_android_root}/camerakit-sample"
-./gradlew check assembleDebug
-./gradlew eject -PoutputDir="${eject_to_directory}"
-popd
+main() {
+    local eject_to=$1
+    source "${script_dir}/prepare_build_environment.sh"
+    echo "Android SDK root: ${ANDROID_SDK_ROOT}"
+
+    pushd "${samples_android_root}/camerakit-sample"
+    ./gradlew check assembleDebug
+
+    if [[ -n "$eject_to" ]]; then
+        ./gradlew eject -PoutputDir="${eject_to}"
+    fi
+
+    popd
+    :
+}
+
+eject_to_directory=""
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    -e | --ejecto-to)
+        eject_to_directory="$2"
+        shift
+        shift
+        ;;
+    *)
+        usage
+        exit
+        ;;
+    esac
+done
+
+main "${eject_to_directory}"

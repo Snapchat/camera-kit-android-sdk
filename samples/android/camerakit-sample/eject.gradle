@@ -45,6 +45,7 @@ task eject(type: Copy) {
     exclude 'eject.gradle'
     exclude '**/*proguard-mapping*'
     exclude 'jarRepositories.xml'
+    exclude '**/build/**'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")

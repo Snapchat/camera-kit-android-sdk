@@ -12,4 +12,4 @@ set -o xtrace
 export ANDROID_HOME=${HOME}/.android-sdk
 export ANDROID_SDK_ROOT=${ANDROID_HOME}
 
-bash install_sdk.sh "${ANDROID_HOME}"
+bash "$( dirname "$0" )/install_sdk.sh" "${ANDROID_HOME}"
