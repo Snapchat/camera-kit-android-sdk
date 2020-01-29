@@ -197,16 +197,22 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         mainLayout.post {
             startPreviewForCurrentCameraFacing()
         }
+        val flipCamera = {
+            cameraFacingFront = !cameraFacingFront
+            startPreviewForCurrentCameraFacing()
+        }
         val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onDoubleTap(e: MotionEvent?): Boolean {
-                cameraFacingFront = !cameraFacingFront
-                startPreviewForCurrentCameraFacing()
+                flipCamera()
                 return true
             }
         })
         mainLayout.setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
+        }
+        mainLayout.findViewById<AppCompatImageButton>(R.id.button_flip_camera).setOnClickListener {
+            flipCamera()
         }
     }
 
