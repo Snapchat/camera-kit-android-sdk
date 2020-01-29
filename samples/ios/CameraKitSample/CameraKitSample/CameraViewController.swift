@@ -24,6 +24,13 @@ class CameraViewController: UIViewController {
     fileprivate let lensPickerButton = UIButton(type: .custom)
     fileprivate let prevLensButton = UIButton(type: .custom)
     fileprivate let nextLensButton = UIButton(type: .custom)
+    fileprivate let flipCameraButton: UIButton = {
+        let button = UIButton(type: .custom)
+        button.setImage(UIImage(named: "camera_flip"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+
+        return button
+    }()
     lazy var lensButtonStackView: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [prevLensButton, lensPickerButton, nextLensButton])
         stackView.alignment = .center
@@ -98,6 +105,7 @@ extension CameraViewController {
 
     fileprivate func setup() {
         setupPreview()
+        setupFlipCameraButton()
         setupLensPicker()
         promptForAccessIfNeeded {
             self.setupSession()
@@ -145,11 +153,25 @@ extension CameraViewController {
             self.input = input
         }
     }
+}
+
+// MARK: Camera Flip
+
+extension CameraViewController {
+    fileprivate func setupFlipCameraButton() {
+        flipCameraButton.addTarget(self, action: #selector(self.flip(sender:)), for: .touchUpInside)
+
+        view.addSubview(flipCameraButton)
+
+        NSLayoutConstraint.activate([
+            flipCameraButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
+            flipCameraButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8.0)
+        ])
+    }
 
     @objc fileprivate func flip(sender: UITapGestureRecognizer) {
         position = position == .back ? .front : .back
     }
-
 }
 
 // MARK: Lens Picker
@@ -175,8 +197,8 @@ extension CameraViewController: LensPickerViewControllerDelegate {
         view.addSubview(lensButtonStackView)
 
         NSLayoutConstraint.activate([
-            lensButtonStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
-            lensButtonStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16.0)
+            lensButtonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32.0),
+            lensButtonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
 
@@ -219,5 +241,4 @@ extension CameraViewController: LensPickerViewControllerDelegate {
         applyLens(lens)
         viewController.dismiss(animated: true, completion: nil)
     }
-
 }
