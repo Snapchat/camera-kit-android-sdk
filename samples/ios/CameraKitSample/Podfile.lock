@@ -1,5 +1,5 @@
 PODS:
-  - CameraKit (0.0.1)
+  - CameraKit (0.1.0)
 
 DEPENDENCIES:
   - CameraKit
@@ -9,7 +9,7 @@ SPEC REPOS:
     - CameraKit
 
 SPEC CHECKSUMS:
-  CameraKit: f81d304e6c4fa78c8024eafa8b22b8286bef8d79
+  CameraKit: fe4b4ec31a4528140a9988b357852aa6246a19de
 
 PODFILE CHECKSUM: 87c60153592e4f7237d68bfa4a783875f2e83e8d
 

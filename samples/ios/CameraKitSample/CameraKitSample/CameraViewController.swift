@@ -17,7 +17,7 @@ class CameraViewController: UIViewController {
 
     // CameraKit Classes
     fileprivate let previewView = PreviewView()
-    fileprivate let cameraKit = CameraKit()
+    fileprivate let cameraKit = Session()
     fileprivate lazy var lensHolder = LensHolder(repository: cameraKit.lenses.repository)
     fileprivate var currentLens: Lens?
 
