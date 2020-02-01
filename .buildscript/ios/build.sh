@@ -21,8 +21,11 @@ usage() {
 
 main() {
     local eject_to=$1
+    local version_file="${script_dir}/../../VERSION"
+    local version="$(sed -n 1p ${version_file})"
 
     pushd "${samples_ios_root}/CameraKitSample"
+    plutil -replace CFBundleShortVersionString -string "${version}" "CameraKitSample/Info.plist"
     rm -rf camera-kit-ios-releases
     git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
     rm -rf camera-kit-ios-releases/.git
