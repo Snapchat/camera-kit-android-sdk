@@ -8,7 +8,7 @@ allprojects {
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
         //internal>
-        def refCount = 'git rev-list master --count'.execute().text.trim()
+        def refCount = 'git rev-list origin/master --count'.execute().text.trim()
         if (refCount && refCount.isInteger()) {
             cameraKitDistributionCode = refCount.toInteger()
         }
