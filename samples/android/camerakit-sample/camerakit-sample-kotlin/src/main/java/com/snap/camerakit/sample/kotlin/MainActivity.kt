@@ -39,6 +39,8 @@ import kotlin.math.min
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
+private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
 
 /**
  * A simple activity which demonstrates how to use [CameraKit] to apply/remove lenses onto a camera preview.
@@ -52,11 +54,17 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var cameraKitSession: Session
 
+    private var appliedLensId: String? = null
     private var cameraFacingFront: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        savedInstanceState?.let {
+            appliedLensId = it.getString(BUNDLE_ARG_APPLIED_LENS_ID)
+            cameraFacingFront = it.getBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT)
+        }
 
         setContentView(R.layout.activity_main)
         val rootLayout = findViewById<DrawerLayout>(R.id.root_layout)
@@ -84,12 +92,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // We keep the last applied Lens reference here in order to update the RecyclerView adapter
         // as well as to use it when determining the next or previous lens to switch to.
-        var appliedLens: LensesComponent.Lens? = null
         val applyLens = { lens: LensesComponent.Lens ->
             cameraKitSession.lenses.processor.apply(lens) { success ->
                 Log.d(TAG, "Apply lens [$lens] success: $success")
                 if (success) {
-                    appliedLens = lens
+                    appliedLensId = lens.id
                     mainLayout.post {
                         lensItemListAdapter.select(lens.toLensItem())
                         Toast.makeText(
@@ -99,27 +106,29 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 }
             }
         }
-        // Working with the CameraKit's lenses component we query for all lenses that are available and the first found
-        // is applied as soon as possible.
+        // Working with the CameraKit's lenses component we query for all lenses that are available. 
+        // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
+        // otherwise we apply the first one from the non-empty list.
         var availableLenses = emptyList<LensesComponent.Lens>()
         cameraKitSession.lenses.repository.query(Available) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 availableLenses = lenses
+                appliedLensId?.let { id ->
+                    lenses.find { it.id == id }?.let(applyLens)
+                } ?: lenses.first().let(applyLens)
                 mainLayout.post {
                     lensItemListAdapter.submitList(lenses.toLensItems())
                 }
             }
-            available.whenHasFirst(applyLens)
         }
-
 
         // Simple previous/next button binding that finds lens in availableLenses list and applies it.
         val previousButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_previous)
         val nextButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_next)
         val lensButton = mainLayout.findViewById<AppCompatImageView>(R.id.button_lens)
         previousButton.setOnClickListener {
-            val index = availableLenses.indexOf(appliedLens)
+            val index = availableLenses.indexOfFirst { it.id == appliedLensId }
             if (index != -1 && availableLenses.isNotEmpty()) {
                 val previousIndex = max(0, index - 1)
                 val previous = availableLenses[
@@ -129,7 +138,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             }
         }
         nextButton.setOnClickListener {
-            val index = availableLenses.indexOf(appliedLens)
+            val index = availableLenses.indexOfFirst { it.id == appliedLensId }
             if (index != -1 && availableLenses.isNotEmpty()) {
                 val nextIndex = min(availableLenses.size - 1, index + 1)
                 val next = availableLenses[
@@ -157,6 +166,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // to connect another TextureView as rendering output.
         val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
         miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        appliedLensId?.let {
+            outState.putString(BUNDLE_ARG_APPLIED_LENS_ID, it)
+        }
+        outState.putBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT, cameraFacingFront)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onResume() {
