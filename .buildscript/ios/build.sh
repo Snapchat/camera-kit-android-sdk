@@ -12,6 +12,8 @@ set -o xtrace
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
+readonly export_options_plist="${script_dir}/exportOptions.plist"
+readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -21,11 +23,14 @@ usage() {
 
 main() {
     local eject_to=$1
+    local ipa_dir=$2
     local version_file="${script_dir}/../../VERSION"
     local version="$(sed -n 1p ${version_file})"
 
     pushd "${samples_ios_root}/CameraKitSample"
     plutil -replace CFBundleShortVersionString -string "${version}" "CameraKitSample/Info.plist"
+    plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "CameraKitSample/Info.plist"
+    rm -rf xcarchive_path
     rm -rf camera-kit-ios-releases
     git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
     rm -rf camera-kit-ios-releases/.git
@@ -33,7 +38,28 @@ main() {
     rm -f Podfile
     mv Podfile.ci Podfile
     pod install
-    xcodebuild -workspace CameraKitSample.xcworkspace -scheme CameraKitSample -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 8' test
+    xcodebuild test \
+        -workspace CameraKitSample.xcworkspace \
+        -scheme CameraKitSample \
+        -sdk iphonesimulator \
+        -destination 'platform=iOS Simulator,name=iPhone 8'
+
+    if [[ -n "$ipa_dir" ]]; then
+        xcodebuild archive \
+            -workspace CameraKitSample.xcworkspace \
+            -scheme CameraKitSample \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath ${archive_path} \
+            CODE_SIGN_IDENTITY='iPhone Distribution: Snap, Inc.' \
+            PROVISIONING_PROFILE='712e43ef-03aa-4e92-a96e-8ab8595d59c4' \
+            DEVELOPMENT_TEAM='424M5254LK'
+
+        xcodebuild -exportArchive \
+            -archivePath ${archive_path} \
+            -exportPath ${ipa_dir} \
+            -exportOptionsPlist ${export_options_plist}
+    fi
 
     if [[ -n "$eject_to" ]]; then
         cp -R "${samples_ios_root}/." "${eject_to}"
@@ -44,6 +70,7 @@ main() {
 }
 
 eject_to_directory=""
+ipa_path=""
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -54,6 +81,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -i | --ipa-path)
+        ipa_path="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -61,4 +93,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${eject_to_directory}"
+main "${eject_to_directory}" "${ipa_path}"

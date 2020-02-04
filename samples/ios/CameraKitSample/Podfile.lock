@@ -2,7 +2,7 @@ PODS:
   - CameraKit (0.1.0)
 
 DEPENDENCIES:
-  - CameraKit
+  - CameraKit (= 0.1.0)
 
 SPEC REPOS:
   "git@github.sc-corp.net:Snapchat/camera-kit-ios-pod-repo.git":
@@ -11,6 +11,6 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   CameraKit: fe4b4ec31a4528140a9988b357852aa6246a19de
 
-PODFILE CHECKSUM: 87c60153592e4f7237d68bfa4a783875f2e83e8d
+PODFILE CHECKSUM: fb9ce238a5d6f696d69e60c51e273c26f40ac7d2
 
 COCOAPODS: 1.8.4
