@@ -3,15 +3,15 @@
 <plist version="1.0">
 <dict>
 	<key>method</key>
-	<string>ad-hoc</string>
+	<string>enterprise</string>
 	<key>compileBitcode</key>
 	<false/>
 	<key>signingStyle</key>
 	<string>manaual</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.snap.camerakit.sample</key>
-		<string>CameraKit Sample Ad Hoc</string>
+		<key>com.snap.camerakit.sample.enterprise</key>
+		<string>CameraKit Sample Enterprise</string>
 	</dict>
 </dict>
 </plist>

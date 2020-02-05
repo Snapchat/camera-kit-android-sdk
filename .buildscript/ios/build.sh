@@ -49,11 +49,11 @@ main() {
             -workspace CameraKitSample.xcworkspace \
             -scheme CameraKitSample \
             -sdk iphoneos \
-            -configuration Release \
+            -configuration Enterprise \
             -archivePath ${archive_path} \
-            CODE_SIGN_IDENTITY='iPhone Distribution: Snap, Inc.' \
-            PROVISIONING_PROFILE='712e43ef-03aa-4e92-a96e-8ab8595d59c4' \
-            DEVELOPMENT_TEAM='424M5254LK'
+            CODE_SIGN_IDENTITY='iPhone Distribution: Snapchat Inc' \
+            PROVISIONING_PROFILE='16227dfc-5923-4bda-9635-51354e0d861c' \
+            DEVELOPMENT_TEAM='RRXKNUJYAH'
 
         xcodebuild -exportArchive \
             -archivePath ${archive_path} \
