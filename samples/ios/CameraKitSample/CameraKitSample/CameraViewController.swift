@@ -107,6 +107,7 @@ extension CameraViewController {
         setupPreview()
         setupFlipCameraButton()
         setupLensPicker()
+        setupNotifications()
         promptForAccessIfNeeded {
             self.setupSession()
             self.setupLenses()
@@ -241,4 +242,21 @@ extension CameraViewController: LensPickerViewControllerDelegate {
         applyLens(lens)
         viewController.dismiss(animated: true, completion: nil)
     }
+}
+
+// MARK: Notifications
+
+extension CameraViewController {
+
+    fileprivate func setupNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.appWillEnterForegroundNotification(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
+    }
+
+    @objc private func appWillEnterForegroundNotification(_ notification: Notification) {
+        // SDK pauses/disables lens in background, so re-apply the lens when entering foreground
+        guard let currentLens = currentLens else { return }
+
+        applyLens(currentLens)
+    }
+
 }
