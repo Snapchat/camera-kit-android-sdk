@@ -8,9 +8,9 @@ allprojects {
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
         //internal>
-        def refCount = 'git rev-list origin/master --count'.execute().text.trim()
-        if (refCount && refCount.isInteger()) {
-            cameraKitDistributionCode = refCount.toInteger()
+        def buildNumber = System.getenv('BUILD_NUMBER')
+        if (buildNumber && buildNumber.isInteger()) {
+            cameraKitDistributionCode = buildNumber.toInteger()
         }
         //<internal
         cameraKitVersion = "$cameraKitDistributionVersion-82fe84f.35"
