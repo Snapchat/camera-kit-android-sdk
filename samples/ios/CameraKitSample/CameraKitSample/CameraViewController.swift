@@ -124,9 +124,9 @@ extension CameraViewController {
         previewView.translatesAutoresizingMaskIntoConstraints = false
         view.addConstraints([
             previewView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-        previewView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        previewView.topAnchor.constraint(equalTo: view.topAnchor),
-        previewView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            previewView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            previewView.topAnchor.constraint(equalTo: view.topAnchor),
+            previewView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(flip(sender:)))
         doubleTap.numberOfTapsRequired = 2
@@ -141,8 +141,8 @@ extension CameraViewController {
         NSLayoutConstraint.activate([
             pipView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             pipView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            pipView.heightAnchor.constraint(equalToConstant: 240.0),
-            pipView.widthAnchor.constraint(equalToConstant: 135.0)
+            pipView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.30),
+            pipView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.30)
         ])
     }
 
