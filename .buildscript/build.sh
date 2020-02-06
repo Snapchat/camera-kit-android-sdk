@@ -17,6 +17,7 @@ readonly distribution_archive_basename="camerakit-distribution"
 readonly program_name=$0
 readonly version_file="${repo_root}/VERSION"
 readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
+readonly license_file="${repo_root}/LICENSE"
 
 usage() {
     echo "usage: ${program_name} [-p --platform <platforms>]"
@@ -72,6 +73,7 @@ main() {
     local distribution_zip="${distribution_basedir}/${distribution_archive_basename}.zip"
     mv "${eject_dir}" "${distribution_dir}"
     cp "${version_file}" "${distribution_dir}"
+    cp "${license_file}" "${distribution_dir}"
     cp -r "${repo_root}/.doc" "${distribution_dir}"
     sed -e "s/\${version}/${version_name}/" "${repo_root}/README.partner.md" > "${distribution_dir}/README.md"
 
