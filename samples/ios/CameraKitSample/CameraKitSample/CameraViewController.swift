@@ -17,6 +17,7 @@ class CameraViewController: UIViewController {
 
     // CameraKit Classes
     fileprivate let previewView = PreviewView()
+    fileprivate let pipView = PreviewView()
     fileprivate let cameraKit = Session()
     fileprivate lazy var lensHolder = LensHolder(repository: cameraKit.lenses.repository)
     fileprivate var currentLens: Lens?
@@ -71,6 +72,9 @@ extension CameraViewController {
         // framerate counter.
         cameraKit.add(output: previewView)
 
+        // CameraKit supports multiple outputs - an example of adding a 2nd output view.
+        cameraKit.add(output: pipView)
+
         applyFirstLens()
     }
 
@@ -105,6 +109,7 @@ extension CameraViewController {
 
     fileprivate func setup() {
         setupPreview()
+        setupPip()
         setupFlipCameraButton()
         setupLensPicker()
         setupNotifications()
@@ -127,6 +132,18 @@ extension CameraViewController {
         doubleTap.numberOfTapsRequired = 2
         previewView.addGestureRecognizer(doubleTap)
         previewView.automaticallyConfiguresTouchHandler = true
+    }
+
+    fileprivate func setupPip() {
+        pipView.backgroundColor = .white
+        pipView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pipView)
+        NSLayoutConstraint.activate([
+            pipView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            pipView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            pipView.heightAnchor.constraint(equalToConstant: 240.0),
+            pipView.widthAnchor.constraint(equalToConstant: 135.0)
+        ])
     }
 
     fileprivate func promptForAccessIfNeeded(completion: @escaping () -> Void) {

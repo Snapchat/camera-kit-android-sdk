@@ -33,7 +33,12 @@ main() {
     rm -rf xcarchive_path
     rm -rf camera-kit-ios-releases
     git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
-    rm -rf camera-kit-ios-releases/.git
+
+    pushd camera-kit-ios-releases
+    git checkout $version
+    rm -rf .git
+    popd
+
     sed -i '' 's;git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git;;g' camera-kit-ios-releases/CameraKit.podspec
     rm -f Podfile
     mv Podfile.ci Podfile
