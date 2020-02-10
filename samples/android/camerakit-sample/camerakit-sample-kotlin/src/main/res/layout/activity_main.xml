@@ -83,7 +83,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/debug_container"
         android:layout_width="224dp"
         android:layout_height="match_parent"
@@ -92,22 +92,45 @@
         android:orientation="vertical"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/available_lenses"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:layout_gravity="center_vertical|start"
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/available_lenses_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/available_lenses"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"
+                android:layout_gravity="center_vertical|start"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/available_lenses_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="40dp"
+                android:requiresFadingEdge="vertical"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/version_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:layout_gravity="bottom|start"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:foreground="?attr/selectableItemBackground"
+            android:background="@android:color/black"
             />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

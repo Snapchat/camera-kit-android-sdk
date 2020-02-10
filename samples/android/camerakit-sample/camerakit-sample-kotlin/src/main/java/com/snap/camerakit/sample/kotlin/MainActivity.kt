@@ -1,6 +1,9 @@
 package com.snap.camerakit.sample.kotlin
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +13,7 @@ import android.view.MotionEvent
 import android.view.TextureView
 import android.view.ViewGroup
 import android.view.ViewStub
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
@@ -166,6 +170,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // to connect another TextureView as rendering output.
         val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
         miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
+
+        // Present basic app version information to make it easier for QA to report it.
+        rootLayout.findViewById<TextView>(R.id.version_info).apply {
+            val versionNameAndCode = getString(
+                R.string.version_info, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE
+            )
+            text = versionNameAndCode
+            setOnClickListener {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip: ClipData = ClipData.newPlainText("version_info", versionNameAndCode)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(
+                    this@MainActivity,
+                    "Copied to clipboard: $versionNameAndCode",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
