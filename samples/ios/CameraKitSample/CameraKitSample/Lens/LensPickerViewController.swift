@@ -49,7 +49,18 @@ class LensPickerViewController: UIViewController {
 
         view.addSubview(tableView)
 
+        setupVersionLabel()
         setupConstraints()
+    }
+    
+    private func setupVersionLabel() {
+        let label = UILabel()
+        label.text = "v\(ApplicationInfo.version ?? "NA") (build \(ApplicationInfo.build ?? "NA"))"
+        label.textAlignment = .center
+        label.textColor = .lightGray
+        label.frame.size.height = 44.0
+        
+        tableView.tableFooterView = label
     }
 
     private func setupConstraints() {
