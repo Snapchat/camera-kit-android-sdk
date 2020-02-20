@@ -28,6 +28,7 @@ import com.snap.camerakit.Session
 import com.snap.camerakit.configureLenses
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.invoke
+import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.ById
@@ -45,6 +46,10 @@ private const val REQUEST_CODE_PERMISSIONS = 10
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
+private val LENS_GROUPS = arrayOf(
+    LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle-partner artifact.
+    "1" // temporary lens group for testing
+)
 
 /**
  * A simple activity which demonstrates how to use [CameraKit] to apply/remove lenses onto a camera preview.
@@ -90,7 +95,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             attachTo(imageProcessorSource)
             attachTo(cameraKitStub)
             configureLenses {
-                useLensesFromAssets()
+                // no configuration options available at the moment
             }
         }
 
@@ -114,7 +119,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
         // otherwise we apply the first one from the non-empty list.
         var availableLenses = emptyList<LensesComponent.Lens>()
-        cameraKitSession.lenses.repository.query(Available) { available ->
+        cameraKitSession.lenses.repository.query(Available(*LENS_GROUPS)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 availableLenses = lenses
@@ -158,7 +163,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We create a RecyclerView adapter that notifies when a lens item in the list is selected. Using the clicked
         // lens item ID we query for matching Lens in LensComponent and if one is found we submit a request to apply it.
         lensItemListAdapter = LensItemListAdapter { lensItem ->
-            cameraKitSession.lenses.repository.query(ById(lensItem.id)) { result ->
+            cameraKitSession.lenses.repository.query(ById(lensItem.id, lensItem.groupId)) { result ->
                 result.whenHasFirst(applyLens)
             }
         }

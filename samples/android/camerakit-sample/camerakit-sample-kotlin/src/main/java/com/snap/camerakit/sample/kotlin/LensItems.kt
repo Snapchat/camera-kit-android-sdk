@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.snap.camerakit.common.Consumer
 import com.snap.camerakit.lenses.LensesComponent
 
-data class LensItem(val id: String, val title: String?)
+data class LensItem(val id: String, val groupId: String, val title: String?)
 
-fun LensesComponent.Lens.toLensItem() = LensItem(id, name)
+fun LensesComponent.Lens.toLensItem() = LensItem(id, groupId, name)
 
 fun List<LensesComponent.Lens>.toLensItems(): List<LensItem> = map { it.toLensItem() }
 
