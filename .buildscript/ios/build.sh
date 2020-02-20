@@ -14,6 +14,7 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
+readonly releases_commit="6d54079d6c49de91bb0f2e9daa90e18343906de1"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -35,7 +36,7 @@ main() {
     git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
 
     pushd camera-kit-ios-releases
-    git checkout $version
+    git checkout $releases_commit
     rm -rf .git
     popd
 
