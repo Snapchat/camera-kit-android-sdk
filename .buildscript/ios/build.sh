@@ -28,6 +28,9 @@ main() {
     local version_file="${script_dir}/../../VERSION"
     local version="$(sed -n 1p ${version_file})"
 
+    # Make sure cocoapods is installed (some nodes seem to not have it)
+    brew list cocoapods --versions || brew install https://raw.githubusercontent.com/Homebrew/homebrew-core/c8a0a2bf358402b5e86f92a2f9fc03840fe3a035/Formula/cocoapods.rb
+
     pushd "${samples_ios_root}/CameraKitSample"
     plutil -replace CFBundleShortVersionString -string "${version}" "CameraKitSample/Info.plist"
     plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "CameraKitSample/Info.plist"
