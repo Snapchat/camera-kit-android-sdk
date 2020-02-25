@@ -86,7 +86,7 @@ class LensPickerViewController: UIViewController {
                 return
             }
 
-            self.bundledLenses = lenses.sorted { $0.name ?? $0.id < $1.name ?? $1.id }
+            self.bundledLenses = lenses
             self.tableView.reloadData()
         }
     }

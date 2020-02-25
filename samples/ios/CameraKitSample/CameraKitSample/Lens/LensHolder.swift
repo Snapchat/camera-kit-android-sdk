@@ -6,28 +6,48 @@ import CameraKit
 
 /// Class to handle getting, caching, etc. lenses from repository so logic isn't in controller
 class LensHolder {
+    private struct Constants {
+        static let groupId = "1"
+    }
+
     let repository: LensRepository
 
+    private var bundledLenses = [Lens]()
     private var availableLenses = [Lens]()
+    private var allLenses: [Lens] {
+        return bundledLenses + availableLenses
+    }
 
     init(repository: LensRepository) {
         self.repository = repository
     }
 
     func getAvailableLenses(completion: @escaping ((_ lenses: [Lens]?, _ error: Error?) -> Void)) {
-        guard availableLenses.isEmpty else {
-            completion(availableLenses, nil)
+        guard allLenses.isEmpty else {
+            completion(allLenses, nil)
             return
         }
 
-        repository.availableLenses { (lens, error) in
-            guard let lens = lens else {
-                completion(nil, error)
-                return
-            }
+        let group = DispatchGroup()
+        var errors: [Error?] = []
 
-            self.availableLenses = lens.sorted { $0.name ?? $0.id < $1.name ?? $1.id }
-            completion(self.availableLenses, nil)
+        group.enter()
+        repository.availableLenses(groupID: SCCameraKitLensRepositoryBundledGroup) { (lens, error) in
+            errors.append(error)
+            self.bundledLenses = (lens ?? []).sorted { $0.name ?? $0.id < $1.name ?? $1.id }
+            group.leave()
+        }
+
+        group.enter()
+        repository.availableLenses(groupID: Constants.groupId) { (lens, error) in
+            errors.append(error)
+            self.availableLenses = (lens ?? []).sorted { $0.name ?? $0.id < $1.name ?? $1.id }
+            group.leave()
+        }
+
+        group.notify(queue: .main) {
+            let anyError = errors.compactMap { $0 }.first
+            completion(self.allLenses, anyError)
         }
     }
 
