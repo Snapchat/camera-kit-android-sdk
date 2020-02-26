@@ -11,6 +11,7 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.TextureView
+import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.TextView
@@ -95,7 +96,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             attachTo(imageProcessorSource)
             attachTo(cameraKitStub)
             configureLenses {
-                // no configuration options available at the moment
+                // When CameraKit is configured to manage its own views by providing a view stub (see above),
+                // lenses touch handling might consume all events due to the fact that it needs to perform gesture
+                // detection internally. If application needs to handle gestures on top of it then LensesComponent
+                // provides a way to dispatch all touch events unhandled by active lens back.
+                dispatchTouchEventsTo(mainLayout.findViewById(R.id.preview_gesture_handler))
             }
         }
 
@@ -251,7 +256,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 return true
             }
         })
-        mainLayout.setOnTouchListener { _, event ->
+        mainLayout.findViewById<View>(R.id.preview_gesture_handler).setOnTouchListener { _, event ->
             gestureDetector.onTouchEvent(event)
             true
         }

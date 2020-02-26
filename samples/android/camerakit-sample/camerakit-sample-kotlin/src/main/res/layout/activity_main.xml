@@ -14,6 +14,12 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="false">
 
+        <View
+            android:id="@+id/preview_gesture_handler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
         <ViewStub
             android:id="@+id/camerakit_stub"
             android:layout_width="match_parent"
