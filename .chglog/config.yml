@@ -1,0 +1,28 @@
+style: github
+template: feats_and_bugs.tpl.md
+info:
+  title: CHANGELOG
+  repository_url: https://github.sc-corp.net/Snapchat/camera-kit-distribution
+options:
+  commits:
+    filters:
+      Type:
+        - "[Feat]"
+        - "[Fix]"
+  commit_groups:
+    title_maps:
+      "[Feat]": Features
+      "[Fix]": Bug Fixes
+  header:
+    pattern: "^(\\[[\\w'-]*\\])(?:\\[([\\w\\$\\.\\-\\*\\s]*)\\])?(.*)$"
+    pattern_maps:
+      - Type
+      - Scope
+      - Subject
+  reverts:
+    pattern: "^Revert \"([\\s\\S]*)\"$"
+    pattern_maps:
+      - Header
+  notes:
+    keywords:
+      - BREAKING CHANGE
