@@ -12,9 +12,9 @@ class LensHolder {
 
     let repository: LensRepository
 
-    private var bundledLenses = [Lens]()
-    private var availableLenses = [Lens]()
-    private var allLenses: [Lens] {
+    var bundledLenses = [Lens]()
+    var availableLenses = [Lens]()
+    var allLenses: [Lens] {
         return bundledLenses + availableLenses
     }
 

@@ -4,6 +4,7 @@
 import UIKit
 import AVFoundation
 import CameraKit
+import CameraKitReferenceUI
 
 class CameraViewController: UIViewController {
     // Standard camera pipeline stuff
@@ -22,9 +23,6 @@ class CameraViewController: UIViewController {
     fileprivate lazy var lensHolder = LensHolder(repository: cameraKit.lenses.repository)
     fileprivate var currentLens: Lens?
 
-    fileprivate let lensPickerButton = UIButton(type: .custom)
-    fileprivate let prevLensButton = UIButton(type: .custom)
-    fileprivate let nextLensButton = UIButton(type: .custom)
     fileprivate let flipCameraButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "camera_flip"), for: .normal)
@@ -32,15 +30,18 @@ class CameraViewController: UIViewController {
 
         return button
     }()
-    lazy var lensButtonStackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [prevLensButton, lensPickerButton, nextLensButton])
-        stackView.alignment = .center
-        stackView.axis = .horizontal
-        stackView.distribution = .fill
-        stackView.spacing = 8.0
-        stackView.translatesAutoresizingMaskIntoConstraints = false
 
-        return stackView
+    fileprivate let carouselView: CarouselView = {
+        let view = CarouselView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    fileprivate let messageView: MessageNotificationView = {
+        let view = MessageNotificationView()
+        view.alpha = 0.0
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
 
     override func viewDidLoad() {
@@ -82,12 +83,15 @@ extension CameraViewController {
         // Get all lenses from the repository and apply the first to the processor.
         // The lenses repository will query `lenses` folder bundled in the app.
         lensHolder.getAvailableLenses { (lenses, error) in
-            guard let lens = lenses?.first else {
+            guard let lenses = lenses, let lens = lenses.first else {
                 print("Failed to get available lenses with error: \(String(describing: error))")
                 return
             }
 
+            self.carouselView.items = lenses.map { CarouselItem(imageUrl: $0.iconUrl) }
+
             self.applyLens(lens)
+            self.showMessage(lens: lens)
         }
     }
 
@@ -111,7 +115,8 @@ extension CameraViewController {
         setupPreview()
         setupPip()
         setupFlipCameraButton()
-        setupLensPicker()
+        setupCarousel()
+        setupMessageView()
         setupNotifications()
         promptForAccessIfNeeded {
             self.setupSession()
@@ -192,72 +197,71 @@ extension CameraViewController {
     }
 }
 
-// MARK: Lens Picker
+// MARK: Carousel
 
-extension CameraViewController: LensPickerViewControllerDelegate {
+extension CameraViewController: CarouselViewDelegate {
 
-    private struct Constants {
-        static let lensPickerImage = "lens_preview_button"
-        static let nextArrowImage = "arrow_right"
-        static let prevArrowImage = "arrow_left"
-    }
-
-    fileprivate func setupLensPicker() {
-        lensPickerButton.setImage(UIImage(named: Constants.lensPickerImage), for: .normal)
-        lensPickerButton.addTarget(self, action: #selector(self.showLensPicker(_:)), for: .touchUpInside)
-
-        prevLensButton.setImage(UIImage(named: Constants.prevArrowImage), for: .normal)
-        prevLensButton.addTarget(self, action: #selector(self.showPrevLens(_:)), for: .touchUpInside)
-
-        nextLensButton.setImage(UIImage(named: Constants.nextArrowImage), for: .normal)
-        nextLensButton.addTarget(self, action: #selector(self.showNextLens(_:)), for: .touchUpInside)
-
-        view.addSubview(lensButtonStackView)
-
+    fileprivate func setupCarousel() {
+        carouselView.delegate = self
+        view.addSubview(carouselView)
         NSLayoutConstraint.activate([
-            lensButtonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32.0),
-            lensButtonStackView.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            carouselView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            carouselView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            carouselView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -32.0),
+            carouselView.heightAnchor.constraint(equalToConstant: 62.0),
         ])
     }
 
-    // MARK: Actions
-
-    @objc private func showLensPicker(_ sender: UIButton) {
-        let viewController = LensPickerViewController(lensHolder: lensHolder, currentLens: currentLens)
-        viewController.delegate = self
-        let navController = UINavigationController(rootViewController: viewController)
-        present(navController, animated: true, completion: nil)
-    }
-
-    @objc private func showPrevLens(_ sender: UIButton) {
-        guard let curr = currentLens else {
-            applyFirstLens()
-            return
-        }
-
-        lensHolder.lens(before: curr) { lens in
-            guard let lens = lens else { return }
-            self.applyLens(lens)
-        }
-    }
-
-    @objc private func showNextLens(_ sender: UIButton) {
-        guard let curr = currentLens else {
-            applyFirstLens()
-            return
-        }
-
-        lensHolder.lens(after: curr) { lens in
-            guard let lens = lens else { return }
-            self.applyLens(lens)
-        }
-    }
-
-    // MARK: Lens Picker Delegate
-
-    func lensPicker(_ viewController: LensPickerViewController, didSelect lens: Lens) {
+    func carouselView(_ view: CarouselView, didSelect item: CarouselItem, at index: Int) {
+        let lens = lensHolder.allLenses[index]
         applyLens(lens)
-        viewController.dismiss(animated: true, completion: nil)
+        showMessage(lens: lens)
+    }
+}
+
+// MARK: Messages
+
+extension CameraViewController {
+    fileprivate func setupMessageView() {
+        view.addSubview(messageView)
+        NSLayoutConstraint.activate([
+            messageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16.0),
+            messageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16.0),
+        ])
+    }
+
+    fileprivate func showMessage(lens: Lens) {
+        var numberOfLines = 1
+        var text = lens.name ?? lens.id
+
+        if lens.name != nil {
+            text.append("\n\(lens.id)")
+            numberOfLines += 1
+        }
+
+        showMessage(text: text, numberOfLines: numberOfLines)
+    }
+
+    fileprivate func showMessage(text: String, numberOfLines: Int) {
+        messageView.layer.removeAllAnimations()
+        messageView.label.text = text
+        messageView.label.numberOfLines = numberOfLines
+        messageView.alpha = 0.0
+
+        UIView.animate(
+            withDuration: 0.5,
+            animations: {
+                self.messageView.alpha = 1.0
+            }
+        ) { completed in
+            if completed {
+                UIView.animate(
+                    withDuration: 0.5, delay: 1.0,
+                    animations: {
+                        self.messageView.alpha = 0.0
+                    }, completion: nil)
+            }
+        }
     }
 }
 

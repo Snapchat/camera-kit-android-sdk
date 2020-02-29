@@ -1,3 +1,8 @@
 target 'CameraKitSample' do
 	pod 'CameraKit', :path => 'camera-kit-ios-releases'
+	pod 'CameraKitReferenceUI', :path => 'camera-kit-ios-releases'
+
+	target 'CameraKitSampleTests' do
+		inherit! :complete
+	end
 end

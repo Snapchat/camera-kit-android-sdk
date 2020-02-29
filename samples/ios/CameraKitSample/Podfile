@@ -1,5 +1,10 @@
 source "git@github.sc-corp.net:Snapchat/camera-kit-ios-pod-repo.git"
 
 target 'CameraKitSample' do
-	pod 'CameraKit', '0.2.0'
+	pod 'CameraKit', '0.3.0'
+	pod 'CameraKitReferenceUI', '0.3.0'
+
+	target 'CameraKitSampleTests' do
+		inherit! :complete
+	end
 end
