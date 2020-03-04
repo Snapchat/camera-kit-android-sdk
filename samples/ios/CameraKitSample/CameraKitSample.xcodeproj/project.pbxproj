@@ -11,6 +11,7 @@
 		0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F16357823F1E30900DA79A0 /* ApplicationInfo.swift */; };
 		0F16357B23F1E34D00DA79A0 /* ApplicationInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F16357A23F1E34D00DA79A0 /* ApplicationInfoTests.swift */; };
 		0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */; };
+		0F5C4A17240F141E0002FEC8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5C4A16240F141E0002FEC8 /* Reachability.swift */; };
 		0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */; };
 		0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */; };
 		0FF07EF023D79DC500CFFA3F /* CameraKitSampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EEF23D79DC500CFFA3F /* CameraKitSampleUITests.swift */; };
@@ -41,6 +42,7 @@
 		0F16357823F1E30900DA79A0 /* ApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfo.swift; sourceTree = "<group>"; };
 		0F16357A23F1E34D00DA79A0 /* ApplicationInfoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfoTests.swift; sourceTree = "<group>"; };
 		0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LensHolder.swift; sourceTree = "<group>"; };
+		0F5C4A16240F141E0002FEC8 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		0FF07ECA23D79DC400CFFA3F /* CameraKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0FF07ED623D79DC500CFFA3F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -105,6 +107,14 @@
 			path = Lens;
 			sourceTree = "<group>";
 		};
+		0F5C4A15240F12430002FEC8 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				0F5C4A16240F141E0002FEC8 /* Reachability.swift */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 		0FF07EC123D79DC400CFFA3F = {
 			isa = PBXGroup;
 			children = (
@@ -132,6 +142,7 @@
 			children = (
 				0F16357723F1E30900DA79A0 /* Application */,
 				0F3EE03123DA7D38002BE1F0 /* Lens */,
+				0F5C4A15240F12430002FEC8 /* Reachability */,
 				0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */,
 				0FF07EFD23D7BD8200CFFA3F /* CameraViewController.swift */,
 				0FF07ED623D79DC500CFFA3F /* Assets.xcassets */,
@@ -434,6 +445,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */,
+				0F5C4A17240F141E0002FEC8 /* Reachability.swift in Sources */,
 				0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */,
 				0FF07EFE23D7BD8200CFFA3F /* CameraViewController.swift in Sources */,
 				0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */,

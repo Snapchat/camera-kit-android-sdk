@@ -23,7 +23,7 @@ class LensHolder {
     }
 
     func getAvailableLenses(completion: @escaping ((_ lenses: [Lens]?, _ error: Error?) -> Void)) {
-        guard allLenses.isEmpty else {
+        guard availableLenses.isEmpty || bundledLenses.isEmpty else {
             completion(allLenses, nil)
             return
         }

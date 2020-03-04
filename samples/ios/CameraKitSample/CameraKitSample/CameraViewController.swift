@@ -22,6 +22,11 @@ class CameraViewController: UIViewController {
     fileprivate let cameraKit = Session()
     fileprivate lazy var lensHolder = LensHolder(repository: cameraKit.lenses.repository)
     fileprivate var currentLens: Lens?
+    fileprivate lazy var reachability: Reachability? = {
+        let reachability = Reachability()
+        reachability?.delegate = self
+        return reachability
+    }()
 
     fileprivate let flipCameraButton: UIButton = {
         let button = UIButton(type: .custom)
@@ -92,6 +97,10 @@ extension CameraViewController {
 
             self.applyLens(lens)
             self.showMessage(lens: lens)
+
+            if error != nil {
+                self.reachability?.startListening()
+            }
         }
     }
 
@@ -280,4 +289,15 @@ extension CameraViewController {
         applyLens(currentLens)
     }
 
+}
+
+// MARK: Reachability
+
+extension CameraViewController: ReachabilityDelegate {
+    func reachability(_ reachability: Reachability, didUpdateStatus status: Reachability.Status) {
+        guard status == .connected else { return }
+
+        applyFirstLens()
+        reachability.stopListening()
+    }
 }
