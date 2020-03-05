@@ -34,7 +34,8 @@ import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.ById
 import com.snap.camerakit.lenses.apply
-import com.snap.camerakit.lenses.query
+import com.snap.camerakit.lenses.get
+import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.whenHasFirst
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
@@ -107,15 +108,20 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We keep the last applied Lens reference here in order to update the RecyclerView adapter
         // as well as to use it when determining the next or previous lens to switch to.
         val applyLens = { lens: LensesComponent.Lens ->
-            cameraKitSession.lenses.processor.apply(lens) { success ->
-                Log.d(TAG, "Apply lens [$lens] success: $success")
-                if (success) {
-                    appliedLensId = lens.id
-                    mainLayout.post {
-                        lensItemListAdapter.select(lens.toLensItem())
-                        Toast.makeText(
-                            this, "Applied lens : ${lens.name ?: lens.id}", Toast.LENGTH_SHORT
-                        ).show()
+            if (appliedLensId == lens.id) {
+                Log.d(TAG, "Lens with ID [${lens.id}] has been applied already, ignoring")
+                Unit
+            } else {
+                cameraKitSession.lenses.processor.apply(lens) { success ->
+                    Log.d(TAG, "Apply lens [$lens] success: $success")
+                    if (success) {
+                        appliedLensId = lens.id
+                        mainLayout.post {
+                            lensItemListAdapter.select(lens.toLensItem())
+                            Toast.makeText(
+                                this, "Applied lens : ${lens.name ?: lens.id}", Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 }
             }
@@ -124,7 +130,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
         // otherwise we apply the first one from the non-empty list.
         var availableLenses = emptyList<LensesComponent.Lens>()
-        cameraKitSession.lenses.repository.query(Available(*LENS_GROUPS)) { available ->
+        cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 availableLenses = lenses
@@ -168,7 +174,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We create a RecyclerView adapter that notifies when a lens item in the list is selected. Using the clicked
         // lens item ID we query for matching Lens in LensComponent and if one is found we submit a request to apply it.
         lensItemListAdapter = LensItemListAdapter { lensItem ->
-            cameraKitSession.lenses.repository.query(ById(lensItem.id, lensItem.groupId)) { result ->
+            cameraKitSession.lenses.repository.get(ById(lensItem.id, lensItem.groupId)) { result ->
                 result.whenHasFirst(applyLens)
             }
         }

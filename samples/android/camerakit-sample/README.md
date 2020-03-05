@@ -88,14 +88,13 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
         cameraKitSession = Sessions.newBuilder(this)
                 .attachTo(imageProcessorSource)
                 .attachTo(findViewById(R.id.camerakit_stub))
-                .configureLenses(Builder::useLensesFromAssets)
                 .build();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        cameraKitSession.getLenses().getRepository().query(Available.INSTANCE, available -> {
+        cameraKitSession.getLenses().getRepository().get(Available("1"), available -> {
             Log.d(TAG, "Available lenses: " + available);
             Lenses.whenHasFirst(available, lens -> cameraKitSession.getLenses().getProcessor().apply(lens, result -> {
                 Log.d(TAG,  "Apply lens [" + lens + "] success: " + result);
