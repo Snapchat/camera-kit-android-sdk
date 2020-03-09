@@ -12,6 +12,7 @@
 		0F16357B23F1E34D00DA79A0 /* ApplicationInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F16357A23F1E34D00DA79A0 /* ApplicationInfoTests.swift */; };
 		0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */; };
 		0F5C4A17240F141E0002FEC8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5C4A16240F141E0002FEC8 /* Reachability.swift */; };
+		0FA888552416B2FF0033B70B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED623D79DC500CFFA3F /* Assets.xcassets */; };
 		0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */; };
 		0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */; };
 		0FF07EF023D79DC500CFFA3F /* CameraKitSampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EEF23D79DC500CFFA3F /* CameraKitSampleUITests.swift */; };
@@ -303,6 +304,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0FA888552416B2FF0033B70B /* Assets.xcassets in Resources */,
 				0FF07F0223D7BFC100CFFA3F /* lenses in Resources */,
 				0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */,
 			);

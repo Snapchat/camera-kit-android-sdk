@@ -42,6 +42,12 @@ class CameraViewController: UIViewController {
         return view
     }()
 
+    fileprivate let cameraButton: CameraButton = {
+        let view = CameraButton()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
     fileprivate let messageView: MessageNotificationView = {
         let view = MessageNotificationView()
         view.alpha = 0.0
@@ -125,6 +131,7 @@ extension CameraViewController {
         setupPip()
         setupFlipCameraButton()
         setupCarousel()
+        setupCameraRing()
         setupMessageView()
         setupNotifications()
         promptForAccessIfNeeded {
@@ -225,6 +232,18 @@ extension CameraViewController: CarouselViewDelegate {
         let lens = lensHolder.allLenses[index]
         applyLens(lens)
         showMessage(lens: lens)
+    }
+}
+
+// MARK: Camera Ring
+
+extension CameraViewController: UIGestureRecognizerDelegate {
+    fileprivate func setupCameraRing() {
+        view.addSubview(cameraButton)
+        NSLayoutConstraint.activate([
+            cameraButton.centerYAnchor.constraint(equalTo: carouselView.centerYAnchor),
+            cameraButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
     }
 }
 
