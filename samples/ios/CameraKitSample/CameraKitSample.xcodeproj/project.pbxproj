@@ -10,13 +10,12 @@
 		0CAE665353D577C59F2F123C /* libPods-CameraKitSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3456462B9BE4A00F17BDA95 /* libPods-CameraKitSample.a */; };
 		0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F16357823F1E30900DA79A0 /* ApplicationInfo.swift */; };
 		0F16357B23F1E34D00DA79A0 /* ApplicationInfoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F16357A23F1E34D00DA79A0 /* ApplicationInfoTests.swift */; };
-		0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */; };
 		0F5C4A17240F141E0002FEC8 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F5C4A16240F141E0002FEC8 /* Reachability.swift */; };
 		0FA888552416B2FF0033B70B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED623D79DC500CFFA3F /* Assets.xcassets */; };
 		0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */; };
 		0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */; };
 		0FF07EF023D79DC500CFFA3F /* CameraKitSampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EEF23D79DC500CFFA3F /* CameraKitSampleUITests.swift */; };
-		0FF07EFE23D7BD8200CFFA3F /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EFD23D7BD8200CFFA3F /* CameraViewController.swift */; };
+		0FF07EFE23D7BD8200CFFA3F /* SampleCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EFD23D7BD8200CFFA3F /* SampleCameraViewController.swift */; };
 		0FF07F0223D7BFC100CFFA3F /* lenses in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07F0123D7BFC100CFFA3F /* lenses */; };
 		CE032A5F4F997EC82F5EA615 /* libPods-CameraKitSample-CameraKitSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4E38A2F7D5C68176B9A25459 /* libPods-CameraKitSample-CameraKitSampleTests.a */; };
 /* End PBXBuildFile section */
@@ -42,7 +41,6 @@
 		054357438A7F882D3517D734 /* Pods-CameraKitSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample.debug.xcconfig"; path = "Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample.debug.xcconfig"; sourceTree = "<group>"; };
 		0F16357823F1E30900DA79A0 /* ApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfo.swift; sourceTree = "<group>"; };
 		0F16357A23F1E34D00DA79A0 /* ApplicationInfoTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfoTests.swift; sourceTree = "<group>"; };
-		0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LensHolder.swift; sourceTree = "<group>"; };
 		0F5C4A16240F141E0002FEC8 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		0FF07ECA23D79DC400CFFA3F /* CameraKitSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraKitSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -54,7 +52,7 @@
 		0FF07EEB23D79DC500CFFA3F /* CameraKitSampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraKitSampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0FF07EEF23D79DC500CFFA3F /* CameraKitSampleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraKitSampleUITests.swift; sourceTree = "<group>"; };
 		0FF07EF123D79DC500CFFA3F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		0FF07EFD23D7BD8200CFFA3F /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		0FF07EFD23D7BD8200CFFA3F /* SampleCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SampleCameraViewController.swift; sourceTree = "<group>"; };
 		0FF07F0123D7BFC100CFFA3F /* lenses */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lenses; sourceTree = "<group>"; };
 		4E38A2F7D5C68176B9A25459 /* libPods-CameraKitSample-CameraKitSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CameraKitSample-CameraKitSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56373A691E2C25911E689638 /* Pods-CameraKitSample-CameraKitSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample-CameraKitSampleTests.release.xcconfig"; path = "Target Support Files/Pods-CameraKitSample-CameraKitSampleTests/Pods-CameraKitSample-CameraKitSampleTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -100,14 +98,6 @@
 			path = Application;
 			sourceTree = "<group>";
 		};
-		0F3EE03123DA7D38002BE1F0 /* Lens */ = {
-			isa = PBXGroup;
-			children = (
-				0F3EE03223DA7D4B002BE1F0 /* LensHolder.swift */,
-			);
-			path = Lens;
-			sourceTree = "<group>";
-		};
 		0F5C4A15240F12430002FEC8 /* Reachability */ = {
 			isa = PBXGroup;
 			children = (
@@ -142,10 +132,9 @@
 			isa = PBXGroup;
 			children = (
 				0F16357723F1E30900DA79A0 /* Application */,
-				0F3EE03123DA7D38002BE1F0 /* Lens */,
 				0F5C4A15240F12430002FEC8 /* Reachability */,
 				0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */,
-				0FF07EFD23D7BD8200CFFA3F /* CameraViewController.swift */,
+				0FF07EFD23D7BD8200CFFA3F /* SampleCameraViewController.swift */,
 				0FF07ED623D79DC500CFFA3F /* Assets.xcassets */,
 				0FF07F0123D7BFC100CFFA3F /* lenses */,
 				0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */,
@@ -449,8 +438,7 @@
 				0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */,
 				0F5C4A17240F141E0002FEC8 /* Reachability.swift in Sources */,
 				0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */,
-				0FF07EFE23D7BD8200CFFA3F /* CameraViewController.swift in Sources */,
-				0F3EE03323DA7D4B002BE1F0 /* LensHolder.swift in Sources */,
+				0FF07EFE23D7BD8200CFFA3F /* SampleCameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

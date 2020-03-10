@@ -28,6 +28,15 @@ class Reachability {
 
     private var isListening = false
 
+    var flags: SCNetworkReachabilityFlags? {
+        var flags = SCNetworkReachabilityFlags()
+        return SCNetworkReachabilityGetFlags(reachability, &flags) ? flags : nil
+    }
+
+    var status: Status {
+        return flags.map(Status.init) ?? .notConnected
+    }
+
     public convenience init?() {
         var zero = sockaddr()
         zero.sa_len = UInt8(MemoryLayout<sockaddr>.size)
