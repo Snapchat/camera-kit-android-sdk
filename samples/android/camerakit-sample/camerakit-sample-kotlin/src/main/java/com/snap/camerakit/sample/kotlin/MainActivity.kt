@@ -1,6 +1,7 @@
 package com.snap.camerakit.sample.kotlin
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -45,7 +46,7 @@ import kotlin.math.min
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
-private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
 private val LENS_GROUPS = arrayOf(
@@ -68,6 +69,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var appliedLensId: String? = null
     private var cameraFacingFront: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
+    private var availableLensesQuery = Closeable {}
+    private var videoRecording: Closeable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,7 +91,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // of things related to Android camera management. CameraX is one of many options to implement Source,
         // anything that can provide image frames through a SurfaceTexture can be used by CameraKit.
         imageProcessorSource = CameraXImageProcessorSource(
-            context = this, lifecycleOwner =  this
+            context = this, lifecycleOwner = this
         )
 
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
@@ -108,29 +111,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We keep the last applied Lens reference here in order to update the RecyclerView adapter
         // as well as to use it when determining the next or previous lens to switch to.
         val applyLens = { lens: LensesComponent.Lens ->
-            if (appliedLensId == lens.id) {
-                Log.d(TAG, "Lens with ID [${lens.id}] has been applied already, ignoring")
-                Unit
-            } else {
-                cameraKitSession.lenses.processor.apply(lens) { success ->
-                    Log.d(TAG, "Apply lens [$lens] success: $success")
-                    if (success) {
-                        appliedLensId = lens.id
-                        mainLayout.post {
-                            lensItemListAdapter.select(lens.toLensItem())
-                            Toast.makeText(
-                                this, "Applied lens : ${lens.name ?: lens.id}", Toast.LENGTH_SHORT
-                            ).show()
-                        }
+            cameraKitSession.lenses.processor.apply(lens) { success ->
+                Log.d(TAG, "Apply lens [$lens] success: $success")
+                if (success) {
+                    appliedLensId = lens.id
+                    mainLayout.post {
+                        lensItemListAdapter.select(lens.toLensItem())
+                        Toast.makeText(
+                            this, "Applied lens : ${lens.name ?: lens.id}", Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
         }
-        // Working with the CameraKit's lenses component we query for all lenses that are available. 
+        // Working with the CameraKit's lenses component we query for all lenses that are available.
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
         // otherwise we apply the first one from the non-empty list.
         var availableLenses = emptyList<LensesComponent.Lens>()
-        cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
+        availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 availableLenses = lenses
@@ -225,14 +223,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onDestroy() {
         miniPreviewOutput.close()
+        availableLensesQuery.close()
         cameraKitSession.close()
         super.onDestroy()
     }
 
     override fun onRequestPermissionsResult(
-            requestCode: Int,
-            permissions: Array<String>,
-            grantResults: IntArray
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
@@ -248,22 +247,54 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun onAllPermissionsGranted() {
         mainLayout.post {
             startPreviewForCurrentCameraFacing()
         }
+        val captureButton = mainLayout.findViewById<View>(R.id.capture_button)
+        val captureGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+
+            override fun onLongPress(e: MotionEvent) {
+                if (videoRecording == null) {
+                    videoRecording = imageProcessorSource.takeVideo { file ->
+                        shareVideoExternally(file)
+                    }
+                }
+            }
+
+            override fun onSingleTapUp(e: MotionEvent): Boolean {
+                imageProcessorSource.takeSnapshot { bitmap ->
+                    shareImageExternally(bitmap)
+                }
+                return true
+            }
+        })
+        captureButton.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
+                    videoRecording?.let {
+                        it.close()
+                    }
+                    videoRecording = null
+                }
+            }
+            captureGestureDetector.onTouchEvent(event)
+        }
+
         val flipCamera = {
             cameraFacingFront = !cameraFacingFront
             startPreviewForCurrentCameraFacing()
         }
-        val gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
-            override fun onDoubleTap(e: MotionEvent?): Boolean {
+        val previewGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+
+            override fun onDoubleTap(e: MotionEvent): Boolean {
                 flipCamera()
                 return true
             }
         })
         mainLayout.findViewById<View>(R.id.preview_gesture_handler).setOnTouchListener { _, event ->
-            gestureDetector.onTouchEvent(event)
+            previewGestureDetector.onTouchEvent(event)
             true
         }
         mainLayout.findViewById<AppCompatImageButton>(R.id.button_flip_camera).setOnClickListener {

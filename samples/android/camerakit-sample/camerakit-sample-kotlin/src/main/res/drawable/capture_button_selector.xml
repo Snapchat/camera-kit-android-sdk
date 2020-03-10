@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-selector
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/pressed"
+        android:drawable="@drawable/ic_capture_button_pressed"
+        android:state_pressed="true" />
+
+    <item
+        android:id="@+id/idle"
+        android:drawable="@drawable/ic_capture_button_idle" />
+
+    <transition
+        android:drawable="@drawable/capture_button_idle_pressed"
+        android:fromId="@id/idle"
+        android:toId="@id/pressed" />
+
+    <transition
+        android:drawable="@drawable/capture_button_pressed_idle"
+        android:fromId="@+id/pressed"
+        android:toId="@+id/idle" />
+
+</animated-selector>
