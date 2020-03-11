@@ -12,7 +12,8 @@
         android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="false">
+        android:fitsSystemWindows="false"
+        android:splitMotionEvents="true">
 
         <View
             android:id="@+id/preview_gesture_handler"
