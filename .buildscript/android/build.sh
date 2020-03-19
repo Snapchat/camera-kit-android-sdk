@@ -30,6 +30,9 @@ main() {
 
     pushd "${samples_android_root}/camerakit-sample"
 
+    ./gradlew clean
+    rm -rf maven/*
+
     local build_type_assemble_task_name="assemble"$(echo $build_type | awk '{ print toupper(substr($0, 1, 1)) substr($0, 2) }')""
     ./gradlew check "${build_type_assemble_task_name}"
 
