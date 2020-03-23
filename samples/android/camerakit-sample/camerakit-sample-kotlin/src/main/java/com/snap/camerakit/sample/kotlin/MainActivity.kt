@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.TextureView
 import android.view.View
@@ -19,13 +18,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.snap.camerakit.Session
 import com.snap.camerakit.configureLenses
 import com.snap.camerakit.connectOutput
@@ -33,16 +29,12 @@ import com.snap.camerakit.invoke
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
-import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.ById
 import com.snap.camerakit.lenses.apply
-import com.snap.camerakit.lenses.get
+import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.observe
-import com.snap.camerakit.lenses.whenHasFirst
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import java.io.Closeable
-import kotlin.math.max
-import kotlin.math.min
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
@@ -62,7 +54,6 @@ private val LENS_GROUPS = arrayOf(
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var mainLayout: ViewGroup
-    private lateinit var lensItemListAdapter: LensItemListAdapter
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var cameraKitSession: Session
 
@@ -105,6 +96,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // detection internally. If application needs to handle gestures on top of it then LensesComponent
                 // provides a way to dispatch all touch events unhandled by active lens back.
                 dispatchTouchEventsTo(mainLayout.findViewById(R.id.preview_gesture_handler))
+                // An optional configuration to enable lenses carousel view. If the provided [observedGroupIds]
+                // is not empty then the carousel will be visible and interactive otherwise it will simply
+                // be disabled to not consume any resources.
+                configureCarousel {
+                    observedGroupIds = LENS_GROUPS.toSet()
+                    heightDimenRes = R.dimen.lenses_carousel_height
+                    marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
+                }
             }
         }
 
@@ -115,70 +114,20 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 Log.d(TAG, "Apply lens [$lens] success: $success")
                 if (success) {
                     appliedLensId = lens.id
-                    mainLayout.post {
-                        lensItemListAdapter.select(lens.toLensItem())
-                        Toast.makeText(
-                            this, "Applied lens : ${lens.name ?: lens.id}", Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 }
             }
         }
         // Working with the CameraKit's lenses component we query for all lenses that are available.
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
         // otherwise we apply the first one from the non-empty list.
-        var availableLenses = emptyList<LensesComponent.Lens>()
         availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
-                availableLenses = lenses
                 appliedLensId?.let { id ->
                     lenses.find { it.id == id }?.let(applyLens)
                 } ?: lenses.first().let(applyLens)
-                mainLayout.post {
-                    lensItemListAdapter.submitList(lenses.toLensItems())
-                }
             }
         }
-
-        // Simple previous/next button binding that finds lens in availableLenses list and applies it.
-        val previousButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_previous)
-        val nextButton = mainLayout.findViewById<AppCompatImageButton>(R.id.button_next)
-        val lensButton = mainLayout.findViewById<AppCompatImageView>(R.id.button_lens)
-        previousButton.setOnClickListener {
-            val index = availableLenses.indexOfFirst { it.id == appliedLensId }
-            if (index != -1 && availableLenses.isNotEmpty()) {
-                val previousIndex = max(0, index - 1)
-                val previous = availableLenses[
-                        if (previousIndex == index) availableLenses.size - 1 else previousIndex
-                ]
-                applyLens(previous)
-            }
-        }
-        nextButton.setOnClickListener {
-            val index = availableLenses.indexOfFirst { it.id == appliedLensId }
-            if (index != -1 && availableLenses.isNotEmpty()) {
-                val nextIndex = min(availableLenses.size - 1, index + 1)
-                val next = availableLenses[
-                        if (nextIndex == index) 0 else nextIndex
-                ]
-                applyLens(next)
-            }
-        }
-        lensButton.setOnClickListener {
-            rootLayout.openDrawer(Gravity.LEFT)
-        }
-
-        // We create a RecyclerView adapter that notifies when a lens item in the list is selected. Using the clicked
-        // lens item ID we query for matching Lens in LensComponent and if one is found we submit a request to apply it.
-        lensItemListAdapter = LensItemListAdapter { lensItem ->
-            cameraKitSession.lenses.repository.get(ById(lensItem.id, lensItem.groupId)) { result ->
-                result.whenHasFirst(applyLens)
-            }
-        }
-        val availableLensesList = findViewById<RecyclerView>(R.id.available_lenses_list)
-        availableLensesList.adapter = lensItemListAdapter
-        availableLensesList.layoutManager = LinearLayoutManager(this)
 
         // While CameraKit is capable (and does) render camera preview into an internal view, this demonstrates how
         // to connect another TextureView as rendering output.

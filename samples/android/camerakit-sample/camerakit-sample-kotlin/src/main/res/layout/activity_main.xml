@@ -36,8 +36,8 @@
             android:layout_width="126dp"
             android:layout_height="224dp"
             android:layout_gravity="bottom|end"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/button_flip_camera"
@@ -50,44 +50,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_previous"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@drawable/button_background"
-            android:fitsSystemWindows="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/button_lens"
-            app:layout_constraintTop_toTopOf="@id/button_lens" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/button_lens"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginBottom="16dp"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/ic_lens_button_39"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@drawable/button_background"
-            android:fitsSystemWindows="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/ic_baseline_arrow_forward_24"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/button_lens"
-            app:layout_constraintTop_toTopOf="@id/button_lens" />
-
         <Button
             android:id="@+id/capture_button"
             android:layout_width="72dp"
@@ -95,7 +57,6 @@
             android:layout_marginBottom="16dp"
             android:layout_gravity="bottom|center"
             android:background="@drawable/capture_button_selector"
-            app:layout_constraintBottom_toTopOf="@id/button_lens"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -112,31 +73,6 @@
         android:background="@android:color/black"
         android:orientation="vertical"
         >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/available_lenses"
-                android:layout_marginTop="8dp"
-                android:padding="8dp"
-                android:layout_gravity="center_vertical|start"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/available_lenses_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="40dp"
-                android:requiresFadingEdge="vertical"
-                />
-
-        </LinearLayout>
 
         <TextView
             android:id="@+id/version_info"
