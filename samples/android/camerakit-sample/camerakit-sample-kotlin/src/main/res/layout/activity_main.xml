@@ -54,7 +54,7 @@
             android:id="@+id/capture_button"
             android:layout_width="72dp"
             android:layout_height="72dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="48dp"
             android:layout_gravity="bottom|center"
             android:background="@drawable/capture_button_selector"
             app:layout_constraintBottom_toBottomOf="parent"

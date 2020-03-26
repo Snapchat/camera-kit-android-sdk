@@ -100,9 +100,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // is not empty then the carousel will be visible and interactive otherwise it will simply
                 // be disabled to not consume any resources.
                 configureCarousel {
+                    activateIdle = true
                     observedGroupIds = LENS_GROUPS.toSet()
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
+                    closeButtonMarginBottomDimenRes = R.dimen.lenses_carousel_close_button_margin_bottom
                 }
             }
         }
@@ -118,14 +120,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             }
         }
         // Working with the CameraKit's lenses component we query for all lenses that are available.
-        // If we have an applied Lens ID saved previously we then try to find it in the list and apply it,
-        // otherwise we apply the first one from the non-empty list.
+        // If we have an applied Lens ID saved previously we then try to find it in the list and apply it.
         availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 appliedLensId?.let { id ->
                     lenses.find { it.id == id }?.let(applyLens)
-                } ?: lenses.first().let(applyLens)
+                }
             }
         }
 
