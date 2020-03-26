@@ -2,10 +2,19 @@
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="0.3.0"></a>
+## [0.3.0] - 2020-03-26
 ### Bug Fixes
+- **Android:**  Allow simultaneous touch handling while recording
+- **Android:**  Picture/video sharing does not work on Android 10
 - **Android:**  Notify lenses list change once network is available
 
 ### Features
+- **Android:**  Integrate provided lenses carousel
+- **Android:**  Add video/picture capture support
+- **iOS:**  Add sample UI and migrate CameraViewController to reference UI
+- **iOS:**  Add snap camera button
 - **iOS:**  Add Carousel
 
 

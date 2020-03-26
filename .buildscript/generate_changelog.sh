@@ -15,6 +15,12 @@ readonly repo_root="${script_dir}/.."
 readonly git_chglog_version="0.9.1"
 
 main() {
+    local next_tag=$1
+    if [[ -z "$next_tag" ]]; then
+        echo "--next_tag is required"
+        exit 1
+    fi
+
     downloadUrl="none"
     sha512sum="none"
     if [ "$(uname)" == "Darwin" ]
@@ -42,7 +48,23 @@ main() {
 
     chmod +x "${downloadPath}"
 
-    "${downloadPath}" -o "${repo_root}/CHANGELOG.md"
+    "${downloadPath}" --next-tag "${next_tag}" -o "${repo_root}/CHANGELOG.md"
 }
 
-main
+next_tag=""
+
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    -nt | --next-tag)
+        next_tag="$2"
+        shift
+        shift
+        ;;
+    *)
+        exit
+        ;;
+    esac
+done
+
+main "${next_tag}"
