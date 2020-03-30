@@ -51,6 +51,7 @@ dependencies {
     implementation "com.snap.camerakit:camerakit-kotlin:$cameraKitVersion"
     implementation "com.snap.camerakit:lenses-bundle-partner:$cameraKitVersion"
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
+    implementation "com.snap.camerakit:support-snap-button:$cameraKitVersion"
 
     testImplementation 'junit:junit:4.12'
 

@@ -34,6 +34,7 @@ import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
+import com.snap.camerakit.support.widget.SnapButtonView
 import java.io.Closeable
 
 private const val TAG = "MainActivity"
@@ -202,34 +203,38 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         mainLayout.post {
             startPreviewForCurrentCameraFacing()
         }
-        val captureButton = mainLayout.findViewById<View>(R.id.capture_button)
-        val captureGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
 
-            override fun onLongPress(e: MotionEvent) {
-                if (videoRecording == null) {
-                    videoRecording = imageProcessorSource.takeVideo { file ->
-                        shareVideoExternally(file)
+        // We use CameraKit provided SnapButtonView to implement a basic photo/video capture flow
+        // that is similar to Snapchat app - single tap to take photo, press & hold to record video.
+        mainLayout.findViewById<SnapButtonView>(R.id.capture_button).apply {
+            onCaptureRequestListener = object : SnapButtonView.OnCaptureRequestListener {
+
+                override fun onStart(captureType: SnapButtonView.CaptureType) {
+                    if (captureType == SnapButtonView.CaptureType.CONTINUOUS) {
+                        if (videoRecording == null) {
+                            videoRecording = imageProcessorSource.takeVideo { file ->
+                                shareVideoExternally(file)
+                            }
+                        }
+                    }
+                }
+
+                override fun onEnd(captureType: SnapButtonView.CaptureType) {
+                    when (captureType) {
+                        SnapButtonView.CaptureType.CONTINUOUS -> {
+                            videoRecording?.let {
+                                it.close()
+                            }
+                            videoRecording = null
+                        }
+                        SnapButtonView.CaptureType.SNAPSHOT -> {
+                            imageProcessorSource.takeSnapshot { bitmap ->
+                                shareImageExternally(bitmap)
+                            }
+                        }
                     }
                 }
             }
-
-            override fun onSingleTapUp(e: MotionEvent): Boolean {
-                imageProcessorSource.takeSnapshot { bitmap ->
-                    shareImageExternally(bitmap)
-                }
-                return true
-            }
-        })
-        captureButton.setOnTouchListener { _, event ->
-            when (event.action) {
-                MotionEvent.ACTION_CANCEL, MotionEvent.ACTION_UP -> {
-                    videoRecording?.let {
-                        it.close()
-                    }
-                    videoRecording = null
-                }
-            }
-            captureGestureDetector.onTouchEvent(event)
         }
 
         val flipCamera = {

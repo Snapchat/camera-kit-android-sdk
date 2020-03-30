@@ -50,17 +50,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Button
+        <com.snap.camerakit.support.widget.SnapButtonView
             android:id="@+id/capture_button"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginBottom="48dp"
-            android:layout_gravity="bottom|center"
-            android:background="@drawable/capture_button_selector"
+            android:padding="@dimen/capture_button_padding"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
+            app:strokeWidth="@dimen/capture_button_stroke_width"
+            app:strokeColor="@color/capture_button_idle"
+            app:strokeColorActivated="@color/capture_button_active"
+            app:progressDuration="10000"
+            app:expandDuration="250"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
