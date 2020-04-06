@@ -30,6 +30,7 @@ import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
 import com.snap.camerakit.lenses.apply
+import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.whenHasSome
@@ -106,6 +107,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
                     closeButtonMarginBottomDimenRes = R.dimen.lenses_carousel_close_button_margin_bottom
+                }
+                // Lens content resources are downloaded and managed by CameraKit internally, however it is possible
+                // to configure certain aspects such as cache size through the LensesComponent.Builder as seen below.
+                configureCache {
+                    lensContentMaxSize = 128 * 1024 * 1024 // 128MB
                 }
             }
         }
