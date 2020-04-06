@@ -14,7 +14,7 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
-readonly releases_commit="a99f23e03317d6a49d9b997b19cdacbe63735362"
+readonly releases_commit="83bb526155c9d907345fa2dc69e8a21c558e5d89"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
