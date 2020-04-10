@@ -10,6 +10,8 @@ In general, CameraKit attaches to your existing camera workflow. You are still r
 
 CameraKit requires a minimum of iOS 11, and a 64 bit processor. CameraKit will compile, but not run on a Simulator (due to lack of AVCaptureSession support).
 
+In order to test sharing to Snapchat, make sure you also add your Snap Kit client id `SCSDKClientId` in `Info.plist`
+
 ### Dependency Management
 
 CameraKit currently supports CocoaPods.

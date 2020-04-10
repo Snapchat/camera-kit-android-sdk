@@ -14,7 +14,7 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
-readonly releases_commit="8220e49f7fd1194c0dd7b41a590eb7d1f1f8da15"
+readonly releases_commit="ab819fcf952c5f576dc8edb754bed2f54844ef5c"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -29,8 +29,11 @@ main() {
     local version="$(sed -n 1p ${version_file})"
 
     pushd "${samples_ios_root}/CameraKitSample"
-    plutil -replace CFBundleShortVersionString -string "${version}" "CameraKitSample/Info.plist"
-    plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "CameraKitSample/Info.plist"
+
+    local sample_info_plist="CameraKitSample/Info.plist"
+    plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
+    plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "${sample_info_plist}"
+
     rm -rf xcarchive_path
     rm -rf camera-kit-ios-releases
     git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
@@ -66,6 +69,8 @@ main() {
             -exportPath ${ipa_dir} \
             -exportOptionsPlist ${export_options_plist}
     fi
+
+    plutil -replace SCSDKClientId -string "[Enter the OAuth2 client ID you get from the Snap Kit developer portal]" "${sample_info_plist}"
 
     if [[ -n "$eject_to" ]]; then
         cp -R "${samples_ios_root}/." "${eject_to}"
