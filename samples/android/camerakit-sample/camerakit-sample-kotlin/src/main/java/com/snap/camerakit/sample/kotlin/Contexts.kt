@@ -47,8 +47,10 @@ internal fun Context.shareVideoExternally(file: File) {
         }
         val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
         videoUri = contentResolver.insert(collection, values)?.also { uri ->
-            contentResolver.openOutputStream(uri)?.use {
-                file.inputStream().copyTo(it)
+            contentResolver.openOutputStream(uri)?.use { outputStream ->
+                file.inputStream().use { inputStream ->
+                    inputStream.copyTo(outputStream)
+                }
                 values.clear()
                 values.put(MediaStore.Video.Media.IS_PENDING, 1)
                 contentResolver.update(uri, values, null, null)
