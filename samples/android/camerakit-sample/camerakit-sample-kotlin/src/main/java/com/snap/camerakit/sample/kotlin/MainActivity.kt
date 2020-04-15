@@ -33,7 +33,9 @@ import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.observe
+import com.snap.camerakit.lenses.whenApplied
 import com.snap.camerakit.lenses.whenHasSome
+import com.snap.camerakit.lenses.whenIdle
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
 import java.io.Closeable
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var cameraFacingFront: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
+    private var lensesProcessorEvents = Closeable {}
     private var videoRecording: Closeable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -121,11 +124,33 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         val applyLens = { lens: LensesComponent.Lens ->
             cameraKitSession.lenses.processor.apply(lens) { success ->
                 Log.d(TAG, "Apply lens [$lens] success: $success")
-                if (success) {
-                    appliedLensId = lens.id
+            }
+        }
+
+        val lensAttribution = mainLayout.findViewById<TextView>(R.id.lens_attribution)
+        var skipLensesProcessorEvent = true
+        // This block demonstrates how to receive and react to lens lifecycle events. When Applied event is received
+        // we keep the ID of applied lens to persist and restore it via savedInstanceState later on.
+        lensesProcessorEvents = cameraKitSession.lenses.processor.observe { event ->
+            Log.d(TAG, "Observed lenses processor event: $event")
+            // First event emitted by lenses processor is always Idle, we skip to avoid overriding appliedLensId
+            // with null when it is persisted in savedInstanceState.
+            if (skipLensesProcessorEvent) {
+                skipLensesProcessorEvent = false
+            } else {
+                mainLayout.post {
+                    event.whenApplied {
+                        appliedLensId = it.lens.id
+                        lensAttribution.text = it.lens.name
+                    }
+                    event.whenIdle {
+                        appliedLensId = null
+                        lensAttribution.text = null
+                    }
                 }
             }
         }
+
         // Working with the CameraKit's lenses component we query for all lenses that are available.
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it.
         availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
@@ -181,6 +206,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     override fun onDestroy() {
         miniPreviewOutput.close()
         availableLensesQuery.close()
+        lensesProcessorEvents.close()
         cameraKitSession.close()
         super.onDestroy()
     }

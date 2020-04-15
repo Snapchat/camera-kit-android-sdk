@@ -13,7 +13,7 @@ allprojects {
             cameraKitDistributionCode = buildNumber.toInteger()
         }
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion-e06744e.89"
+        cameraKitVersion = "$cameraKitDistributionVersion-8ff827d.90"
     }
 
     buildscript {
