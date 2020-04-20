@@ -43,6 +43,7 @@ import java.io.Closeable
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+private val OPTIONAL_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO)
 private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
 private val LENS_GROUPS = arrayOf(
@@ -93,7 +94,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
         cameraKitSession = Session(this) {
-            attachTo(imageProcessorSource)
+            imageProcessorSource(imageProcessorSource)
             attachTo(cameraKitStub)
             configureLenses {
                 // When CameraKit is configured to manage its own views by providing a view stub (see above),
@@ -196,10 +197,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onResume() {
         super.onResume()
-        if (allPermissionsGranted()) {
-            onAllPermissionsGranted()
+        if (requiredPermissionsGranted()) {
+            onRequiredPermissionsGranted()
         } else {
-            ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS + OPTIONAL_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
         }
     }
 
@@ -217,21 +220,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         grantResults: IntArray
     ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (allPermissionsGranted()) {
-                onAllPermissionsGranted()
+            if (requiredPermissionsGranted()) {
+                onRequiredPermissionsGranted()
             } else {
-                Toast.makeText(this, "Permissions not granted by the user.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Required permissions not granted by the user.", Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
     }
 
-    private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
+    private fun requiredPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private fun onAllPermissionsGranted() {
+    private fun onRequiredPermissionsGranted() {
         mainLayout.post {
             startPreviewForCurrentCameraFacing()
         }
