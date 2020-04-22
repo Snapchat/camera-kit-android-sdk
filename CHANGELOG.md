@@ -3,6 +3,29 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="0.5.0"></a>
+## [0.5.0] - 0001-01-01
+
+<a name="0.4.0"></a>
+## [0.4.0] - 2020-04-22
+### Bug Fixes
+- **iOS:**  Original lens should be active on app opening
+- **iOS:**  First lens doesn't work on fresh install
+- **iOS:**  Carousel in landscape is not aligned
+- **iOS:**  Fix carousel ux: close button goes to empty lens
+
+### Features
+- **Android:**  Audio processing (analysis and effects) support
+- **Android:**  Use lens lifecycle events to update camera UI
+- **Android:**  Add support for internal cache configuration
+- **Android:**  Integrate SnapButtonView for photo/video capture
+- **iOS:**  Add processor observer
+- **iOS:**  Add share to Snapchat
+- **iOS:**  Capture and image preview support
+- **iOS:**  Add support for remote assets and unbundle tracking data
+- **iOS:**  Add sample video preview
+
+
 <a name="0.3.0"></a>
 ## [0.3.0] - 2020-03-30
 ### Bug Fixes
