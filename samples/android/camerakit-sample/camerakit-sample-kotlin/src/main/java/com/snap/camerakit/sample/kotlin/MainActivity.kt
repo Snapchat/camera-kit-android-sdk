@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.app.ActivityCompat
@@ -163,11 +164,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             }
         }
 
-        // While CameraKit is capable (and does) render camera preview into an internal view, this demonstrates how
-        // to connect another TextureView as rendering output.
-        val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
-        miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
-
         // Present basic app version information to make it easier for QA to report it.
         rootLayout.findViewById<TextView>(R.id.version_info).apply {
             val versionNameAndCode = getString(
@@ -183,6 +179,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     "Copied to clipboard: $versionNameAndCode",
                     Toast.LENGTH_LONG
                 ).show()
+            }
+        }
+
+        // While CameraKit is capable (and does) render camera preview into an internal view, this demonstrates how
+        // to connect another TextureView as rendering output.
+        val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
+        rootLayout.findViewById<ToggleButton>(R.id.mini_preview_toggle).apply {
+            setOnCheckedChangeListener { _, isChecked ->
+                miniPreviewOutput.close()
+                if (isChecked) {
+                    miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
+                } else {
+                    (miniPreview.parent as? ViewGroup)?.let { parent ->
+                        val index = parent.indexOfChild(miniPreview)
+                        parent.removeView(miniPreview)
+                        parent.addView(miniPreview, index)
+                    }
+                }
             }
         }
     }
