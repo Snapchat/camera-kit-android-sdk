@@ -185,18 +185,19 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // While CameraKit is capable (and does) render camera preview into an internal view, this demonstrates how
         // to connect another TextureView as rendering output.
         val miniPreview = mainLayout.findViewById<TextureView>(R.id.mini_preview)
+        val setupMiniPreview = { connectOutput: Boolean ->
+            miniPreviewOutput.close()
+            if (connectOutput) {
+                miniPreview.visibility = View.VISIBLE
+                miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
+            } else {
+                miniPreview.visibility = View.GONE
+            }
+        }
         rootLayout.findViewById<ToggleButton>(R.id.mini_preview_toggle).apply {
+            setupMiniPreview(isChecked)
             setOnCheckedChangeListener { _, isChecked ->
-                miniPreviewOutput.close()
-                if (isChecked) {
-                    miniPreviewOutput = cameraKitSession.processor.connectOutput(miniPreview)
-                } else {
-                    (miniPreview.parent as? ViewGroup)?.let { parent ->
-                        val index = parent.indexOfChild(miniPreview)
-                        parent.removeView(miniPreview)
-                        parent.addView(miniPreview, index)
-                    }
-                }
+                setupMiniPreview(isChecked)
             }
         }
     }

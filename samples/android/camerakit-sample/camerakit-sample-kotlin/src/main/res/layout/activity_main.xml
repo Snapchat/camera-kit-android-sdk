@@ -36,6 +36,7 @@
             android:layout_width="126dp"
             android:layout_height="224dp"
             android:layout_gravity="bottom|end"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
