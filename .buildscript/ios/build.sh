@@ -61,7 +61,7 @@ main() {
             -configuration Enterprise \
             -archivePath ${archive_path} \
             CODE_SIGN_IDENTITY='iPhone Distribution: Snapchat Inc' \
-            PROVISIONING_PROFILE='16227dfc-5923-4bda-9635-51354e0d861c' \
+            PROVISIONING_PROFILE='52a1349c-50fc-4331-b2eb-e22a02406389' \
             DEVELOPMENT_TEAM='RRXKNUJYAH'
 
         xcodebuild -exportArchive \
