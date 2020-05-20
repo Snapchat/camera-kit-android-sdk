@@ -41,7 +41,7 @@ main() {
         echo "Sanity check of ejected project build in: ${eject_to}"
         pushd "${eject_to}"
         ./gradlew assembleDebug
-        rm -rf ./**/build/**
+        rm -rf `find . -type d -name build`
         rm -rf .gradle
         popd
     fi
