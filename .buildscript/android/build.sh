@@ -38,6 +38,10 @@ main() {
 
     if [[ -n "$eject_to" ]]; then
         ./gradlew eject -PoutputDir="${eject_to}"
+        echo "Sanity check of ejected project build in: ${eject_to}"
+        pushd "${eject_to}"
+        ./gradlew assembleDebug
+        popd
     fi
 
     popd

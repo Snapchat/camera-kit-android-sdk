@@ -34,6 +34,9 @@ main() {
 
     local eject_dir=$(mktemp -d -t "camerakit-eject-XXXXXXXXXX")
 
+    # Copy VERSION file so that ejected builds can use it when running sanity checks
+    cp "${version_file}" "${eject_dir}/VERSION"
+
     local samples_eject_dir="${eject_dir}/samples"
     mkdir -p "${samples_eject_dir}"
     
