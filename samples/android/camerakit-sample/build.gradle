@@ -12,8 +12,11 @@ allprojects {
         if (buildNumber && buildNumber.isInteger()) {
             cameraKitDistributionCode = buildNumber.toInteger()
         }
+        cameraKitRemoteServiceGateway = System.getenv('CAMERAKIT_REMOTE_SERVICE_GATEWAY') ?: ''
+        cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
+        cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion-45dddc2.107"
+        cameraKitVersion = "$cameraKitDistributionVersion-6722694.108"
     }
 
     buildscript {

@@ -41,6 +41,7 @@ usage() {
 
 function appcenter_upload {
     local app_binary_path=$1
+    local release_notes_prefix=$2
 
     local upload_info=$(curl -X POST "${appcenter_api_path_apps_release_uploads}" -H "accept: application/json" -H "X-API-Token: ${appcenter_token}" -H "Content-Type: application/json")
     local upload_id=$(echo $upload_info | jq -r .upload_id)
@@ -50,7 +51,7 @@ function appcenter_upload {
     local update_status=$(curl -X PATCH -H "Content-Type: application/json" -H "accept: application/json" -H "X-API-Token: ${appcenter_token}" -d "{ \"status\": \"committed\"  }" "${appcenter_api_path_apps_release_uploads}/$upload_id")
     local release_url=$(echo $update_status | jq -r .release_url)
     local appcenter_release_id=$(echo $update_status | jq -r .release_id)
-    local release_notes="COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off ${branch} branch authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
+    local release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off ${branch} branch authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
 
     if [[ "${appcenter_enable_download}" -ne 0 ]];then
         IFS=' '  read -a groups <<< "${appcenter_distribution_group}"
@@ -68,12 +69,13 @@ function appcenter_upload {
 
 function appcenter_upload_wtih_retries {
     local app_binary_path=$1
+    local release_notes_prefix=$2
     local retry_count=0
     local appcenter_release_id
     while [[ $retry_count -lt 3 ]];
     do
         # 'true' is added to the next statement to override set -e
-        appcenter_release_id=$((appcenter_upload "${app_binary_path}") || true)
+        appcenter_release_id=$((appcenter_upload "${app_binary_path}" "${release_notes_prefix}") || true)
         if [[ ! -z "$appcenter_release_id" ]];
         then
             echo "$appcenter_release_id"
@@ -86,9 +88,10 @@ function appcenter_upload_wtih_retries {
 
 main() {
     local app_binary_path=$1
+    local release_notes_prefix=$2
     
     if [[ -n "$app_binary_path" ]]; then
-        appcenter_upload_wtih_retries "$app_binary_path"
+        appcenter_upload_wtih_retries "$app_binary_path" "$release_notes_prefix"
     else
         echo "No app binary path provided, exiting"
     fi
@@ -97,12 +100,18 @@ main() {
 }
 
 app_binary_path=""
+release_notes_prefix=""
 
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
     -a | --app-binary-path)
         app_binary_path="$2"
+        shift
+        shift
+        ;;
+    -rnp | --release-notes-prefix)
+        release_notes_prefix="$2"
         shift
         shift
         ;;
@@ -113,4 +122,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${app_binary_path}"
+main "${app_binary_path}" "${release_notes_prefix}"

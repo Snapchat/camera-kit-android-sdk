@@ -33,6 +33,9 @@ task copyCameraKitDependenciesToBundledRepo() {
     }
 }
 
+def stripTagStartPlainComment = '//internal>'
+def stripTagEndPlainComment = '//<internal'
+
 task eject(type: Copy) {
     dependsOn copyCameraKitDependenciesToBundledRepo
 
@@ -47,14 +50,31 @@ task eject(type: Copy) {
     exclude '**/*proguard-mapping*'
     exclude 'jarRepositories.xml'
     exclude '**/build/**'
+    exclude 'camerakit-sample-kotlin/src/staging/**'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")
     }
     doLast {
-        def fileToStrip = new File(outputDir, 'build.gradle')
-        def stripped = stripBlockWithin(fileToStrip.text)
-        fileToStrip.write(stripped)
+        def buildFilesToStrip = [
+            new Tuple3(
+                new File(outputDir, 'build.gradle'), 
+                stripTagStartPlainComment, 
+                stripTagEndPlainComment
+            ), 
+            new Tuple3(
+                new File(outputDir, 'camerakit-sample-kotlin/build.gradle'), 
+                stripTagStartPlainComment, 
+                stripTagEndPlainComment
+            )
+        ]
+        buildFilesToStrip.each { tuple -> 
+            def file = tuple.first
+            def startTag = tuple.second
+            def endTag = tuple.third
+            def stripped = stripBlockWithin(file.text, startTag, endTag)
+            file.write(stripped)
+        }
     }
 }
 
@@ -68,7 +88,7 @@ def static gitignoreToList(File file) {
     return ignores
 }
 
-def static stripBlockWithin(String text, String start = '//internal>', String end = '//<internal') {
+def static stripBlockWithin(String text, String start, String end) {
     def d1 = Pattern.quote(start)
     def d2 = Pattern.quote(end)
     def r = Pattern.compile("""(?s)$d1.*?$d2""")

@@ -14,7 +14,7 @@ readonly samples_android_root="${script_dir}/../../samples/android"
 readonly program_name=$0
 
 usage() {
-    echo "usage: ${program_name} [-e, --eject-to path] [-b, build-type]"
+    echo "usage: ${program_name} [-e, --eject-to path] [-b, --build-type]"
     echo "  -e, eject-to path [optional] specify filesystem path to eject publishable project sources to"
     echo "                    Default: none, build only, no sources are ejected"
     echo "  -b, build-type    [optional] specify Android application build type"

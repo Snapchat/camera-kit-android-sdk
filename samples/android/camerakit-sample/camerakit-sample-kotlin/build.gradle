@@ -5,13 +5,18 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.snap.camerakit.sample.kotlin"
+        applicationId 'com.snap.camerakit.sample.kotlin'
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode rootProject.cameraKitDistributionCode
-        versionName rootProject.cameraKitDistributionVersion
+        versionCode cameraKitDistributionCode
+        versionName cameraKitDistributionVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+            // NOTE: replace the value with ID specific to your application
+            'cameraKitApplicationId': 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
+        ]
 
     }
 
@@ -22,6 +27,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
+        //internal>
+        staging {
+            initWith release
+            applicationIdSuffix '.staging'
+            manifestPlaceholders = [
+                'cameraKitRemoteServiceGateway': cameraKitRemoteServiceGateway,
+                'cameraKitRemoteServiceAuthority': cameraKitRemoteServiceAuthority,
+                'cameraKitRemoteAccessToken': cameraKitRemoteAccessToken
+            ]
+        }
+        //<internal
     }
 
     compileOptions {
