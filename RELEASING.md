@@ -2,8 +2,8 @@
 
 CameraKit follows the process documented below to manage the release flow.
 
-- `${version}` - the current version, such as `0.3.0`.
-- `${version_next}` - the next version, such as `0.4.0`.
+- `${version}` - the current version.
+- `${version_next}` - the next version.
 
 *We continue bumping the `minor` version element until CameraKit is ready for general release - at this point the version should become `1.0.0` and follow a typical semantic versioning scheme.* 
 
@@ -53,6 +53,8 @@ CameraKit follows the process documented below to manage the release flow.
 
 - [ ] 22. Cool the above PR when CI is green - the initial release cycle is done. 
 
-    
 
 *Bug fixes to the `${version}` must be opened as PRs against the `release/${version}` branch.*
+
+___
+The above checklist can be generatated for specific release version using `.buildscript/generate_release_checklist.sh` script.
