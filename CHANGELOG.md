@@ -3,8 +3,14 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.0.0"></a>
+## [1.0.0] - 0001-01-01
+
 <a name="0.5.0"></a>
-## [0.5.0] - 0001-01-01
+## [0.5.0] - 2020-06-03
+### Bug Fixes
+- **Android:**  Remove 3rd-party R classes jars from the SDK binary
+
 
 <a name="0.4.0"></a>
 ## [0.4.0] - 2020-04-22
