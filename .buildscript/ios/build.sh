@@ -14,7 +14,7 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
-readonly releases_commit="d0a042d597ef26353250cfe94c2f34c6f07b681c"
+readonly releases_commit="89697d4f6e3bdc4c27fedea28c9252dad170d9d7"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -43,11 +43,13 @@ main() {
     rm -rf .git
     popd
 
+    bundle install --path gem-out
+
     sed -i '' 's;git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git;;g' camera-kit-ios-releases/CameraKit.podspec
     rm -f Podfile
     mv Podfile.ci Podfile
-    pod install
-    xcodebuild test \
+    bundle exec pod install
+    xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
         -sdk iphonesimulator \
@@ -75,6 +77,12 @@ main() {
     if [[ -n "$eject_to" ]]; then
         cp -R "${samples_ios_root}/." "${eject_to}"
     fi
+
+    ## cleanup CI gem artifacts
+    rm -f Gemfile
+    rm -f Gemfile.lock
+    rm -rf .bundle
+    rm -rf gem-out
 
     popd
     :
