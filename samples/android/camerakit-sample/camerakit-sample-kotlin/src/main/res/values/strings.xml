@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">CameraKit Sample</string>
     <string name="available_lenses">Available lenses</string>
+    <string name="prefetch_lenses" translatable="false">Prefetch lenses</string>
     <string name="version_info">v%s (%d)</string>
     <string name="mini_preview_off">Mini Preview OFF</string>
     <string name="mini_preview_on">Mini Preview ON</string>

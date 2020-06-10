@@ -14,6 +14,7 @@ import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -34,6 +35,7 @@ import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.observe
+import com.snap.camerakit.lenses.run
 import com.snap.camerakit.lenses.whenApplied
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
@@ -69,6 +71,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var availableLensesQuery = Closeable {}
     private var lensesProcessorEvents = Closeable {}
     private var videoRecording: Closeable? = null
+    private var lensesPrefetch: Closeable = Closeable {}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -200,6 +203,19 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 setupMiniPreview(isChecked)
             }
         }
+
+        rootLayout.findViewById<Button>(R.id.lenses_prefetch_button).setOnClickListener {
+            cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
+                available.whenHasSome { lenses ->
+                    // Cancel any running prefetch operation before submitting new one
+                    lensesPrefetch.close()
+                    // Prefetch available lenses content async
+                    lensesPrefetch = cameraKitSession.lenses.prefetcher.run(lenses) { success ->
+                        Log.d(TAG, "Finished prefetch of [${lenses.size}] lenses with success: $success")
+                    }
+                }
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -225,6 +241,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         miniPreviewOutput.close()
         availableLensesQuery.close()
         lensesProcessorEvents.close()
+        lensesPrefetch.close()
         cameraKitSession.close()
         super.onDestroy()
     }
