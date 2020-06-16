@@ -86,7 +86,7 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
         imageProcessorSource.startPreview(true /*cameraFacingFront*/);
 
         cameraKitSession = Sessions.newBuilder(this)
-                .attachTo(imageProcessorSource)
+                .imageProcessorSource(imageProcessorSource)
                 .attachTo(findViewById(R.id.camerakit_stub))
                 .build();
     }
@@ -94,7 +94,7 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
     @Override
     protected void onResume() {
         super.onResume();
-        cameraKitSession.getLenses().getRepository().get(Available("1"), available -> {
+        cameraKitSession.getLenses().getRepository().get(new Available("1"), available -> {
             Log.d(TAG, "Available lenses: " + available);
             Lenses.whenHasFirst(available, lens -> cameraKitSession.getLenses().getProcessor().apply(lens, result -> {
                 Log.d(TAG,  "Apply lens [" + lens + "] success: " + result);
