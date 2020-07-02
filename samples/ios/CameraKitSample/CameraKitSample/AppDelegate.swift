@@ -2,18 +2,24 @@
 //  CameraKitSample
 
 import UIKit
+import CameraKit
 import CameraKitReferenceUI
 import SCSDKCreativeKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
+
+    private enum Constants {
+        static let partnerGroupId = "5721207605297152"
+    }
+
     var window: UIWindow?
 
     let snapAPI = SCSDKSnapAPI()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let cameraViewController = CameraViewController()
+        let cameraViewController = CameraViewController(repoGroups: [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId])
         cameraViewController.snapchatDelegate = self
         window?.rootViewController = cameraViewController
         window?.makeKeyAndVisible()
