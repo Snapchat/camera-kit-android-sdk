@@ -51,7 +51,7 @@ private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
 private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle-partner artifact.
-    "1" // temporary lens group for testing
+    "5721207605297152" // temporary lens group for testing
 )
 
 /**
