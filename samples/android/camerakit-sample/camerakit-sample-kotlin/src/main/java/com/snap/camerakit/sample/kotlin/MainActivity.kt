@@ -34,6 +34,7 @@ import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Availa
 import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
+import com.snap.camerakit.lenses.configureHints
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.run
 import com.snap.camerakit.lenses.whenApplied
@@ -115,6 +116,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
                     closeButtonMarginBottomDimenRes = R.dimen.lenses_carousel_close_button_margin_bottom
+                }
+                // An optional configuration to enable lens hints view. When enabled, lens hints are shown using
+                // built-in view that is horizontally and vertically centered on top of camera preview. It is possible
+                // to provide a custom view that implements LensesComponent.Hints.View interface using this block.
+                configureHints {
+                    enabled = true
                 }
                 // Lens content resources are downloaded and managed by CameraKit internally, however it is possible
                 // to configure certain aspects such as cache size through the LensesComponent.Builder as seen below.
