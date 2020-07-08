@@ -3,8 +3,25 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.1.0"></a>
+## [1.1.0] - 0001-01-01
+
 <a name="1.0.0"></a>
-## [1.0.0] - 0001-01-01
+## [1.0.0] - 2020-07-08
+### Bug Fixes
+- **Android:**  Memory leaks caused by delayed operations
+- **Android:**  Handle/abort connection to invalid output surface
+
+### Features
+- **Android:**  Offline lens repository support
+- **Android:**  Add support for prefetching lenses content
+- **Android:**  Add support for lens hints
+- **Android:**  Expose Lens vendor data
+- **iOS:**  Expose vendor data
+- **iOS:**  Add lens prefetcher support
+- **iOS:**  Add support for ARKit
+- **iOS:**  Add support for localized hints
+
 
 <a name="0.5.0"></a>
 ## [0.5.0] - 2020-06-03

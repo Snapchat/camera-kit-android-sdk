@@ -1,12 +1,12 @@
 PODS:
-  - CameraKit (1.0.0)
-  - CameraKitReferenceUI (1.0.0):
+  - CameraKit (1.1.0)
+  - CameraKitReferenceUI (1.1.0):
     - CameraKit
   - SnapSDK/SCSDKCreativeKit (1.4.2)
 
 DEPENDENCIES:
-  - CameraKit (= 1.0.0)
-  - CameraKitReferenceUI (= 1.0.0)
+  - CameraKit (= 1.1.0)
+  - CameraKitReferenceUI (= 1.1.0)
   - SnapSDK/SCSDKCreativeKit (= 1.4.2)
 
 SPEC REPOS:
@@ -17,10 +17,10 @@ SPEC REPOS:
     - SnapSDK
 
 SPEC CHECKSUMS:
-  CameraKit: 9778384db6ce8ef6c8287e5ae67cf69c59aa6060
-  CameraKitReferenceUI: 9deae7c24b17c91939c808fe4d50a18be9f4331c
+  CameraKit: b6fe63b54173ba1523e74a8e1316aadadcc71768
+  CameraKitReferenceUI: 88fe909e22dd2bd31abdd26a5d5d61678ae098fb
   SnapSDK: 40335ae82ff55d578b8be38fa2b098b1e6471866
 
-PODFILE CHECKSUM: 60c3e6b86d9025bd886ca753da886313c6b5deaf
+PODFILE CHECKSUM: cc005980cbf797a2121a6baa33ac15c486eedf7b
 
 COCOAPODS: 1.9.1
