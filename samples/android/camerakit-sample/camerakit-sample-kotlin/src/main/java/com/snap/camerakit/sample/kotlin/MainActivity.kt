@@ -43,6 +43,7 @@ import com.snap.camerakit.lenses.whenIdle
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
 import java.io.Closeable
+import java.util.Date
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
@@ -96,10 +97,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             context = this, lifecycleOwner = this
         )
 
+        // Some content may request additional data such as user name to personalize lenses. Providing this data is
+        // optional, the MockUserProcessorSource class demonstrates a basic example to implement a source of the data.
+        val mockUserProcessorSource = MockUserProcessorSource(
+            userDisplayName = "Jane Doe",
+            userBirthDate = Date(136985835000L)
+        )
+
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
         cameraKitSession = Session(this) {
             imageProcessorSource(imageProcessorSource)
+            userProcessorSource(mockUserProcessorSource)
             attachTo(cameraKitStub)
             configureLenses {
                 // When CameraKit is configured to manage its own views by providing a view stub (see above),
