@@ -44,6 +44,7 @@ import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
 import java.io.Closeable
 import java.util.Date
+import java.util.concurrent.Executors
 
 private const val TAG = "MainActivity"
 private const val REQUEST_CODE_PERMISSIONS = 10
@@ -63,6 +64,7 @@ private val LENS_GROUPS = arrayOf(
  */
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
+    private val singleThreadExecutor = Executors.newSingleThreadExecutor()
     private lateinit var mainLayout: ViewGroup
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var cameraKitSession: Session
@@ -94,7 +96,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // of things related to Android camera management. CameraX is one of many options to implement Source,
         // anything that can provide image frames through a SurfaceTexture can be used by CameraKit.
         imageProcessorSource = CameraXImageProcessorSource(
-            context = this, lifecycleOwner = this
+            context = this,
+            lifecycleOwner = this,
+            executorService = singleThreadExecutor,
+            videoOutputDirectory = cacheDir
         )
 
         // Some content may request additional data such as user name to personalize lenses. Providing this data is
@@ -259,6 +264,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         lensesProcessorEvents.close()
         lensesPrefetch.close()
         cameraKitSession.close()
+        singleThreadExecutor.shutdown()
         super.onDestroy()
     }
 
@@ -296,7 +302,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     if (captureType == SnapButtonView.CaptureType.CONTINUOUS) {
                         if (videoRecording == null) {
                             videoRecording = imageProcessorSource.takeVideo { file ->
-                                shareVideoExternally(file)
+                                PreviewActivity.startUsing(this@MainActivity, mainLayout, file, MIME_TYPE_VIDEO_MP4)
                             }
                         }
                     }
@@ -312,7 +318,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                         }
                         SnapButtonView.CaptureType.SNAPSHOT -> {
                             imageProcessorSource.takeSnapshot { bitmap ->
-                                shareImageExternally(bitmap)
+                                PreviewActivity.startUsing(
+                                    this@MainActivity,
+                                    mainLayout,
+                                    this@MainActivity.cacheJpegOf(bitmap),
+                                    MIME_TYPE_IMAGE_JPEG
+                                )
                             }
                         }
                     }

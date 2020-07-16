@@ -5,6 +5,7 @@ allprojects {
         //<internal
         bundledMavenRepo = rootProject.file('maven')
         kotlinVersion = '1.3.61'
+        exoPlayerVersion = '2.11.7'
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
         //internal>
@@ -16,7 +17,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion-07b7c5f.2223"
+        cameraKitVersion = "$cameraKitDistributionVersion-2c2933b.2346"
     }
 
     buildscript {

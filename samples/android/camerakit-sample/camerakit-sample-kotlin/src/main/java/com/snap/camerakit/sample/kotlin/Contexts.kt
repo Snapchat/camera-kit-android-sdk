@@ -8,65 +8,89 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.MediaStore
 import java.io.File
 import java.util.UUID
 
-private const val MIME_TYPE_VIDEO_MP4 = "video/mp4"
-
 /**
- * Inserts the provided [bitmap] to media store of external images and opens a sharing intent to the result image URI.
+ * Shares the provided [uri] of expected video/image [mimeType] via an [Intent] with application chooser.
  */
-internal fun Context.shareImageExternally(bitmap: Bitmap, title: String = UUID.randomUUID().toString()) {
-    // Passing non-null title is necessary on Android 10 otherwise the following call will fail with:
-    // `Failed to build unique file: /storage/emulated/0/Pictures Image image/jpeg`.
-    val url = MediaStore.Images.Media.insertImage(contentResolver, bitmap, title, null)
-    if (url != null) {
-        val uri = Uri.parse(url)
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = "image/*"
-            putExtra(Intent.EXTRA_STREAM, uri)
-        }
-        startActivity(Intent.createChooser(intent, "Share image"))
+internal fun Context.shareExternally(uri: Uri, mimeType: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = mimeType
+        putExtra(Intent.EXTRA_STREAM, uri)
     }
+    val title = when (mimeType) {
+        MIME_TYPE_IMAGE_JPEG -> getString(R.string.share_image)
+        MIME_TYPE_VIDEO_MP4 -> getString(R.string.share_video)
+        else -> throw IllegalArgumentException("Unexpected media [$uri] with type [$mimeType]")
+    }
+    startActivity(Intent.createChooser(intent, title))
 }
 
 /**
- * Inserts the provided [file] to media store of external videos and opens a sharing intent to the result video URI.
+ * Attempts to insert the provided [file] of the specified [mimeType] to [MediaStore].
  */
-internal fun Context.shareVideoExternally(file: File) {
-    val videoUri: Uri?
+internal fun Context.tryInsertToMediaStore(file: File, mimeType: String): Uri? {
+    val insertedUri: Uri?
     val values = ContentValues().apply {
-        put(MediaStore.Video.Media.TITLE, file.name)
-        put(MediaStore.Video.Media.MIME_TYPE, MIME_TYPE_VIDEO_MP4)
+        put(MediaStore.MediaColumns.TITLE, file.name)
+        put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val relativePath = when (mimeType) {
+            MIME_TYPE_IMAGE_JPEG -> "${Environment.DIRECTORY_PICTURES}/CameraKit"
+            MIME_TYPE_VIDEO_MP4 -> "${Environment.DIRECTORY_MOVIES}/CameraKit"
+            else -> throw IllegalArgumentException(
+                "Cannot determine relative path for media [$file] with type [$mimeType]")
+        }
+        val collection = when (mimeType) {
+            MIME_TYPE_IMAGE_JPEG -> MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            MIME_TYPE_VIDEO_MP4 -> MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            else -> throw IllegalArgumentException(
+                "Cannot determine collection for media [$file] with type [$mimeType]")
+        }
         values.apply {
-            put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/CameraKit/")
-            put(MediaStore.Video.Media.IS_PENDING, 1)
+            put(MediaStore.MediaColumns.RELATIVE_PATH, relativePath)
+            put(MediaStore.MediaColumns.IS_PENDING, 1)
         }
-        val collection = MediaStore.Video.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-        videoUri = contentResolver.insert(collection, values)?.also { uri ->
-            contentResolver.openOutputStream(uri)?.use { outputStream ->
-                file.inputStream().use { inputStream ->
-                    inputStream.copyTo(outputStream)
-                }
-                values.clear()
-                values.put(MediaStore.Video.Media.IS_PENDING, 1)
-                contentResolver.update(uri, values, null, null)
-            }
-        }
+        insertedUri = contentResolver.insert(collection, values)
     } else {
         values.apply {
-            put(MediaStore.Video.Media.DATA, file.absolutePath)
+            put(MediaStore.MediaColumns.MIME_TYPE, mimeType)
         }
-        videoUri = contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
+        insertedUri = when (mimeType) {
+            MIME_TYPE_IMAGE_JPEG -> contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+            MIME_TYPE_VIDEO_MP4 -> contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, values)
+            else -> throw IllegalArgumentException("Cannot insert media [$file] with type [$mimeType]")
+        }
     }
-    if (videoUri != null) {
-        val intent = Intent(Intent.ACTION_SEND).apply {
-            type = MIME_TYPE_VIDEO_MP4
-            putExtra(Intent.EXTRA_STREAM, videoUri)
+    insertedUri?.also { uri ->
+        contentResolver.openOutputStream(uri)?.use { outputStream ->
+            file.inputStream().use { inputStream ->
+                inputStream.copyTo(outputStream)
+            }
+            values.clear()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                values.put(MediaStore.MediaColumns.IS_PENDING, 0)
+                contentResolver.update(uri, values, null, null)
+            } else {
+                sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri))
+            }
         }
-        startActivity(Intent.createChooser(intent, "Share video"))
+    }
+
+    return insertedUri
+}
+
+/**
+ * Saves the provided [bitmap] as a jpeg file to application's cache directory.
+ */
+internal fun Context.cacheJpegOf(bitmap: Bitmap): File {
+    return File(cacheDir, "${UUID.randomUUID()}.jpg").also {
+        it.outputStream().use { outputStream ->
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+        }
     }
 }

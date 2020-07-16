@@ -5,4 +5,8 @@
     <string name="version_info">v%s (%d)</string>
     <string name="mini_preview_off">Mini Preview OFF</string>
     <string name="mini_preview_on">Mini Preview ON</string>
+    <string name="share_video">Share video</string>
+    <string name="share_image">Share image</string>
+
+    <string name="transition_shared_dummy">transition_shared_dummy</string>
 </resources>
