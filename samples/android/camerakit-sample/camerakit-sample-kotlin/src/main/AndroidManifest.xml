@@ -28,6 +28,7 @@
             android:name=".PreviewActivity"
             android:theme="@style/AppTheme.Preview"
             android:launchMode="singleTask"
+            android:alwaysRetainTaskState="true"
             >
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW"/>
