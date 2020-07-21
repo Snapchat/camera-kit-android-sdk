@@ -4,7 +4,7 @@ allprojects {
         snapMavenUri = 'gcs://snapengine-maven-publish/releases'
         //<internal
         bundledMavenRepo = rootProject.file('maven')
-        kotlinVersion = '1.3.61'
+        kotlinVersion = '1.3.72'
         exoPlayerVersion = '2.11.7'
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
@@ -27,7 +27,7 @@ allprojects {
 
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.5.3'
+            classpath 'com.android.tools.build:gradle:4.0.1'
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         }
     }

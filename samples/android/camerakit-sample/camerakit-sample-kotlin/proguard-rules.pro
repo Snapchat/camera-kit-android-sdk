@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# TODO: remove once fixed in R8 version 2.1.52 R8
+# see: https://partnerissuetracker.corp.google.com/issues/160971124
+-keepclassmembers enum * {
+    <fields>; # Needed for reflectively looking up the values via getEnumConstants
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
