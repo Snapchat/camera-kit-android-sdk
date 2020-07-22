@@ -12,7 +12,7 @@ set -o xtrace
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 readonly program_name=$0
 readonly samples_android_root="${script_dir}/../../samples/android"
-readonly samples_android_kotlin_root="${samples_android_root}/camerakit-sample/camerakit-sample-kotlin"
+readonly samples_android_kotlin_root="${samples_android_root}/camerakit-sample/camerakit-sample-partner"
 
 usage() {
     echo "usage: ${program_name} [-b, --build-type]"
@@ -37,7 +37,7 @@ main() {
     ./build.sh -b "${build_type}"
     popd
 
-    local apk_path="${samples_android_kotlin_root}/build/outputs/apk/${build_type}/camerakit-sample-kotlin-${build_type}.apk"
+    local apk_path="${samples_android_kotlin_root}/build/outputs/apk/${build_type}/camerakit-sample-partner-${build_type}.apk"
     if [ -e "${apk_path}" ]
     then
         echo "Publishing apk: ${apk_path}"

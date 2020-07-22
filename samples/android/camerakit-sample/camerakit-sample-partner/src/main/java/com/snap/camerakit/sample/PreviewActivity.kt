@@ -1,4 +1,4 @@
-package com.snap.camerakit.sample.kotlin
+package com.snap.camerakit.sample
 
 import android.app.Activity
 import android.app.ActivityOptions

@@ -5,7 +5,7 @@ android {
     compileSdkVersion 29
 
     defaultConfig {
-        applicationId 'com.snap.camerakit.sample.kotlin'
+        applicationId 'com.snap.camerakit.sample.partner'
         minSdkVersion 21
         targetSdkVersion 29
         versionCode cameraKitDistributionCode

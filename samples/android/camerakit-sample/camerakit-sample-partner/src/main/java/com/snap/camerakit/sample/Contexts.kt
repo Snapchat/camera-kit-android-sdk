@@ -1,6 +1,6 @@
 @file:JvmName("Contexts")
 
-package com.snap.camerakit.sample.kotlin
+package com.snap.camerakit.sample
 
 import android.content.ContentValues
 import android.content.Context

@@ -50,7 +50,7 @@ task eject(type: Copy) {
     exclude '**/*proguard-mapping*'
     exclude 'jarRepositories.xml'
     exclude '**/build/**'
-    exclude 'camerakit-sample-kotlin/src/staging/**'
+    exclude 'camerakit-sample-partner/src/staging/**'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")
@@ -63,7 +63,7 @@ task eject(type: Copy) {
                 stripTagEndPlainComment
             ), 
             new Tuple3(
-                new File(outputDir, 'camerakit-sample-kotlin/build.gradle'), 
+                new File(outputDir, 'camerakit-sample-partner/build.gradle'), 
                 stripTagStartPlainComment, 
                 stripTagEndPlainComment
             )

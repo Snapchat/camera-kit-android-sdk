@@ -9,11 +9,11 @@ Demonstrates uses of CameraKit SDK on the Android platform. To get started with 
 
 ## Installation
 
-To build and install the `camerakit-sample-kotlin` to a connected phone:
+To build and install the `camerakit-sample-partner` to a connected phone:
 
 ### Command line
 
-`./gradlew camerakit-sample-kotlin:installDebug`
+`./gradlew camerakit-sample-partner:installDebug`
 
 ### IDE
 
@@ -21,7 +21,7 @@ Open the 'camerakit-sample' project in Android Studio by opening the root `build
 
 ![open-android-studio](.doc/open_android_studio.png)
 
-Select the `camerakit-sample-kotlin` module configuration and click run:
+Select the `camerakit-sample-partner` module configuration and click run:
 
 ![run-android-studio](.doc/run_android_studio.png)
 
@@ -49,7 +49,7 @@ android {
 }
 ``` 
 
-*For more information, see build configuration in `camerakit-sample-kotlin` [build.gradle](./camerakit-sample-kotlin/build.gradle).*
+*For more information, see build configuration in `camerakit-sample-partner` [build.gradle](./camerakit-sample-partner/build.gradle).*
 
 ### Components
 

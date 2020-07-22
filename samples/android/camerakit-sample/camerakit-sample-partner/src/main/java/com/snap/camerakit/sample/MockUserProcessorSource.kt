@@ -1,4 +1,4 @@
-package com.snap.camerakit.sample.kotlin
+package com.snap.camerakit.sample
 
 import com.snap.camerakit.Source
 import com.snap.camerakit.UserProcessor

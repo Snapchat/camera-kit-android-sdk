@@ -1,4 +1,4 @@
-package com.snap.camerakit.sample.kotlin
+package com.snap.camerakit.sample
 
 import android.Manifest
 import android.annotation.SuppressLint
