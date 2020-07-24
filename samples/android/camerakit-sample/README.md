@@ -9,15 +9,17 @@ Demonstrates uses of CameraKit SDK on the Android platform. To get started with 
 
 ## Installation
 
-To build and install the `camerakit-sample-partner` to a connected phone:
+To build, install and launch the `camerakit-sample-partner` on a connected device:
 
 ### Command line
 
-`./gradlew camerakit-sample-partner:installDebug`
+- `./gradlew camerakit-sample-partner:installDebug`
+
+- `adb shell am start -n com.snap.camerakit.sample.partner/com.snap.camerakit.sample.MainActivity`
 
 ### IDE
 
-Open the 'camerakit-sample' project in Android Studio by opening the root `build.gradle` file:
+Open the `camerakit-sample` project in Android Studio by opening the root `build.gradle` file:
 
 ![open-android-studio](.doc/open_android_studio.png)
 
@@ -29,7 +31,7 @@ Select the `camerakit-sample-partner` module configuration and click run:
 
 ### Build
 
-The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version and it is possible to pick and choose the dependencies necessary for a specific project:
+The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version and it is possible to pick and choose the dependencies necessary for your specific project:
 
 ```groovy
     implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
@@ -38,7 +40,36 @@ The current version of CameraKit SDK is not yet available on public Maven reposi
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
 ```
 
-CameraKit is built targeting Java8 bytecode which required to enable Java8 compatibility (desugar) support via Android Gradle Plugin (AGP) `compileOptions`:
+In order for CameraKit to be able to communicate with remote services to get content such as lenses, app needs to provide CameraKit its unique "application ID" which is associated with app's package name (Android application ID).  The easiest way to do this is to first define a manifest placeholder with CameraKit application ID value:
+
+```groovy
+android {
+    defaultConfig {
+        applicationId 'com.snap.camerakit.sample.partner'
+        manifestPlaceholders = [
+            // NOTE: replace the value with ID specific to your application
+            'cameraKitApplicationId': 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
+        ]
+    }
+}
+```
+
+Then, the placeholder can be used within the app's  [AndroidManifest.xml](./camerakit-sample-partner/src/main/AndroidManifest.xml):
+
+```xml
+<application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
+
+</application>
+```
+
+CameraKit is built targeting Java8 bytecode which requires enabling Java8 compatibility (desugar) support via Android Gradle Plugin (AGP) `compileOptions` for your app:
 
 ```groovy
 android {
@@ -47,17 +78,30 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-``` 
+```
 
 *For more information, see build configuration in `camerakit-sample-partner` [build.gradle](./camerakit-sample-partner/build.gradle).*
 
 ### Components
 
-The main point of entry to all CameraKit SDK features is the `Session` interface which can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. A simplified diagram of components that the `Session` is composed of can be seen below:
+The main point of entry to all CameraKit SDK features is the `Session` interface which can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. 
 
-![component_structure](.doc/component_structure.png)
+To obtain a new `Session`, use of one of the provided static or extension builder methods:
+
+```kotlin
+  cameraKitSession = Session(this) {// <- Lambda with Session.Builder as receiver 
+      
+      // Customize general functionality shared by all CameraKit components
+      
+      configureLenses {
+          // Customize functionality exposed by lenses
+      }
+  }
+```
 
 ### Lifecycle
+
+`Session` instance is typically shared within a single Android application, service or activity lifecycle scope as `Session` is costly in terms of memory and cpu resources it requires to operate. Once done with a `Session`, It is **essential** to dispose it using `Session#close` method which releases all the acquired resources in CameraKit safe manner. 
 
 The basic use of CameraKit and its lifecycle can be presented as:
 
@@ -65,7 +109,9 @@ The basic use of CameraKit and its lifecycle can be presented as:
 
 ### Implementation
 
-CameraKit's main target is Kotlin projects however the base `camerakit-partner` module does not depend or require Kotlin to function (Kotlin projects can use `camerakit-kotlin` for official extensions). The API CameraKit exposes is Java friendly. Here is an example of applying a lens with CameraKit in Java:
+The base `camerakit-partner` module is designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions. 
+
+Here is an example of applying a lens with CameraKit in Java:
 
 ```java
 public final class BasicActivity extends AppCompatActivity implements LifecycleOwner {
@@ -116,4 +162,4 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
         super.onDestroy();
     }
 }
-``` 
+```
