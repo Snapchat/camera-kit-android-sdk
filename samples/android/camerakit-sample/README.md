@@ -1,23 +1,41 @@
 # CameraKit Samples for Android
 
-Demonstrates uses of CameraKit SDK on the Android platform. To get started with building and testing, make sure that the following requirements are met:  
+Demonstrates uses of CameraKit SDK on the Android platform.
 
-## Requirements
+Table of contents
+=================
 
-- Recent Android Studio (3.5+), download latest at: https://developer.android.com/studio.
-- CameraKit is not supported to run in x86 based emulators therefore a real Android device, with a minimum SDK API level of 21, is required. 
+<!--ts-->
+   * [Installation](#installation)
+      * [Requirements](#requirements)
+      * [Build](#build)
+         * [Command Line](#command-line)
+         * [IDE](#ide)
+      * [Configuration](#configuration)
+      * [Proguard](#proguard)
+   * [Getting Started](#getting-started)
+      * [Lifecycle](#lifecycle)
+      * [Java or Kotlin?](#java-or-kotlin)
+<!--te-->
 
 ## Installation
 
+### Requirements
+
+- Recent Android Studio (3.5+), download latest at: https://developer.android.com/studio.
+- CameraKit is not supported to run in x86 based emulators therefore a real Android 5.0 device, with a minimum SDK API level of 21, is required.
+
+### Build
+
 To build, install and launch the `camerakit-sample-partner` on a connected device:
 
-### Command line
+#### Command Line
 
 - `./gradlew camerakit-sample-partner:installDebug`
 
 - `adb shell am start -n com.snap.camerakit.sample.partner/com.snap.camerakit.sample.MainActivity`
 
-### IDE
+#### IDE
 
 Open the `camerakit-sample` project in Android Studio by opening the root `build.gradle` file:
 
@@ -27,11 +45,9 @@ Select the `camerakit-sample-partner` module configuration and click run:
 
 ![run-android-studio](.doc/run_android_studio.png)
 
-## Explore
+### Configuration
 
-### Build
-
-The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version and it is possible to pick and choose the dependencies necessary for your specific project:
+The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version (see [CHANGELOG](../../../CHANGELOG.md) for a summary of changes in each release) and it is possible to pick and choose the dependencies necessary for your specific project:
 
 ```groovy
     implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
@@ -82,7 +98,11 @@ android {
 
 *For more information, see build configuration in `camerakit-sample-partner` [build.gradle](./camerakit-sample-partner/build.gradle).*
 
-### Components
+### Proguard
+
+The CameraKit SDK artifacts ship with consumer Proguard rules which cover all CameraKit specific cases without being too broad. CameraKit is tested against the R8 optimizer running in full mode, enabled in [gradle.properties](./gradle.properties).
+
+## Getting Started
 
 The main point of entry to all CameraKit SDK features is the `Session` interface which can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. 
 
@@ -107,7 +127,7 @@ The basic use of CameraKit and its lifecycle can be presented as:
 
 ![usage_lifecycle](.doc/usage_lifecycle.png)
 
-### Implementation
+### Java or Kotlin?
 
 The base `camerakit-partner` module is designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions. 
 
