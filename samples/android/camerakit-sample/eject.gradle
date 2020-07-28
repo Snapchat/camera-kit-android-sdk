@@ -51,6 +51,7 @@ task eject(type: Copy) {
     exclude 'jarRepositories.xml'
     exclude '**/build/**'
     exclude 'camerakit-sample-partner/src/staging/**'
+    exclude 'camerakit-sample-partner/src/androidTest/resources/META-INF/**'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")

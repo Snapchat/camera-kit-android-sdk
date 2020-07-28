@@ -54,7 +54,7 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/android"
-            ./build.sh -e "${platform_eject_dir}/camerakit-sample"
+            ./build.sh -e "${platform_eject_dir}/camerakit-sample" -k true -b release
             popd
             
             echo ""

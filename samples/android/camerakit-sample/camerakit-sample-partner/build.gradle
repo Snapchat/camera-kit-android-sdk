@@ -1,6 +1,16 @@
+//internal>
+buildscript {
+    dependencies {
+        //noinspection GradleDynamicVersion
+        classpath 'com.snap.karma:karma-gradle-plugin:0.11.0+24da176.100'
+    }
+}
+//<internal
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-
+//internal>
+apply plugin: 'com.snap.karma'
+//<internal
 android {
     compileSdkVersion 29
 
@@ -17,8 +27,9 @@ android {
             // NOTE: replace the value with ID specific to your application
             'cameraKitApplicationId': 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
         ]
-
     }
+
+    testBuildType = project.hasProperty('testBuildType') ? project.property('testBuildType') : 'debug'
 
     buildTypes {
         debug {}
@@ -75,5 +86,58 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
+//internal>
+def karmaServiceAccount = System.getenv('KARMA_SERVICE_ACCOUNT')
+        ?: 'gcloud auth list --filter=status:ACTIVE --format=value(account)'.execute().text.trim()
+def karmaDeviceName = System.getenv('KARMA_DEVICE_NAME') ?: 'dreamlte'
+def karmaDevicePool = System.getenv('KARMA_DEVICE_POOL') ?: 'SM-G950F-dreamlte-7'
+
+karma {
+    initiator karmaServiceAccount
+    serviceAccount = karmaServiceAccount
+    suites {
+        from(file('src/androidTest/resources/META-INF/ui-test-metadata-v2.json')) {
+            runner('spoon2') {
+                testApk = file("build/outputs/apk/androidTest/${android.testBuildType}/${project.name}-${android.testBuildType}-androidTest.apk")
+                apks += file("build/outputs/apk/${android.testBuildType}/${project.name}-${android.testBuildType}.apk")
+                recordVideo = true
+            }
+            device { testCase ->
+                name = karmaDeviceName
+                pool = karmaDevicePool
+            }
+        }
+    }
+}
+
+tasks.withType(com.snap.karma.KarmaTestTask).configureEach {
+    dependsOn(
+            "assemble${android.testBuildType.capitalize()}",
+            "assemble${android.testBuildType.capitalize()}AndroidTest"
+    )
+
+    doFirst {
+        if (karmaServiceAccount == null || karmaServiceAccount.isEmpty()) {
+            throw new GradleException(
+                    "To trigger tests on Karma, you need a service account or a dev account with an up-to-date Snap " +
+                            "personal access token which can be generated using command: `snapaccess credentials refresh`")
+        }
+    }
+
+    beforeTest { descriptor ->
+        logger.lifecycle("Karma test started: ${descriptor.karmaAcceptedTest}")
+    }
+
+    afterTest { descriptor, result ->
+        if (result.failedTestCount == 0L) {
+            logger.lifecycle("Karma test succeeded: ${descriptor.karmaAcceptedTest}")
+        } else {
+            logger.lifecycle("Karma test failed: ${descriptor.karmaAcceptedTest}")
+        }
+    }
+}
+//<internal

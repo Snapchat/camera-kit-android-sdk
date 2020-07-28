@@ -1,0 +1,38 @@
+{
+  "test-suites": {
+    "camerakit": {
+      "issue-tracker-key": "LOOK",
+      "contact-details-mention": [
+        {
+          "name": "Snapchat/camera-platform-android"
+        },
+        {
+          "name": "jokubas-dargis"
+        }
+      ],
+      "contact-details-email": [
+        {
+          "address": "jokubas@snap.com"
+        }
+      ],
+      "test-cases": [
+        {
+          "priority": 0,
+          "impact": 50,
+          "fully-qualified-name": "com.snap.camerakit.sample.MainActivityTest#launch_rotateScreen_noCrash",
+          "short-class-name": "MainActivityTest",
+          "full-class-name": "com.snap.camerakit.sample.MainActivityTest",
+          "method-name": "launch_rotateScreen_noCrash"
+        },
+        {
+          "priority": 0,
+          "impact": 50,
+          "fully-qualified-name": "com.snap.camerakit.sample.MainActivityTest#launch_switchCamera_noCrash",
+          "short-class-name": "MainActivityTest",
+          "full-class-name": "com.snap.camerakit.sample.MainActivityTest",
+          "method-name": "launch_switchCamera_noCrash"
+        }
+      ]
+    }
+  }
+}

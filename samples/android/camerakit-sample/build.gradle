@@ -22,6 +22,11 @@ allprojects {
 
     buildscript {
         repositories {
+            //internal>
+            maven {
+                url snapMavenUri
+            }
+            //<internal
             google()
             jcenter()
 
