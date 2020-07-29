@@ -35,6 +35,7 @@ import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.configureHints
+import com.snap.camerakit.lenses.invoke
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.run
 import com.snap.camerakit.lenses.whenApplied
@@ -148,7 +149,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We keep the last applied Lens reference here in order to update the RecyclerView adapter
         // as well as to use it when determining the next or previous lens to switch to.
         val applyLens = { lens: LensesComponent.Lens ->
-            cameraKitSession.lenses.processor.apply(lens) { success ->
+            // An example of how dynamic launch data can be used. Vendor specific metadata is added into LaunchData
+            // so it can be used by lens on launch.
+            val launchData = LensesComponent.Lens.LaunchData {
+                lens.vendorData.forEach { (key, value) -> putString(key, value) }
+            }
+            cameraKitSession.lenses.processor.apply(lens, launchData) { success ->
                 Log.d(TAG, "Apply lens [$lens] success: $success")
             }
         }
