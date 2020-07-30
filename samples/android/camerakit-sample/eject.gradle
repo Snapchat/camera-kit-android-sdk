@@ -23,6 +23,7 @@ task copyCameraKitDependenciesToBundledRepo() {
         modules.each { module ->
             project.exec {
                 commandLine 'gsutil',
+                        '-m',
                         'cp',
                         '-r',
                         "$baseUri/$module/$cameraKitVersion",
