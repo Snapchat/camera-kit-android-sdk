@@ -3,8 +3,19 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.2.0"></a>
+## [1.2.0] - 0001-01-01
+
 <a name="1.1.0"></a>
-## [1.1.0] - 0001-01-01
+## [1.1.0] - 2020-07-29
+### Features
+- **Android:**  Add support for dynamic lens launch data
+- **Android:**  Add ability to provide ImageProcessor.Output rotation
+- **Android:**  Add post capture preview screen
+- **Android:**  Add support to provide user data
+- **iOS:**  Add support for dynamic lens launch data
+- **iOS:**  Expose user data provider
+
 
 <a name="1.0.0"></a>
 ## [1.0.0] - 2020-07-08
