@@ -2,8 +2,8 @@
 //  CameraKitSample
 
 import UIKit
-import CameraKit
-import CameraKitReferenceUI
+import SCSDKCameraKit
+import SCSDKCameraKitReferenceUI
 import SCSDKCreativeKit
 
 @UIApplicationMain
