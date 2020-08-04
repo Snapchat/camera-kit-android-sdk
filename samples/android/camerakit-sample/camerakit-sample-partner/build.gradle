@@ -36,6 +36,9 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (testBuildType == 'release') {
+                proguardFiles += 'proguard-rules-instrumentation.pro'
+            }
             signingConfig signingConfigs.debug
         }
         //internal>
@@ -89,6 +92,7 @@ dependencies {
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
 }
 //internal>
 def karmaServiceAccount = System.getenv('KARMA_SERVICE_ACCOUNT')

@@ -31,6 +31,14 @@
           "short-class-name": "MainActivityTest",
           "full-class-name": "com.snap.camerakit.sample.MainActivityTest",
           "method-name": "launch_switchCamera_noCrash"
+        },
+        {
+          "priority": 0,
+          "impact": 50,
+          "fully-qualified-name": "com.snap.camerakit.sample.SessionTest#openSession_applyLens_outputBitmap",
+          "short-class-name": "SessionTest",
+          "full-class-name": "com.snap.camerakit.sample.SessionTest",
+          "method-name": "openSession_applyLens_outputBitmap"
         }
       ]
     }
