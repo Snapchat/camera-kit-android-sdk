@@ -84,6 +84,8 @@
             app:strokeColor="@color/capture_button_idle"
             app:strokeColorActivated="@color/capture_button_active"
             app:progressDuration="10000"
+            app:progressCycleRepeatCount="5"
+            app:progressCycleEndCapture="5"
             app:expandDuration="250"
             />
 
