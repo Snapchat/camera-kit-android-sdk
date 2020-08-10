@@ -23,7 +23,7 @@ Table of contents
 ### Requirements
 
 - Recent Android Studio (3.5+), download latest at: https://developer.android.com/studio.
-- CameraKit is not supported to run in x86 based emulators therefore a real Android 5.0 device, with a minimum SDK API level of 21, is required.
+- Android 5.0 device or emulator, with a minimum SDK API level of 21, is required.
 
 ### Build
 
