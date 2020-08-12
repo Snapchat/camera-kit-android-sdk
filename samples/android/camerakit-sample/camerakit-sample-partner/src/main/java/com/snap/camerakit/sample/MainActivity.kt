@@ -174,6 +174,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     event.whenApplied {
                         appliedLensId = it.lens.id
                         lensAttribution.text = it.lens.name
+                        // Reapply lens to pass LaunchData If vendor metadata isn't empty.
+                        if (it.lens.vendorData.isNotEmpty()) {
+                            applyLens(it.lens)
+                        }
                     }
                     event.whenIdle {
                         appliedLensId = null
