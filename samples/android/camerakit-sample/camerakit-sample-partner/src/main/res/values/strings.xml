@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">CameraKit Sample</string>
+    <string name="camera_kit_unsupported" translatable="false">CameraKit is not supported on this device</string>
+    <string name="required_permissions_not_granted" translatable="false">Required permissions not granted by the user</string>
     <string name="available_lenses">Available lenses</string>
     <string name="prefetch_lenses" translatable="false">Prefetch lenses</string>
     <string name="version_info">v%s (%d)</string>

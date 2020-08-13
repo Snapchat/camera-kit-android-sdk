@@ -43,6 +43,7 @@ import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
+import com.snap.camerakit.supported
 import java.io.Closeable
 import java.util.Date
 import java.util.concurrent.Executors
@@ -80,6 +81,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Use Sessions#supported method to check if CameraKit can run on a specific device.
+        // CameraKit requires certain hardware/OS features such as OpenGL ES 3.0 to be available,
+        // attempts to run CameraKit on an unsupported device may lead to undefined runtime behavior and exceptions.
+        if (!supported(this)) {
+            Toast.makeText(this, R.string.camera_kit_unsupported, Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         savedInstanceState?.let {
             appliedLensId = it.getString(BUNDLE_ARG_APPLIED_LENS_ID)
@@ -287,7 +297,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             if (requiredPermissionsGranted()) {
                 onRequiredPermissionsGranted()
             } else {
-                Toast.makeText(this, "Required permissions not granted by the user.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.required_permissions_not_granted, Toast.LENGTH_SHORT).show()
                 finish()
             }
         }
