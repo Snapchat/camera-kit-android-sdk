@@ -2,8 +2,8 @@ source "git@github.sc-corp.net:Snapchat/camera-kit-ios-pod-repo.git"
 source 'git@github.com:CocoaPods/Specs.git'
 
 target 'CameraKitSample' do
-	pod 'CameraKit', '1.2.0'
-	pod 'CameraKitReferenceUI', '1.2.0'
+	pod 'CameraKit', '1.3.0'
+	pod 'CameraKitReferenceUI', '1.3.0'
 	pod 'SnapSDK', '1.4.2', :subspecs => ['SCSDKCreativeKit']
 
 	target 'CameraKitSampleTests' do

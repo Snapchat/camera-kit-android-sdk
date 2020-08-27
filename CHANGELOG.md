@@ -3,8 +3,25 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.3.0"></a>
+## [1.3.0] - 0001-01-01
+
 <a name="1.2.0"></a>
-## [1.2.0] - 0001-01-01
+## [1.2.0] - 2020-08-27
+### Bug Fixes
+- **Android:**  Processed texture interpolation artifacts when resized
+- **Android:**  OpenGL out of memory crash
+- **Android:**  Lenses Processor apply callback not invoked
+
+### Features
+- **Android:**  Add instrumentation test helpers
+- **Android:**  Invalidate metadata cache on cold-start when network is available
+- **Android:**  Add ability to check if device is supported
+- **Android:**  Reapply lens with launch data if available
+- **Android:**  Add x86/x86_64 support
+- **Android:**  Progress cycle repeat parameters for SnapButtonView
+- **iOS:**  Invalidate metadata cache on cold-start when network is available
+
 
 <a name="1.1.0"></a>
 ## [1.1.0] - 2020-07-29

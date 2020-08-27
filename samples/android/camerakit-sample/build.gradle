@@ -17,7 +17,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion-001d88d.5461"
+        cameraKitVersion = "$cameraKitDistributionVersion-f4aebb5.5471"
     }
 
     buildscript {
