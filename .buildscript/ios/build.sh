@@ -48,7 +48,7 @@ main() {
     sed -i '' 's;git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git;;g' camera-kit-ios-releases/CameraKit.podspec
     rm -f Podfile
     mv Podfile.ci Podfile
-    bundle exec pod install
+    bundle exec pod install --repo-update
     xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
