@@ -4,7 +4,7 @@ source 'git@github.com:CocoaPods/Specs.git'
 target 'CameraKitSample' do
 	pod 'CameraKit', '1.3.0'
 	pod 'CameraKitReferenceUI', '1.3.0'
-	pod 'SnapSDK', '1.4.2', :subspecs => ['SCSDKCreativeKit']
+	pod 'SnapSDK', '1.6.4', :subspecs => ['SCSDKCreativeKit']
 
 	target 'CameraKitSampleTests' do
 		inherit! :search_paths

@@ -45,8 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
     private func sendSnapContent(_ content: SCSDKSnapContent, viewController: UIViewController) {
         viewController.view.isUserInteractionEnabled = false
-        snapAPI.startSending(content) { _ in
-            viewController.view.isUserInteractionEnabled = true
+        snapAPI.startSending(content) { error in
+            if let error = error {
+                print("Failed to send content to Snapchat with error: \(error.localizedDescription)")
+                return
+            }
+
+            DispatchQueue.main.async {
+                viewController.view.isUserInteractionEnabled = true
+            }
         }
     }
 }
