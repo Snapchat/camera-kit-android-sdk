@@ -1,3 +1,10 @@
 rootProject.name = 'camera-kit-sample-root'
 
+def include(String moduleName, String relativePath) {
+    include(moduleName)
+    project(moduleName).projectDir = new File(rootDir, relativePath)
+}
+
 include ':camerakit-sample-partner'
+include(':camerakit-sample-dynamic-app', 'camerakit-sample-dynamic/app')
+include(':camerakit_sample_dynamic_ondemand', 'camerakit-sample-dynamic/ondemand')

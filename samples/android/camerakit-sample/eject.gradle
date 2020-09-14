@@ -5,6 +5,7 @@ import java.util.regex.Pattern
 // worry about downloading artifacts from some protected repository.
 task copyCameraKitDependenciesToBundledRepo() {
     def modules = [
+            'camerakit-api',
             'camerakit-partner',
             'camerakit-kotlin',
             'lenses-bundle-partner',

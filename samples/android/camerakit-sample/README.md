@@ -1,4 +1,4 @@
-# CameraKit Samples for Android
+# CameraKit Android
 
 Demonstrates uses of CameraKit SDK on the Android platform.
 
@@ -6,44 +6,36 @@ Table of contents
 =================
 
 <!--ts-->
-   * [Installation](#installation)
-      * [Requirements](#requirements)
-      * [Build](#build)
-         * [Command Line](#command-line)
-         * [IDE](#ide)
-      * [Configuration](#configuration)
-      * [Proguard](#proguard)
    * [Getting Started](#getting-started)
+      * [Requirements](#requirements)
+      * [IDE](#ide)
+      * [Samples](#sample-apps)
+      * [Configuration](#configuration)
+   * [Usage](#usage)
       * [Lifecycle](#lifecycle)
       * [Java or Kotlin?](#java-or-kotlin)
+      * [Proguard](#proguard)
 <!--te-->
 
-## Installation
+## Getting Started
 
 ### Requirements
 
 - Recent Android Studio (3.5+), download latest at: https://developer.android.com/studio.
 - Android 5.0 device or emulator, with a minimum SDK API level of 21, is required.
 
-### Build
+### IDE
 
-To build, install and launch the `camerakit-sample-partner` on a connected device:
-
-#### Command Line
-
-- `./gradlew camerakit-sample-partner:installDebug`
-
-- `adb shell am start -n com.snap.camerakit.sample.partner/com.snap.camerakit.sample.MainActivity`
-
-#### IDE
-
-Open the `camerakit-sample` project in Android Studio by opening the root `build.gradle` file:
+Open the `camerakit-sample` project in Android Studio by opening the root [`build.gradle`](./build.gradle) file:
 
 ![open-android-studio](.doc/open_android_studio.png)
 
-Select the `camerakit-sample-partner` module configuration and click run:
+### Samples
 
-![run-android-studio](.doc/run_android_studio.png)
+This project includes several sample apps that demonstrate different approaches to integrating CameraKit SDK:
+
+- [`camerakit-sample-partner`](./camerakit-sample-partner) contains a fully functioning camera capture with lenses and preview flow.
+- [`camerakit-sample-dynamic-app`](./camerakit-sample-dynamic) contains a basic application that loads CameraKit SDK as a dynamic feature to display a list of available lenses.
 
 ### Configuration
 
@@ -98,11 +90,7 @@ android {
 
 *For more information, see build configuration in `camerakit-sample-partner` [build.gradle](./camerakit-sample-partner/build.gradle).*
 
-### Proguard
-
-The CameraKit SDK artifacts ship with consumer Proguard rules which cover all CameraKit specific cases without being too broad. CameraKit is tested against the R8 optimizer running in full mode, enabled in [gradle.properties](./gradle.properties).
-
-## Getting Started
+## Usage
 
 The main point of entry to all CameraKit SDK features is the `Session` interface which can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. 
 
@@ -129,7 +117,7 @@ The basic use of CameraKit and its lifecycle can be presented as:
 
 ### Java or Kotlin?
 
-The base `camerakit-partner` module is designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions. 
+The `camerakit-api` and the base `camerakit-partner` modules are designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions.
 
 Here is an example of applying a lens with CameraKit in Java:
 
@@ -183,3 +171,7 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
     }
 }
 ```
+
+### Proguard
+
+The CameraKit SDK artifacts ship with consumer Proguard rules which cover all CameraKit specific cases without being too broad. CameraKit is tested against the R8 optimizer running in full mode, enabled in [gradle.properties](./gradle.properties).

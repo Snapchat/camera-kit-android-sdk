@@ -6,8 +6,13 @@ allprojects {
         bundledMavenRepo = rootProject.file('maven')
         kotlinVersion = '1.3.72'
         exoPlayerVersion = '2.11.7'
+        appCompatVersion = '1.1.0'
+        recyclerViewVersion = '1.1.0'
+        glideVersion = '4.11.0'
+
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
+
         //internal>
         def buildNumber = System.getenv('BUILD_NUMBER')
         if (buildNumber && buildNumber.isInteger()) {
@@ -17,7 +22,11 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion-f4aebb5.5471"
+        cameraKitVersion = "$cameraKitDistributionVersion-5d64861.6536"
+        // NOTE: replace the value with ID specific to your application
+        cameraKitApplicationId = 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
+        // NOTE: replace the value with lenses group ID specific to your application
+        cameraKitLensesGroupId = '5685839489138688'
     }
 
     buildscript {
