@@ -109,16 +109,29 @@
                 android:id="@+id/mini_preview_toggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:paddingTop="8dp"
-                android:paddingBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_gravity="top|start"
+                android:padding="8dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textAllCaps="true"
                 android:textOff="@string/mini_preview_off"
                 android:textOn="@string/mini_preview_on"
+                />
+
+            <ToggleButton
+                android:id="@+id/capture_photo_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center_vertical|start"
+                android:padding="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textAllCaps="true"
+                android:textOff="@string/capture_photo_off"
+                android:textOn="@string/capture_photo_on"
                 />
 
             <Button

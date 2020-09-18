@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
@@ -73,6 +74,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private var appliedLensId: String? = null
     private var cameraFacingFront: Boolean = true
+    private var capturePhoto: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
     private var lensesProcessorEvents = Closeable {}
@@ -245,6 +247,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             }
         }
 
+        rootLayout.findViewById<ToggleButton>(R.id.capture_photo_toggle).apply {
+            capturePhoto = isChecked
+            setOnCheckedChangeListener { _, isChecked ->
+                capturePhoto = isChecked
+            }
+        }
+
         rootLayout.findViewById<Button>(R.id.lenses_prefetch_button).setOnClickListener {
             cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
                 available.whenHasSome { lenses ->
@@ -337,13 +346,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                             videoRecording = null
                         }
                         SnapButtonView.CaptureType.SNAPSHOT -> {
-                            imageProcessorSource.takeSnapshot { bitmap ->
+                            val onBitmapAvailable: (Bitmap) -> Unit = { bitmap ->
                                 PreviewActivity.startUsing(
                                     this@MainActivity,
                                     mainLayout,
                                     this@MainActivity.cacheJpegOf(bitmap),
                                     MIME_TYPE_IMAGE_JPEG
                                 )
+                            }
+                            // CameraKit supports processing photo capture images directly using
+                            // ImageProcessors.processBitmap/processImage extension that it is utilized in
+                            // CameraXImageProcessorSource.
+                            // It is recommended to use regular snapshot capture when low latency is more important
+                            // than result image quality, this sample allows to test both approaches using a toggle
+                            // button located in the debug drawer menu.
+                            if (capturePhoto) {
+                                imageProcessorSource.takePhoto(onBitmapAvailable)
+                            } else {
+                                imageProcessorSource.takeSnapshot(onBitmapAvailable)
                             }
                         }
                     }
