@@ -15,6 +15,7 @@ Table of contents
       * [Lifecycle](#lifecycle)
       * [Java or Kotlin?](#java-or-kotlin)
       * [Proguard](#proguard)
+   * [Troubleshooting](#troubleshooting)
 <!--te-->
 
 ## Getting Started
@@ -175,3 +176,21 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
 ### Proguard
 
 The CameraKit SDK artifacts ship with consumer Proguard rules which cover all CameraKit specific cases without being too broad. CameraKit is tested against the R8 optimizer running in full mode, enabled in [gradle.properties](./gradle.properties).
+
+## Troubleshooting
+
+The following is a list of common issues and suggestions on how to troubleshoot them when integrating CameraKit into your own app.
+
+### Camera preview is black
+
+- Check that your device is supported by CameraKit using `Sessions#supported` method. The minimum OpenGLES version that CameraKit supports is 3.0.
+- Check that a camera based `Source<ImageProcessor>` such as `CameraXImageProcessorSource` is provided to the `Session.Builder`. If you cannot provide an implementation of `Source<ImageProcessor>` then make sure to connect a `SurfaceTexture` based input to the current `Session.processor`.
+- If no `ViewStub` is provided to the `Session.Builder` then CameraKit does not attempt to render any views such as lenses carousel as well as camera preview. To see camera preview without any other CameraKit views, a `TextureView`, `SurfaceTexture` or `Surface` based output must be connected to the current `Session.processor`.
+- If a non-null `ViewStub` is provided to the `Session.Builder` check (using [Layout Inspector](https://developer.android.com/studio/debug/layout-inspector)) that the layout dimensions are more than 0 when the `ViewStub` gets inflated. The CameraKit's root view that gets inflated from the provided `ViewStub` inherits layout parameters set on the `ViewStub`, check that `match_parent` or other parameters are applicable to your layout.
+- Compare versions of dependencies of your app to the CameraKit sample apps. If dependency versions differ, for example the `camerakit-sample-partner` uses `androidx.constraintlayout:constraintlayout:1.1.3` while your app uses `androidx.constraintlayout:constraintlayout:2.0.0`, it is possible that code ported from CameraKit sample to your app may not work as expected.
+
+### Nothing works as expected
+
+- Attach debugger to your app, enable Java exception breakpoints and build a `Session` while checking that there are no unexpected exceptions with stacktraces related to CameraKit.
+- Attach debugger to your app, pause all threads and export their state into a text file - check that there are no deadlocked threads related to CameraKit.
+- Capture Android bug report with `adb bugreport` and send it to CameraKit developers for further investigation.
