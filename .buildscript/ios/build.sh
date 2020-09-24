@@ -14,7 +14,6 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
-readonly releases_commit="b7498a013827e72fd4dd8ccf20d5b3b96b485254"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -35,29 +34,18 @@ main() {
     plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "${sample_info_plist}"
 
     rm -rf xcarchive_path
-    rm -rf camera-kit-ios-releases
-    git clone git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git
 
-    pushd camera-kit-ios-releases
-    git checkout $releases_commit
-    rm -rf .git
-    popd
+    ./focus --skip-xcode
 
-    bundle install --path gem-out
-
-    sed -i '' 's;git@github.sc-corp.net:Snapchat/camera-kit-ios-releases.git;;g' camera-kit-ios-releases/CameraKit.podspec
-    rm -f Podfile
-    mv Podfile.ci Podfile
-    bundle exec pod install --repo-update
     xcodebuild clean test \
-        -workspace CameraKitSample.xcworkspace \
+        -project CameraKitSample.xcodeproj \
         -scheme CameraKitSample \
         -sdk iphonesimulator \
-        -destination 'platform=iOS Simulator,name=iPhone 8'
+        -destination 'platform=iOS Simulator,name=iPhone 11 Pro'
 
     if [[ -n "$ipa_dir" ]]; then
         xcodebuild archive \
-            -workspace CameraKitSample.xcworkspace \
+            -project CameraKitSample.xcodeproj \
             -scheme CameraKitSample \
             -sdk iphoneos \
             -configuration Enterprise \
@@ -79,10 +67,8 @@ main() {
     fi
 
     ## cleanup CI gem artifacts
-    rm -f Gemfile
-    rm -f Gemfile.lock
-    rm -rf .bundle
-    rm -rf gem-out
+    rm -f .build
+    rm -f focus
 
     popd
     :
