@@ -13,7 +13,13 @@ let package = Package(
             targets: [
                 "SCSDKCameraKitReferenceUI"
             ]
-        )
+        ),
+        .library(
+            name: "SCSDKCameraKit",
+            targets: [
+                "SCSDKCameraKit"
+            ]
+        ),
     ],
     dependencies: [],
     targets: [

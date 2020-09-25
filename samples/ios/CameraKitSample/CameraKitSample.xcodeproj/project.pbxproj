@@ -15,8 +15,7 @@
 		0F711704251A9C4F003EA17A /* SCSDKCreativeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F711701251A9C4F003EA17A /* SCSDKCreativeKit.framework */; };
 		0F711705251A9C4F003EA17A /* SCSDKCreativeKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0F711701251A9C4F003EA17A /* SCSDKCreativeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0F711724251AB76D003EA17A /* SCSDKCameraKitReferenceUI in Frameworks */ = {isa = PBXBuildFile; productRef = 0F711723251AB76D003EA17A /* SCSDKCameraKitReferenceUI */; };
-		0F711734251AB86F003EA17A /* SCSDKCameraKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0F711725251AB775003EA17A /* SCSDKCameraKit.xcframework */; };
-		0F71173D251AB87A003EA17A /* SCSDKCameraKit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0F711725251AB775003EA17A /* SCSDKCameraKit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		0F71182D251D9B15003EA17A /* SCSDKCameraKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0F71182C251D9B15003EA17A /* SCSDKCameraKit */; };
 		0FA888552416B2FF0033B70B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED623D79DC500CFFA3F /* Assets.xcassets */; };
 		0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */; };
 		0FF07EDA23D79DC500CFFA3F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07ED823D79DC500CFFA3F /* LaunchScreen.storyboard */; };
@@ -48,7 +47,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				0F71173D251AB87A003EA17A /* SCSDKCameraKit.xcframework in Embed Frameworks */,
 				0F711703251A9C4F003EA17A /* SCSDKCoreKit.framework in Embed Frameworks */,
 				0F711705251A9C4F003EA17A /* SCSDKCreativeKit.framework in Embed Frameworks */,
 			);
@@ -86,7 +84,7 @@
 				0F711702251A9C4F003EA17A /* SCSDKCoreKit.framework in Frameworks */,
 				0F711704251A9C4F003EA17A /* SCSDKCreativeKit.framework in Frameworks */,
 				0F711724251AB76D003EA17A /* SCSDKCameraKitReferenceUI in Frameworks */,
-				0F711734251AB86F003EA17A /* SCSDKCameraKit.xcframework in Frameworks */,
+				0F71182D251D9B15003EA17A /* SCSDKCameraKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +188,7 @@
 				0FF07EC723D79DC400CFFA3F /* Frameworks */,
 				0FF07EC823D79DC400CFFA3F /* Resources */,
 				0F711706251A9C4F003EA17A /* Embed Frameworks */,
+				0F71182E251D9B1E003EA17A /* Codesign frameworks */,
 			);
 			buildRules = (
 			);
@@ -198,6 +197,7 @@
 			name = CameraKitSample;
 			packageProductDependencies = (
 				0F711723251AB76D003EA17A /* SCSDKCameraKitReferenceUI */,
+				0F71182C251D9B15003EA17A /* SCSDKCameraKit */,
 			);
 			productName = CameraKitSample;
 			productReference = 0FF07ECA23D79DC400CFFA3F /* CameraKitSample.app */;
@@ -311,6 +311,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0F71182E251D9B1E003EA17A /* Codesign frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Codesign frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "for framework in $(find $CODESIGNING_FOLDER_PATH -name '*.framework'); do\n    codesign --force --deep --sign \"${EXPANDED_CODE_SIGN_IDENTITY}\" --preserve-metadata=identifier,entitlements --timestamp=none \"$framework\"\ndone\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0FF07EC623D79DC400CFFA3F /* Sources */ = {
@@ -788,6 +809,10 @@
 		0F711723251AB76D003EA17A /* SCSDKCameraKitReferenceUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SCSDKCameraKitReferenceUI;
+		};
+		0F71182C251D9B15003EA17A /* SCSDKCameraKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SCSDKCameraKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

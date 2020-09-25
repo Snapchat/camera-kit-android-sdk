@@ -37,11 +37,13 @@ main() {
 
     ./focus --skip-xcode
 
+    local sim_id=$(xcrun instruments -s devices | grep 'Simulator' | grep 'iPhone 11 Pro' | head -n 1 | grep -Eo '[A-Za-z0-9_]{8}-[A-Za-z0-9_]{4}-[A-Za-z0-9_]{4}-[A-Za-z0-9_]{4}-[A-Za-z0-9_]{12}')
+
     xcodebuild clean test \
         -project CameraKitSample.xcodeproj \
         -scheme CameraKitSample \
         -sdk iphonesimulator \
-        -destination 'platform=iOS Simulator,name=iPhone 11 Pro'
+        -destination "id=${sim_id}"
 
     if [[ -n "$ipa_dir" ]]; then
         xcodebuild archive \
