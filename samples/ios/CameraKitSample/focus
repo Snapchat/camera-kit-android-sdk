@@ -41,7 +41,7 @@ ck_fetch_latest() {
 ck_fetch_if_needed() {
 	if [[ -f "${ck_info_plist}" ]]; then
 		local ck_framework_version="$(plutil -extract CFBundleVersion xml1 -o - "${ck_info_plist}" | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
-		if [[ "${ck_framework_version}" != "${CAMERA_KIT_VERSION}" ]]; then
+		if [[ "${ck_framework_version}" != "${CAMERA_KIT_BUILD}" ]]; then
 			ck_fetch_latest
 		fi
 	else

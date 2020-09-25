@@ -3,8 +3,15 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.4.0"></a>
+## [1.4.0] - 2020-09-25
+
 <a name="1.3.0"></a>
-## [1.3.0] - 0001-01-01
+## [1.3.0] - 2020-09-25
+### Features
+- **Android:**  Support photo API captured image processing
+- **Android:**  Support dynamic feature loading
+
 
 <a name="1.2.0"></a>
 ## [1.2.0] - 2020-08-27
