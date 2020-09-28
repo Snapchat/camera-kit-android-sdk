@@ -1,6 +1,8 @@
+<img align="left" width="64" height="64" src=".doc/camerakit_icon.svg">
+
 # CameraKit
 
-![camerakit-splash](.doc/camerakit_splash.png)
+</br>
 
 Welcome to CameraKit partner distribution release ${version}. 
 
