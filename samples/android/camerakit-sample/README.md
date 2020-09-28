@@ -9,7 +9,7 @@ Table of contents
    * [Getting Started](#getting-started)
       * [Requirements](#requirements)
       * [IDE](#ide)
-      * [Samples](#sample-apps)
+      * [Samples](#samples)
       * [Configuration](#configuration)
    * [Usage](#usage)
       * [Lifecycle](#lifecycle)
