@@ -302,13 +302,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (requiredPermissionsGranted()) {
-                onRequiredPermissionsGranted()
-            } else {
-                Toast.makeText(this, R.string.required_permissions_not_granted, Toast.LENGTH_SHORT).show()
-                finish()
-            }
+        if (requestCode == REQUEST_CODE_PERMISSIONS && !requiredPermissionsGranted()) {
+            Toast.makeText(this, R.string.required_permissions_not_granted, Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 
