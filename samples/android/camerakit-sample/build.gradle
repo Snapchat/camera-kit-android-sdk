@@ -10,6 +10,10 @@ allprojects {
         recyclerViewVersion = '1.1.0'
         glideVersion = '4.11.0'
 
+        androidMinSdkVersion = 21
+        androidCompileSdkVersion = 29
+        androidTargetSdkVersion = androidCompileSdkVersion
+
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
 

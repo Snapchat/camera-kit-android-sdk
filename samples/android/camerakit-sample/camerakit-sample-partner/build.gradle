@@ -12,12 +12,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'com.snap.karma'
 //<internal
 android {
-    compileSdkVersion 29
+    compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
         applicationId 'com.snap.camerakit.sample.partner'
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionCode cameraKitDistributionCode
         versionName cameraKitDistributionVersion
 

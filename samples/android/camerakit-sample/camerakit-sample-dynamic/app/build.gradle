@@ -2,14 +2,15 @@ apply plugin: 'com.android.application'
 
 android {
     def cameraKitDynamicFeatureModule = 'camerakit_sample_dynamic_ondemand'
+    def cameraKitDynamicPluginApplicationId = 'com.snap.camerakit.sample.dynamic.plugin'
 
-    compileSdkVersion 29
+    compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
         applicationId 'com.snap.camerakit.sample.dynamic.app'
 
-        minSdkVersion 21
-        targetSdkVersion 29
+        minSdkVersion androidMinSdkVersion
+        targetSdkVersion androidTargetSdkVersion
         versionCode cameraKitDistributionCode
         versionName cameraKitDistributionVersion
 
@@ -21,6 +22,7 @@ android {
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
         buildConfigField 'String', "DYNAMIC_FEATURE_CAMERAKIT", "\"$cameraKitDynamicFeatureModule\""
+        buildConfigField 'String', "DYNAMIC_PLUGIN_CAMERAKIT", "\"$cameraKitDynamicPluginApplicationId\""
     }
 
     dynamicFeatures = [":$cameraKitDynamicFeatureModule".toString()]
@@ -58,7 +60,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerViewVersion"
     implementation 'com.google.android.play:core:1.8.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation "com.snap.camerakit:camerakit-api:$cameraKitVersion"
+    api project(':camerakit-sample-dynamic-api')
 
     binary 'com.android.tools.build:bundletool:1.2.0'
 }

@@ -27,10 +27,10 @@ import com.snap.camerakit.sample.dynamic.app.R;
 import static com.snap.camerakit.sample.dynamic.app.BuildConfig.LENS_GROUP_ID_TEST;
 
 /**
- * A simple activity that demonstrates loading CameraKit implementation library on demand as a dynamic feature
- * using Google Play's {@link SplitInstallManager}. When user clicks on "INSTALL CAMERAKIT" button we attempt to install
- * {@link CameraKitFeature} and, it it succeeds, a group lenses is requested and displayed in a list of items with
- * details such lens name, icon etc.
+ * A simple activity that demonstrates loading CameraKit implementation library on demand both as a plugin that lives in
+ * a separate apk installation as well as a dynamic feature using Google Play's {@link SplitInstallManager}.
+ * When user clicks on "INSTALL CAMERAKIT" button we attempt to install {@link CameraKitFeature} and, it it succeeds,
+ * a group lenses is requested and displayed in a list of items with details such lens name, icon etc.
  */
 public final class MainActivity extends AppCompatActivity {
 
@@ -72,8 +72,20 @@ public final class MainActivity extends AppCompatActivity {
     }
 
     private void tryInstallCameraKitFeature() {
-        if (splitInstallManager.getInstalledModules().contains(BuildConfig.DYNAMIC_FEATURE_CAMERAKIT)) {
-            onCameraKitFeatureInstalled();
+        // Attempt to get CameraKitFeature.Loader if plugin application is installed on the device, otherwise fallback
+        // to Google Play split module install approach.
+        CameraKitFeature.Loader loader =
+                CameraKitFeature.Loader.Factory.pathClassLoader(this, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT);
+        if (loader != null) {
+            Toast.makeText(
+                    this,
+                    getString(R.string.message_camerakit_load_plugin, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT),
+                    Toast.LENGTH_LONG)
+                    .show();
+            onCameraKitFeatureInstalled(loader);
+        } else if (splitInstallManager.getInstalledModules().contains(BuildConfig.DYNAMIC_FEATURE_CAMERAKIT)) {
+            Toast.makeText(this, R.string.message_camerakit_load_feature, Toast.LENGTH_LONG).show();
+            onCameraKitFeatureInstalled(CameraKitFeature.Loader.Factory.serviceLoader());
         } else if (installTask == null) {
             SplitInstallRequest installRequest = SplitInstallRequest
                     .newBuilder()
@@ -93,7 +105,8 @@ public final class MainActivity extends AppCompatActivity {
                     });
             splitInstallManager.registerListener(state -> {
                 if (state.status() == SplitInstallSessionStatus.INSTALLED) {
-                    onCameraKitFeatureInstalled();
+                    Toast.makeText(this, R.string.message_camerakit_load_feature, Toast.LENGTH_LONG).show();
+                    onCameraKitFeatureInstalled(CameraKitFeature.Loader.Factory.serviceLoader());
                 }
             });
         } else {
@@ -101,13 +114,13 @@ public final class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void onCameraKitFeatureInstalled() {
+    private void onCameraKitFeatureInstalled(CameraKitFeature.Loader loader) {
         if (cameraKitFeature != null) {
             Log.w(TAG, "CameraKit feature has been setup already");
             loadingIndicator.hide();
             installCameraKitButton.setVisibility(View.GONE);
         } else {
-            cameraKitFeature = CameraKitFeature.Loader.load();
+            cameraKitFeature = loader.load();
             if (cameraKitFeature.supported(getApplicationContext())) {
                 Session cameraKitSession = cameraKitFeature
                         .newSessionBuilder(getApplicationContext())

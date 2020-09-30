@@ -1,3 +1,4 @@
-# This interface is implemented in a feature module that is accessed reflectively
-# therefore its name/signature must be kept to void rewrites that are incompatible.
--keep public interface com.snap.camerakit.sample.CameraKitFeature { *; }
+# Keep all CameraKit classes that are loaded dynamically for a feature/plugin.
+-keep class com.snap.camerakit** { *; }
+# Repackage to avoid clashes with classes in CameraKit SDK.
+-repackageclasses 'com.snap.camerakit.sample'
