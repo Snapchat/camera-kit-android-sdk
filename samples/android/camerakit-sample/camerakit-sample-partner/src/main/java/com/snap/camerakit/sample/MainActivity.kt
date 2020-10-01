@@ -127,7 +127,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         cameraKitSession = Session(this) {
             imageProcessorSource(imageProcessorSource)
             userProcessorSource(mockUserProcessorSource)
-            attachTo(cameraKitStub)
+            // The provided ViewStub will be used to inflate CameraKit's Session view hierarchy to handle touch events
+            // as well as to render camera preview. In this example we set withPreview to true to have Session
+            // render the camera preview - this might not be suitable for other use cases that manage camera preview
+            // differently (SurfaceView, off-screen rendering) therefore it is possible to pass withPreview = false
+            // and attach camera preview output separately.
+            attachTo(cameraKitStub, withPreview = true)
             configureLenses {
                 // When CameraKit is configured to manage its own views by providing a view stub (see above),
                 // lenses touch handling might consume all events due to the fact that it needs to perform gesture
