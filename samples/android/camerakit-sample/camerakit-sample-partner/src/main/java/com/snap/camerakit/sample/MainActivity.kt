@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
@@ -376,15 +377,26 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             cameraFacingFront = !cameraFacingFront
             startPreviewForCurrentCameraFacing()
         }
-        val previewGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+        val flipGestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 flipCamera()
                 return true
             }
         })
+
+        val zoomGestureDetector = ScaleGestureDetector(
+                this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+
+            override fun onScale(detector: ScaleGestureDetector): Boolean {
+                imageProcessorSource.zoomBy(detector.scaleFactor)
+                return true
+            }
+        })
+
         mainLayout.findViewById<View>(R.id.preview_gesture_handler).setOnTouchListener { _, event ->
-            previewGestureDetector.onTouchEvent(event)
+            flipGestureDetector.onTouchEvent(event)
+            zoomGestureDetector.onTouchEvent(event)
             true
         }
         mainLayout.findViewById<AppCompatImageButton>(R.id.button_flip_camera).setOnClickListener {
