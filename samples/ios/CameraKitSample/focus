@@ -93,10 +93,12 @@ main() {
 	source ".build"
 
 	ck_fetch_if_needed
-	sk_fetch_if_needed
+
+	bundle install --path .gem-out
+	bundle exec pod install --repo-update
 
 	if [[ $skip_xcode == "0" ]]; then
-		open "CameraKitSample.xcodeproj"
+		open "CameraKitSample.xcworkspace"
 	fi
 	
 	popd

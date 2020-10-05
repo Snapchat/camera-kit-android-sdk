@@ -42,14 +42,14 @@ main() {
     sudo xcrun simctl erase all
 
     xcodebuild clean test \
-        -project CameraKitSample.xcodeproj \
+        -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
         -sdk iphonesimulator \
         -destination "platform=iOS Simulator,name=iPhone 11 Pro"
 
     if [[ -n "$ipa_dir" ]]; then
         xcodebuild archive \
-            -project CameraKitSample.xcodeproj \
+            -workspace CameraKitSample.xcworkspace \
             -scheme CameraKitSample \
             -sdk iphoneos \
             -configuration Enterprise \
@@ -71,6 +71,10 @@ main() {
     fi
 
     ## cleanup CI gem artifacts
+    rm -f Gemfile
+    rm -f Gemfile.lock
+    rm -rf .bundle
+    rm -rf gem-out
     rm -f .build
     rm -f focus
 

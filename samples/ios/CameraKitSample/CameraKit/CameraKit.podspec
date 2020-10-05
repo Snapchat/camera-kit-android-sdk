@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "CameraKit"
-  spec.version = "1.3.0"
+  spec.version = "1.4.0"
   spec.summary      = "A short description of CameraKit."
 
   # This description is used to generate tags and improve search results.
