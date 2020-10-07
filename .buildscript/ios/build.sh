@@ -66,10 +66,6 @@ main() {
 
     plutil -replace SCSDKClientId -string "[Enter the OAuth2 client ID you get from the Snap Kit developer portal]" "${sample_info_plist}"
 
-    if [[ -n "$eject_to" ]]; then
-        cp -R "${samples_ios_root}/." "${eject_to}"
-    fi
-
     ## cleanup CI gem artifacts
     rm -f Gemfile
     rm -f Gemfile.lock
@@ -77,6 +73,10 @@ main() {
     rm -rf gem-out
     rm -f .build
     rm -f focus
+
+    if [[ -n "$eject_to" ]]; then
+        cp -R "${samples_ios_root}/." "${eject_to}"
+    fi
 
     popd
     :
