@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -92,6 +93,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             Toast.makeText(this, R.string.camera_kit_unsupported, Toast.LENGTH_SHORT).show()
             finish()
             return
+        }
+
+        val metadata = packageManager.getActivityInfo(componentName, PackageManager.GET_META_DATA).metaData
+        val lockPortraitOrientation = metadata?.getBoolean(getString(R.string.lock_portrait_orientation)) ?: false
+
+        if (lockPortraitOrientation) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         savedInstanceState?.let {
