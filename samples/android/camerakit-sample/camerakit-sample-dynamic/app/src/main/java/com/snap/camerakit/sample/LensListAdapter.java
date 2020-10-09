@@ -1,5 +1,6 @@
 package com.snap.camerakit.sample;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -15,12 +18,35 @@ import com.snap.camerakit.sample.dynamic.app.R;
 
 import java.util.List;
 
-final class LensListAdapter extends RecyclerView.Adapter<LensListAdapter.ViewHolder> {
+final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAdapter.ViewHolder> {
 
-    private final List<LensesComponent.Lens> lenses;
+    interface Listener {
 
-    LensListAdapter(List<LensesComponent.Lens> lenses) {
-        this.lenses = lenses;
+        void onClicked(LensesComponent.Lens lens);
+    }
+
+    private static final DiffUtil.ItemCallback<LensesComponent.Lens> DIFF_CALLBACK =
+            new DiffUtil.ItemCallback<LensesComponent.Lens>() {
+                @Override
+                public boolean areItemsTheSame(
+                        @NonNull LensesComponent.Lens oldItem, @NonNull LensesComponent.Lens newItem) {
+                    return oldItem.getId().equals(newItem.getId());
+                }
+
+                @SuppressLint("DiffUtilEquals") // Lens model implements equals internally, safe to ignore.
+                @Override
+                public boolean areContentsTheSame(
+                        @NonNull LensesComponent.Lens oldItem, @NonNull LensesComponent.Lens newItem) {
+                    return oldItem.equals(newItem);
+                }
+            };
+
+    private final Listener listener;
+
+    LensListAdapter(List<LensesComponent.Lens> lenses, Listener listener) {
+        super(DIFF_CALLBACK);
+        submitList(lenses);
+        this.listener = listener;
     }
 
     @NonNull
@@ -31,15 +57,10 @@ final class LensListAdapter extends RecyclerView.Adapter<LensListAdapter.ViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(lenses.get(position));
+        holder.bind(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return lenses.size();
-    }
-
-    static final class ViewHolder extends RecyclerView.ViewHolder {
+    final class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private final TextView lensIdView;
         private final ImageView lensIconView;
@@ -50,12 +71,21 @@ final class LensListAdapter extends RecyclerView.Adapter<LensListAdapter.ViewHol
             lensIdView = itemView.findViewById(R.id.lens_id);
             lensIconView = itemView.findViewById(R.id.lens_icon);
             lensNameView = itemView.findViewById(R.id.lens_name);
+            itemView.setOnClickListener(this);
         }
 
         public void bind(LensesComponent.Lens lens) {
             lensIdView.setText(lens.getId());
             lensNameView.setText(lens.getName());
             Glide.with(itemView).load(lens.getIconUri()).into(lensIconView);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onClicked(getItem(position));
+            }
         }
     }
 }

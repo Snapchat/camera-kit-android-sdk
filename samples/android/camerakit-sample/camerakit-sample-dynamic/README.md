@@ -6,7 +6,7 @@ The sample [`app`](./app) uses two approaches to load CameraKit SDK through the 
 - As a [`plugin`](./plugin) that is installed as a separate apk on a device and loaded by looking up its application ID.
 - As an [`ondemand`](./ondemand) module installed using Google Play split apk / [app bundle](https://developer.android.com/guide/app-bundle) support.
 
-In this specific sample app, when user clicks on the **INSTALL CAMERAKIT** button, we first check if plugin application is installed otherwise we attempt install CameraKit SDK using Google Play's [`SplitInstallManager`](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager). If installing of the CameraKit SDK loading is successful, we then attempt to load it to present user with a list of available lenses:
+In this specific sample app, when user clicks on the **INSTALL CAMERAKIT** button, we first check if plugin application is installed otherwise we attempt install CameraKit SDK using Google Play's [`SplitInstallManager`](https://developer.android.com/reference/com/google/android/play/core/splitinstall/SplitInstallManager). If installing of the CameraKit SDK loading is successful, we then attempt to load it to present user with a list of available lenses that can can be clicked on to preview:
 
 ![demo](../.doc/sample_dynamic_demo.gif)
 

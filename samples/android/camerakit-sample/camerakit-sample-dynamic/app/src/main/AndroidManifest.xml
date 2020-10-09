@@ -15,7 +15,10 @@
 
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
 
-        <activity android:name="com.snap.camerakit.sample.MainActivity">
+        <activity
+            android:name="com.snap.camerakit.sample.MainActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
