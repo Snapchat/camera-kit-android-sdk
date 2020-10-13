@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -38,10 +39,13 @@ import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.configureHints
+import com.snap.camerakit.lenses.get
 import com.snap.camerakit.lenses.invoke
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.run
+import com.snap.camerakit.lenses.whenActivated
 import com.snap.camerakit.lenses.whenApplied
+import com.snap.camerakit.lenses.whenDeactivated
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
@@ -80,6 +84,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
     private var lensesProcessorEvents = Closeable {}
+    private var lensesCarouselEvents = Closeable {}
     private var videoRecording: Closeable? = null
     private var lensesPrefetch: Closeable = Closeable {}
 
@@ -153,6 +158,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // be disabled to not consume any resources.
                 configureCarousel {
                     activateIdle = true
+                    activateOnTap = true
+                    deactivateOnClose = true
                     observedGroupIds = LENS_GROUPS.toSet()
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
@@ -220,6 +227,34 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             available.whenHasSome { lenses ->
                 appliedLensId?.let { id ->
                     lenses.find { it.id == id }?.let(applyLens)
+                }
+            }
+        }
+
+        // It is possible to implement custom lenses carousel activation logic by interacting with carousel through
+        // the LensesComponent.Carousel interface which also allows to observe its state, useful to enable/disable
+        // custom UI elements such as the lens button below.
+        findViewById<ImageButton>(R.id.button_lens).let { lensButton ->
+            cameraKitSession.lenses.apply {
+                lensesCarouselEvents = carousel.observe { event ->
+                    Log.d(TAG, "Observed lenses carousel event: $event")
+                    mainLayout.post {
+                        event.whenActivated {
+                            lensButton.visibility = View.GONE
+                        }
+                        event.whenDeactivated {
+                            lensButton.visibility = View.VISIBLE
+                        }
+                    }
+                }
+                // When lens button is clicked on, we get the first available lens used to activate lenses carousel
+                // with: the lens appears selected and gets applied immediately.
+                lensButton.setOnClickListener {
+                    repository.get(Available(*LENS_GROUPS)) { available ->
+                        available.whenHasSome { lenses ->
+                            carousel.activate((lenses.first()))
+                        }
+                    }
                 }
             }
         }
@@ -305,6 +340,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         miniPreviewOutput.close()
         availableLensesQuery.close()
         lensesProcessorEvents.close()
+        lensesCarouselEvents.close()
         lensesPrefetch.close()
         cameraKitSession.close()
         singleThreadExecutor.shutdown()
