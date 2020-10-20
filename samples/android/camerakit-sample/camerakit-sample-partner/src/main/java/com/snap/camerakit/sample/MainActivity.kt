@@ -38,6 +38,7 @@ import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Availa
 import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
+import com.snap.camerakit.lenses.configureEachItem
 import com.snap.camerakit.lenses.configureHints
 import com.snap.camerakit.lenses.get
 import com.snap.camerakit.lenses.invoke
@@ -164,6 +165,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
                     closeButtonMarginBottomDimenRes = R.dimen.lenses_carousel_close_button_margin_bottom
+                    // A lambda passed to configureEachItem can be used to customize position or appearance of each
+                    // item in the lenses carousel.
+                    configureEachItem {
+                        if (lens.groupId == LENS_GROUP_ID_BUNDLED || index == 1) {
+                            moveToLeft()
+                        } else {
+                            moveToRight()
+                        }
+                    }
                 }
                 // An optional configuration to enable lens hints view. When enabled, lens hints are shown using
                 // built-in view that is horizontally and vertically centered on top of camera preview. It is possible
