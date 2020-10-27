@@ -37,10 +37,6 @@ main() {
 
     ./focus --skip-xcode
 
-    sudo xcrun simctl shutdown all
-    sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService
-    sudo xcrun simctl erase all
-
     xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
