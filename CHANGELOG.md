@@ -3,8 +3,71 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.5.0"></a>
+## [1.5.0] - 0001-01-01
+
 <a name="1.4.0"></a>
-## [1.4.0] - 2020-09-25
+## [1.4.0] - 2020-10-28
+### Bug Fixes
+- **Android:**  Missing lenses carousel center icon
+- **Android:**  Better portrait orientation support
+- **iOS:**  ARKit video is stretched
+- **iOS:**  Image hints are present in videos
+- **iOS:**  Some lenses won't download after the internet is back
+- **iOS:**  Bundled hints not localizing properly if host app doesn't support localization
+- **iOS:**  Recorded video frozen when returning from background
+
+### Features
+- **Android:**  Customize lenses carousel with custom item positions
+- **Android:**  Expose API to disable default camera preview rendering
+- **Android:**  Expose lens preview model
+- **Android:**  Use exposed lenses carousel API to implement lens button
+- **Android:**  Improve dynamic loading sample plugin example
+- **Android:**  Camera zoom support example
+- **iOS:**  Add LiDAR support
+- **iOS:**  Improve AVSessionInput camera performance
+- **iOS:**  Expose lens preview model
+
+
+<a name="1.3.5"></a>
+## [1.3.5] - 2020-10-20
+### Bug Fixes
+- **Android:**  Missing lenses carousel center icon
+
+### Features
+- **Android:**  Customize lenses carousel with custom item positions and activation flow
+
+
+<a name="1.3.4"></a>
+## [1.3.4] - 2020-10-15
+### Features
+- **Android:**  Expose lens preview model
+- **iOS:**  Expose lens preview model
+
+
+<a name="1.3.3"></a>
+## [1.3.3] - 2020-10-15
+### Bug Fixes
+- **Android:**  Crash when user app targets API level 30 on Android Q (11) devices
+
+
+<a name="1.3.2"></a>
+## [1.3.2] - 2020-10-15
+
+<a name="1.3.1"></a>
+## [1.3.1] - 2020-10-09
+### Bug Fixes
+- **Android:**  Better portrait orientation support
+- **Android:**  Crash after required permissions accepted
+- **iOS:**  Some lenses won't download after the internet is back
+- **iOS:**  Race condition sometimes when retrying requests due to no internet
+- **iOS:**  Requests sometime failing if app is open for too long
+
+### Features
+- **Android:**  Improve dynamic loading sample plugin example
+- **Android:**  Expose API to disable default camera preview rendering
+- **Android:**  Dynamic feature-as-a-plugin example
+
 
 <a name="1.3.0"></a>
 ## [1.3.0] - 2020-09-25
