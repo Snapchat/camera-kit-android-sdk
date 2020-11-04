@@ -58,12 +58,12 @@
 
     </FrameLayout>
 
-    <Button android:id="@+id/install_camerakit_button"
+    <Button android:id="@+id/start_camerakit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/button_camerakit_install"
+        android:text="@string/button_camerakit_start"
         android:textAllCaps="true"
         android:layout_gravity="center"
         />

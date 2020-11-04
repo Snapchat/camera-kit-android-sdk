@@ -22,6 +22,7 @@ import com.google.android.play.core.tasks.Task;
 import com.snap.camerakit.Session;
 import com.snap.camerakit.lenses.LensesComponent;
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available;
+import com.snap.camerakit.plugin.Plugin;
 import com.snap.camerakit.sample.dynamic.app.BuildConfig;
 import com.snap.camerakit.sample.dynamic.app.R;
 
@@ -36,7 +37,7 @@ import static com.snap.camerakit.sample.dynamic.app.BuildConfig.LENS_GROUP_ID_TE
 /**
  * A simple activity that demonstrates loading CameraKit implementation library on demand both as a plugin that lives in
  * a separate apk installation as well as a dynamic feature using Google Play's {@link SplitInstallManager}.
- * When user clicks on "INSTALL CAMERAKIT" button we attempt to install {@link CameraKitFeature} and, it it succeeds,
+ * When user clicks on "START CAMERAKIT" button we attempt to load {@link Plugin} and, it it succeeds,
  * a group lenses is requested and displayed in a list of items that can be clicked on to preview on a pre-recorded video.
  */
 public final class MainActivity extends AppCompatActivity {
@@ -46,12 +47,12 @@ public final class MainActivity extends AppCompatActivity {
 
     private SplitInstallManager splitInstallManager;
     private Task<Integer> installTask;
-    private CameraKitFeature cameraKitFeature;
+    private Plugin cameraKitPlugin;
     private Session cameraKitSession;
 
     private ContentLoadingProgressBar loadingIndicator;
     private RecyclerView lensesListView;
-    private Button installCameraKitButton;
+    private Button startCameraKitButton;
     private View lensesUnavailableView;
     private ViewStub cameraKitViewStub;
 
@@ -71,11 +72,11 @@ public final class MainActivity extends AppCompatActivity {
         itemDecoration.setDrawable(getDrawable(R.drawable.divider));
         lensesListView.addItemDecoration(itemDecoration);
 
-        installCameraKitButton = findViewById(R.id.install_camerakit_button);
-        installCameraKitButton.setOnClickListener(v -> {
+        startCameraKitButton = findViewById(R.id.start_camerakit_button);
+        startCameraKitButton.setOnClickListener(v -> {
             v.setEnabled(false);
             loadingIndicator.show();
-            tryInstallCameraKitFeature();
+            tryLoadCameraKitPlugin();
         });
 
         lensesUnavailableView = findViewById(R.id.lenses_unavailable);
@@ -90,22 +91,33 @@ public final class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    private void tryInstallCameraKitFeature() {
-        // Attempt to get CameraKitFeature.Loader if plugin application is installed on the device, otherwise fallback
-        // to Google Play split module install approach.
-        CameraKitFeature.Loader loader =
-                CameraKitFeature.Loader.Factory.pathClassLoader(this, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT);
-        if (loader != null) {
+    private void tryLoadCameraKitPlugin() {
+        final Plugin.Loader loader;
+        // If CameraKit Plugin is installed as a dynamic feature we attempt to load it first,
+        // otherwise we attempt to load Plugin from a separate apk.
+        if (splitInstallManager.getInstalledModules().contains(BuildConfig.DYNAMIC_FEATURE_CAMERAKIT)) {
+            loader = Plugin.Loader.from(this, Plugin.class.getClassLoader());
+        } else {
+            loader = Plugin.Loader.from(this, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT);
+        }
+        Plugin.Loader.Result loadResult = loader.load();
+        if (loadResult instanceof Plugin.Loader.Result.Failure) {
             Toast.makeText(
                     this,
-                    getString(R.string.message_camerakit_load_plugin, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT),
+                    getString(R.string.message_camerakit_start_failure,
+                            ((Plugin.Loader.Result.Failure) loadResult).getMessage()),
                     Toast.LENGTH_LONG)
                     .show();
-            onCameraKitFeatureInstalled(loader);
-        } else if (splitInstallManager.getInstalledModules().contains(BuildConfig.DYNAMIC_FEATURE_CAMERAKIT)) {
-            Toast.makeText(this, R.string.message_camerakit_load_feature, Toast.LENGTH_LONG).show();
-            onCameraKitFeatureInstalled(CameraKitFeature.Loader.Factory.serviceLoader(this));
-        } else if (installTask == null) {
+            // If Plugin loading fails we attempt to install it as a dynamic feature - successful install will
+            // call tryLoadCameraKitPlugin again.
+            tryInstallCameraKitPluginAsDynamicFeature();
+        } else if (loadResult instanceof Plugin.Loader.Result.Success) {
+            onCameraKitPluginLoaded(((Plugin.Loader.Result.Success) loadResult).getPlugin());
+        }
+    }
+
+    private void tryInstallCameraKitPluginAsDynamicFeature() {
+        if (installTask == null) {
             SplitInstallRequest installRequest = SplitInstallRequest
                     .newBuilder()
                     .addModule(BuildConfig.DYNAMIC_FEATURE_CAMERAKIT)
@@ -116,72 +128,65 @@ public final class MainActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Toast.makeText(
                                     this,
-                                    getString(R.string.message_camerakit_install_failure, e.getMessage()),
+                                    getString(R.string.message_camerakit_start_failure, e.getMessage()),
                                     Toast.LENGTH_LONG).show();
                             loadingIndicator.hide();
-                            installCameraKitButton.setEnabled(true);
+                            startCameraKitButton.setEnabled(true);
                         });
                     });
             splitInstallManager.registerListener(state -> {
                 if (state.status() == SplitInstallSessionStatus.INSTALLED) {
-                    Toast.makeText(this, R.string.message_camerakit_load_feature, Toast.LENGTH_LONG).show();
-                    onCameraKitFeatureInstalled(CameraKitFeature.Loader.Factory.serviceLoader(this));
+                    Toast.makeText(this, R.string.message_camerakit_load_feature, Toast.LENGTH_SHORT).show();
+                    tryLoadCameraKitPlugin();
                 }
             });
-        } else {
-            Log.w(TAG, "CameraKit feature install task may be running already");
         }
     }
 
-    private void onCameraKitFeatureInstalled(CameraKitFeature.Loader loader) {
-        if (cameraKitFeature != null) {
+    private void onCameraKitPluginLoaded(Plugin plugin) {
+        if (cameraKitPlugin != null) {
             Log.w(TAG, "CameraKit feature has been setup already");
             loadingIndicator.hide();
-            installCameraKitButton.setVisibility(View.GONE);
+            startCameraKitButton.setVisibility(View.GONE);
         } else {
-            cameraKitFeature = loader.load();
-            if (cameraKitFeature.supported()) {
-                File videoFile = new File(getCacheDir(), TEST_VIDEO_FILE_LENS_PREVIEW);
-                try (InputStream source = getClassLoader().getResourceAsStream(TEST_VIDEO_FILE_LENS_PREVIEW);
-                     OutputStream target = new FileOutputStream(videoFile)
-                ) {
-                    Streams.copy(source, target);
-                } catch (IOException e) {
-                    throw new RuntimeException("Failed to copy lens preview video", e);
-                }
+            cameraKitPlugin = plugin;
 
-                cameraKitSession = cameraKitFeature
-                        .newSessionBuilder()
-                        .imageProcessorSource(cameraKitFeature.sourceFrom(videoFile))
-                        .attachTo(cameraKitViewStub)
-                        .build();
-
-                cameraKitSession.getLenses().getRepository().get(new Available(LENS_GROUP_ID_TEST), result -> {
-                    Log.d(TAG, "Lenses query result: " + result);
-                    runOnUiThread(() -> {
-                        loadingIndicator.hide();
-                        installCameraKitButton.setVisibility(View.GONE);
-                        lensesUnavailableView.setVisibility(View.GONE);
-                        if (result instanceof LensesComponent.Repository.Result.Some) {
-                            LensListAdapter lensListAdapter = new LensListAdapter(
-                                    ((LensesComponent.Repository.Result.Some) result).getLenses(),
-                                    lens -> {
-                                        Log.d(TAG, "Clicked on: " + lens);
-                                        cameraKitSession.getLenses().getProcessor().apply(lens, success -> {
-                                            Log.d(TAG, "Applied lens [" + lens + "]: " + success);
-                                        });
-                                    });
-                            lensesListView.setAdapter(lensListAdapter);
-                        } else {
-                            lensesUnavailableView.setVisibility(View.VISIBLE);
-                        }
-                    });
-                });
-            } else {
-                Toast.makeText(this, R.string.message_camerakit_unsupported, Toast.LENGTH_SHORT).show();
-                loadingIndicator.hide();
-                installCameraKitButton.setVisibility(View.GONE);
+            File videoFile = new File(getCacheDir(), TEST_VIDEO_FILE_LENS_PREVIEW);
+            try (InputStream source = getClassLoader().getResourceAsStream(TEST_VIDEO_FILE_LENS_PREVIEW);
+                 OutputStream target = new FileOutputStream(videoFile)
+            ) {
+                Streams.copy(source, target);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to copy lens preview video", e);
             }
+
+            cameraKitSession = cameraKitPlugin
+                    .newSessionBuilder()
+                    .imageProcessorSource(cameraKitPlugin.imageProcessorSourceFrom(videoFile))
+                    .attachTo(cameraKitViewStub)
+                    .build();
+
+            cameraKitSession.getLenses().getRepository().get(new Available(LENS_GROUP_ID_TEST), result -> {
+                Log.d(TAG, "Lenses query result: " + result);
+                runOnUiThread(() -> {
+                    loadingIndicator.hide();
+                    startCameraKitButton.setVisibility(View.GONE);
+                    lensesUnavailableView.setVisibility(View.GONE);
+                    if (result instanceof LensesComponent.Repository.Result.Some) {
+                        LensListAdapter lensListAdapter = new LensListAdapter(
+                                ((LensesComponent.Repository.Result.Some) result).getLenses(),
+                                lens -> {
+                                    Log.d(TAG, "Clicked on: " + lens);
+                                    cameraKitSession.getLenses().getProcessor().apply(lens, success -> {
+                                        Log.d(TAG, "Applied lens [" + lens + "]: " + success);
+                                    });
+                                });
+                        lensesListView.setAdapter(lensListAdapter);
+                    } else {
+                        lensesUnavailableView.setVisibility(View.VISIBLE);
+                    }
+                });
+            });
         }
     }
 }

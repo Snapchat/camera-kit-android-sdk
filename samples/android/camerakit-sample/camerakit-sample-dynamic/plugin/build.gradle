@@ -36,6 +36,6 @@ android {
 }
 
 dependencies {
-    implementation project(':camerakit-sample-dynamic-api')
+    implementation "com.snap.camerakit:camerakit-plugin-api:$cameraKitVersion"
     implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
 }
