@@ -59,10 +59,10 @@ main() {
 
     local current_version_rev=""
     local current_version_build_number=""
-    if [[ $(cat "${samples_android_root_build}") =~ \"(\$cameraKitDistributionVersion)\-(.*?)\.([0-9]+)\" ]]
+    if [[ $(cat "${samples_android_root_build}") =~ \"(\$cameraKitDistributionVersion)(\+|\-)(.*?)\.([0-9]+)\" ]]
     then
-        current_version_rev="${BASH_REMATCH[2]}"
-        current_version_build_number="${BASH_REMATCH[3]}"
+        current_version_rev="${BASH_REMATCH[3]}"
+        current_version_build_number="${BASH_REMATCH[4]}"
     fi
 
     if [[ $version_name != $next_version_name ]]
@@ -126,7 +126,7 @@ main() {
             exit 1
         fi
 
-        local next_version_name="${version_name}-${next_version_rev}.${next_version_build_number}"
+        local next_version_name="${version_name}+${next_version_rev}.${next_version_build_number}"
         local update_title="[Build][Android] Update SDK to ${next_version_name}"
         local update_body="This updates Android SDK to \`${next_version_name}\` built in https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-android-publish/${next_version_build_number}"
 
@@ -142,12 +142,13 @@ main() {
            update_body="${update_body}"$'\n'"- ${commit_message}: ${commit_http_url}"
         done
 
-        echo "Updating current version ${version_name}-${current_version_rev}.${current_version_build_number} to ${next_version_name}-${next_version_rev}.${next_version_build_number} in ${samples_android_root_build}"
+        echo "Updating current version ${version_name}+${current_version_rev}.${current_version_build_number} to ${next_version_name}+${next_version_rev}.${next_version_build_number} in ${samples_android_root_build}"
 
         sed -i "s/${current_version_rev}.${current_version_build_number}/${next_version_rev}.${next_version_build_number}/g" "${samples_android_root_build}" 
 
         git add "${samples_android_root_build}"
         local branch="android-sdk-update/${next_version_name}"
+        local base_branch=$(git rev-parse --abbrev-ref HEAD)
         git checkout -B "${branch}"
 
         local update_commit_message="${update_title}
@@ -159,7 +160,7 @@ main() {
         then
             git push origin "${branch}"
 
-            local pr=$(create_pr_draft "${update_title}" "${branch}" "master" "${update_body}")
+            local pr=$(create_pr_draft "${update_title}" "${branch}" "${base_branch}" "${update_body}")
             local pr_html_url=$(echo "${pr}" | jq -r .html_url)
 
             echo "Created new PR at: ${pr_html_url}"
@@ -195,11 +196,11 @@ done
 
 if [[ -n "$next_version_name" ]]
 then
-    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9])+\-(.*?)\.([0-9]+) ]]
+    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9])+(\+|\-)(.*?)\.([0-9]+) ]]
     then
         next_version="${BASH_REMATCH[1]}"
-        next_version_rev="${BASH_REMATCH[2]}"
-        next_version_build_number="${BASH_REMATCH[3]}"
+        next_version_rev="${BASH_REMATCH[3]}"
+        next_version_build_number="${BASH_REMATCH[4]}"
 
         echo "Next version: ${next_version}, revision: ${next_version_rev}, build number: ${next_version_build_number}" 
 
