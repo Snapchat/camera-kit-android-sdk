@@ -23,16 +23,43 @@ task copyCameraKitDependenciesToBundledRepo() {
     }
     doLast {
         modules.each { module ->
+            // Google Cloud Storage treats + as space :/ therefore we need to convert it back to +
+            // upon downloading the files and directories.
+            def gcsCameraKitVersion = cameraKitVersion.replace('+', ' ')
+
+            def moduleDir = new File(baseOutputDir, module)
+            if (moduleDir.exists()) {
+                moduleDir.deleteDir()
+            }
+            if (!moduleDir.mkdirs()) {
+                throw new IOException(
+                        "Failed to create directory for artifact module in: $moduleDir")
+            }
+
             project.exec {
                 commandLine 'gsutil',
                         '-m',
                         'cp',
                         '-r',
-                        "$baseUri/$module/$cameraKitVersion",
-                        new File(baseOutputDir, module).absolutePath
+                        "$baseUri/$module/$gcsCameraKitVersion",
+                        moduleDir
             }
-        }
 
+            def moduleVersionDir = new File(moduleDir, gcsCameraKitVersion)
+            def filesToRename = new LinkedHashSet<File>()
+            moduleDir.eachFileRecurse { file ->
+                filesToRename.add(file)
+            }
+            // Rename all files first before renaming their directory.
+            filesToRename = filesToRename - moduleVersionDir
+            filesToRename.each { file ->
+                file.renameTo(new File(file.parentFile, file.name.replaceAll("\\s+", '+')))
+            }
+            moduleVersionDir.renameTo(new File(
+                    moduleVersionDir.parentFile,
+                    moduleVersionDir.name.replaceAll("\\s+", '+')
+            ))
+        }
     }
 }
 
