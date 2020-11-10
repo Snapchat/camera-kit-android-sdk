@@ -15,11 +15,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
     var window: UIWindow?
 
+    fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
+
     let snapAPI = SCSDKSnapAPI()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         let cameraViewController = CameraViewController(repoGroups: [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId])
+        cameraViewController.appOrientationDelegate = self
         cameraViewController.snapchatDelegate = self
         window?.rootViewController = cameraViewController
         window?.makeKeyAndVisible()
@@ -55,5 +58,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
             }
         }
     }
+
+    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
+        return supportedOrientations
+    }
+}
+
+// MARK: Helper Orientation Methods
+
+extension AppDelegate: AppOrientationDelegate {
+
+    func lockOrientation(_ orientation: UIInterfaceOrientationMask) {
+        supportedOrientations = orientation
+    }
+
+    func unlockOrientation() {
+        supportedOrientations = .allButUpsideDown
+    }
+
 }
 
