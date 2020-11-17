@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="com.google.android.play.core.splitcompat.SplitCompatApplication">
+        >
 
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
 

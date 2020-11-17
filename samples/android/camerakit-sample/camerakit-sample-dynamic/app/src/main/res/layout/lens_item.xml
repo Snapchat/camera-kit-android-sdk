@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="8dp"
+    android:background="@drawable/lens_item_selector"
     >
 
     <TextView

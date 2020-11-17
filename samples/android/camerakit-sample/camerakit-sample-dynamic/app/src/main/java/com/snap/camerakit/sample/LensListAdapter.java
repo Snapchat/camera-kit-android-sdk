@@ -42,6 +42,7 @@ final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAd
             };
 
     private final Listener listener;
+    private int selectedPosition = -1;
 
     LensListAdapter(List<LensesComponent.Lens> lenses, Listener listener) {
         super(DIFF_CALLBACK);
@@ -58,6 +59,7 @@ final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(getItem(position));
+        holder.itemView.setSelected(selectedPosition == position);
     }
 
     final class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -84,6 +86,8 @@ final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAd
         public void onClick(View v) {
             int position = getAdapterPosition();
             if (position != RecyclerView.NO_POSITION) {
+                selectedPosition = position;
+                notifyDataSetChanged();
                 listener.onClicked(getItem(position));
             }
         }

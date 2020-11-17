@@ -7,5 +7,4 @@ def include(String moduleName, String relativePath) {
 
 include ':camerakit-sample-partner'
 include(':camerakit-sample-dynamic-app', 'camerakit-sample-dynamic/app')
-include(':camerakit_sample_dynamic_ondemand', 'camerakit-sample-dynamic/ondemand')
 include(':camerakit-sample-dynamic-plugin', 'camerakit-sample-dynamic/plugin')
