@@ -37,6 +37,13 @@ main() {
 
     ./focus --skip-xcode
 
+    framework_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+
+    if [[ "$version" != "$framework_version" ]]; then
+        echo "Distribution version ${version} and iOS SDK version ${framework_version} are not equal; exiting..."
+        exit 1
+    fi
+
     xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
