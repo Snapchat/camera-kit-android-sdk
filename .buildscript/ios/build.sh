@@ -39,8 +39,22 @@ main() {
 
     framework_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
 
+    scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+
+    refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+
     if [[ "$version" != "$framework_version" ]]; then
         echo "Distribution version ${version} and iOS SDK version ${framework_version} are not equal; exiting..."
+        exit 1
+    fi
+
+    if [[ "$version" != "$scsdk_podspec_version" ]]; then
+        echo "Distribution version ${version} and iOS SDK version ${scsdk_podspec_version} are not equal; exiting..."
+        exit 1
+    fi
+
+    if [[ "$version" != "$refui_podspec_version" ]]; then
+        echo "Distribution version ${version} and iOS SDK version ${refui_podspec_version} are not equal; exiting..."
         exit 1
     fi
 
