@@ -23,6 +23,8 @@ import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static java.util.Collections.singletonList;
+
 /**
  * A simple activity that demonstrates loading CameraKit implementation library on demand as a plugin that lives in
  * a separate apk installation.
@@ -52,7 +54,11 @@ public final class MainActivity extends AppCompatActivity {
         startCameraKitButton = findViewById(R.id.start_camerakit_button);
         startCameraKitButton.setOnClickListener(v -> {
             v.setEnabled(false);
-            tryInstallCameraKit(Plugin.Loader.from(this, BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT));
+            tryInstallCameraKit(Plugin.Loader.from(
+                    this,
+                    BuildConfig.DYNAMIC_PLUGIN_CAMERAKIT,
+                    singletonList("BF7AF0D491B22B21F183226F838E9B91AC388E95E896CF8CAB6BBE51D6382298")
+            ));
         });
     }
 
