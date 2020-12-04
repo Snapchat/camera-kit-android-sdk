@@ -3,14 +3,40 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
-<a name="1.5.0"></a>
-## [1.5.0] - 0001-01-01
+<a name="1.6.0"></a>
+## [1.6.0] - 2020-12-03
 
-<a name="1.4.0"></a>
-## [1.4.0] - 2020-10-28
+<a name="1.5.0"></a>
+## [1.5.0] - 2020-12-03
 ### Bug Fixes
+- **Android:**  Dynamic Plugin class loading is not reliable
+- **iOS:**  CarouselView crashing sometimes when swiping
+
+### Features
+- **Android:**  Use externally published Plugin interface for dynamic loading
+- **iOS:**  Add first frame ready event to processor observer
+
+
+<a name="1.4.5"></a>
+## [1.4.5] - 2020-12-01
+
+<a name="1.4.4"></a>
+## [1.4.4] - 2020-11-20
+
+<a name="1.4.3"></a>
+## [1.4.3] - 2020-11-18
+
+<a name="1.4.2"></a>
+## [1.4.2] - 2020-11-17
+
+<a name="1.4.1"></a>
+## [1.4.1] - 2020-11-16
+### Bug Fixes
+- **Android:**  Dynamic Plugin class loading is not reliable
 - **Android:**  Missing lenses carousel center icon
 - **Android:**  Better portrait orientation support
+- **iOS:**  Lock orientation when recording
+- **iOS:**  Carousel sometimes resetting transform on reloading data
 - **iOS:**  ARKit video is stretched
 - **iOS:**  Image hints are present in videos
 - **iOS:**  Some lenses won't download after the internet is back
@@ -18,6 +44,7 @@
 - **iOS:**  Recorded video frozen when returning from background
 
 ### Features
+- **Android:**  Use externally published Plugin interface for dynamic loading
 - **Android:**  Customize lenses carousel with custom item positions
 - **Android:**  Expose API to disable default camera preview rendering
 - **Android:**  Expose lens preview model
@@ -27,6 +54,16 @@
 - **iOS:**  Add LiDAR support
 - **iOS:**  Improve AVSessionInput camera performance
 - **iOS:**  Expose lens preview model
+
+
+<a name="1.3.6"></a>
+## [1.3.6] - 2020-11-04
+### Bug Fixes
+- **Android:**  Missing lens placeholder icon
+- **iOS:**  Lens repo sometimes returning stale data
+
+### Features
+- **Android:**  Added Configuration for Processor to support different input frame rotation behaviors
 
 
 <a name="1.3.5"></a>
