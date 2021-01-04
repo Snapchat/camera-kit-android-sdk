@@ -22,16 +22,22 @@
             android:layout_height="match_parent"
             />
 
-        <ViewStub
-            android:id="@+id/camerakit_stub"
+        <!-- ViewStub dimensions within ConstraintLayout evaluate to 0 therefore we need to wrap it with FrameLayout -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inflatedId="@+id/camerakit_root"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+        >
+            <ViewStub
+                android:id="@+id/camerakit_stub"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inflatedId="@+id/camerakit_root"
+                app:layout_constraintBottom_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
             />
+        </FrameLayout>
 
         <TextureView
             android:id="@+id/mini_preview"

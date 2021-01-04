@@ -396,9 +396,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 override fun onEnd(captureType: SnapButtonView.CaptureType) {
                     when (captureType) {
                         SnapButtonView.CaptureType.CONTINUOUS -> {
-                            videoRecording?.let {
-                                it.close()
-                            }
+                            videoRecording?.close()
                             videoRecording = null
                         }
                         SnapButtonView.CaptureType.SNAPSHOT -> {
