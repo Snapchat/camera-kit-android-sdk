@@ -50,6 +50,7 @@ import com.snap.camerakit.lenses.whenDeactivated
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
+import com.snap.camerakit.support.gms.location.GmsLocationProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
 import com.snap.camerakit.supported
 import java.io.Closeable
@@ -137,11 +138,16 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             userBirthDate = Date(136985835000L)
         )
 
+        // Provide location data to CameraKit through the Google Mobile Services backed Source<LocationProcessor>
+        // that handles runtime permission requests internally.
+        val locationProcessorSource = GmsLocationProcessorSource(context = this)
+
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
         cameraKitSession = Session(this) {
             imageProcessorSource(imageProcessorSource)
             userProcessorSource(mockUserProcessorSource)
+            locationProcessorSource(locationProcessorSource)
             // The provided ViewStub will be used to inflate CameraKit's Session view hierarchy to handle touch events
             // as well as to render camera preview. In this example we set withPreview to true to have Session
             // render the camera preview - this might not be suitable for other use cases that manage camera preview
