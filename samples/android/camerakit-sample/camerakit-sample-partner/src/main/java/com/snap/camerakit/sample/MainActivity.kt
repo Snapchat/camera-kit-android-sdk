@@ -387,6 +387,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // We use CameraKit provided SnapButtonView to implement a basic photo/video capture flow
         // that is similar to Snapchat app - single tap to take photo, press & hold to record video.
         mainLayout.findViewById<SnapButtonView>(R.id.capture_button).apply {
+
+            // When user scrolls over SnapButtonView, we can re-dispatch touches to CameraKit root view to make
+            // lenses carousel respond to the scroll gesture:
+            fallbackTouchHandlerViewId = R.id.camerakit_root
+
             onCaptureRequestListener = object : SnapButtonView.OnCaptureRequestListener {
 
                 override fun onStart(captureType: SnapButtonView.CaptureType) {
