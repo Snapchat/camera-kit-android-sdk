@@ -142,12 +142,17 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // that handles runtime permission requests internally.
         val locationProcessorSource = GmsLocationProcessorSource(context = this)
 
+        // Provide the area between the camera flip and capture button as the "safe render" area to CameraKit
+        // so that they do not overlap any UI elements rendered internally by lenses.
+        val safeRenderAreaProcessorSource = CameraLayoutSafeRenderAreaProcessorSource(activity = this)
+
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
         cameraKitSession = Session(this) {
             imageProcessorSource(imageProcessorSource)
             userProcessorSource(mockUserProcessorSource)
             locationProcessorSource(locationProcessorSource)
+            safeRenderAreaProcessorSource(safeRenderAreaProcessorSource)
             // The provided ViewStub will be used to inflate CameraKit's Session view hierarchy to handle touch events
             // as well as to render camera preview. In this example we set withPreview to true to have Session
             // render the camera preview - this might not be suitable for other use cases that manage camera preview
