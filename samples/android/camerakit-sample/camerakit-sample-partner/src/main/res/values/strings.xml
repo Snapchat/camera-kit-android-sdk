@@ -12,6 +12,8 @@
     <string name="capture_photo_on">Photo Capture ON</string>
     <string name="share_video">Share video</string>
     <string name="share_image">Share image</string>
+    <string name="button_camera_flip_content_description">Flip camera</string>
+    <string name="button_lens_activate_content_description">Activate lenses</string>
 
     <string name="transition_shared_dummy">transition_shared_dummy</string>
     <string name="lock_portrait_orientation">lock_portrait_orientation</string>
