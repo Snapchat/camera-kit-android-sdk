@@ -167,11 +167,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_gravity="center_vertical|start"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textAllCaps="true"
                 android:text="@string/prefetch_lenses"
+                />
+
+            <Button
+                android:id="@+id/update_lens_groups_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="center_vertical|start"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textAllCaps="true"
+                android:text="@string/update_lens_groups"
                 />
 
         </LinearLayout>

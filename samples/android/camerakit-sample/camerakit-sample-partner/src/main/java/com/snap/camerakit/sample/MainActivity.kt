@@ -9,6 +9,8 @@ import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.GestureDetector
 import android.view.MotionEvent
@@ -18,10 +20,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.app.ActivityCompat
@@ -63,6 +67,7 @@ private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA, Manifest.
 private val OPTIONAL_PERMISSIONS = arrayOf(Manifest.permission.RECORD_AUDIO)
 private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
+private const val BUNDLE_ARG_LENS_GROUPS = "lens_groups"
 private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle-partner artifact.
     BuildConfig.LENS_GROUP_ID_TEST // temporary lens group for testing
@@ -82,6 +87,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private var appliedLensId: String? = null
     private var cameraFacingFront: Boolean = true
+    private var lensGroups = LENS_GROUPS
     private var capturePhoto: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
@@ -112,6 +118,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         savedInstanceState?.let {
             appliedLensId = it.getString(BUNDLE_ARG_APPLIED_LENS_ID)
             cameraFacingFront = it.getBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT)
+            lensGroups = it.getStringArray(BUNDLE_ARG_LENS_GROUPS) ?: LENS_GROUPS
         }
 
         setContentView(R.layout.activity_main)
@@ -172,7 +179,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     activateIdle = true
                     activateOnTap = true
                     deactivateOnClose = true
-                    observedGroupIds = LENS_GROUPS.toSet()
+                    observedGroupIds = lensGroups.toSet()
                     heightDimenRes = R.dimen.lenses_carousel_height
                     marginBottomDimenRes = R.dimen.lenses_carousel_margin_bottom
                     closeButtonMarginBottomDimenRes = R.dimen.lenses_carousel_close_button_margin_bottom
@@ -243,7 +250,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // Working with the CameraKit's lenses component we query for all lenses that are available.
         // If we have an applied Lens ID saved previously we then try to find it in the list and apply it.
-        availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
+        availableLensesQuery = cameraKitSession.lenses.repository.observe(Available(*lensGroups)) { available ->
             Log.d(TAG, "Available lenses: $available")
             available.whenHasSome { lenses ->
                 appliedLensId?.let { id ->
@@ -271,7 +278,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // When lens button is clicked on, we get the first available lens used to activate lenses carousel
                 // with: the lens appears selected and gets applied immediately.
                 lensButton.setOnClickListener {
-                    repository.get(Available(*LENS_GROUPS)) { available ->
+                    repository.get(Available(*lensGroups)) { available ->
                         available.whenHasSome { lenses ->
                             carousel.activate((lenses.first()))
                         }
@@ -325,7 +332,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
 
         rootLayout.findViewById<Button>(R.id.lenses_prefetch_button).setOnClickListener {
-            cameraKitSession.lenses.repository.observe(Available(*LENS_GROUPS)) { available ->
+            cameraKitSession.lenses.repository.observe(Available(*lensGroups)) { available ->
                 available.whenHasSome { lenses ->
                     // Cancel any running prefetch operation before submitting new one
                     lensesPrefetch.close()
@@ -336,6 +343,40 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 }
             }
         }
+
+        findViewById<Button>(R.id.update_lens_groups_button).setOnClickListener {
+            var updatedLensGroups = lensGroups
+            val dialog = AlertDialog.Builder(this)
+                .setView(R.layout.dialog_groups_edit)
+                .setCancelable(true)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    if (updatedLensGroups.isNotEmpty() && !updatedLensGroups.contentEquals(lensGroups)) {
+                        lensGroups = updatedLensGroups
+                        recreate()
+                    }
+                }
+                .setNegativeButton(android.R.string.cancel) { dialog, _ ->
+                    dialog.cancel()
+                }
+                .create()
+                .apply {
+                    show()
+                }
+
+            dialog.findViewById<EditText>(R.id.lens_groups_field)!!.apply {
+                setText(updatedLensGroups.joinToString())
+                addTextChangedListener(object : TextWatcher {
+
+                    override fun afterTextChanged(s: Editable) {}
+
+                    override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                        updatedLensGroups = s.toString().split(", ").filter { it.isNotBlank() }.toTypedArray()
+                    }
+                })
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -343,6 +384,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             outState.putString(BUNDLE_ARG_APPLIED_LENS_ID, it)
         }
         outState.putBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT, cameraFacingFront)
+        if (lensGroups.isNotEmpty()) {
+            outState.putStringArray(BUNDLE_ARG_LENS_GROUPS, lensGroups)
+        }
         super.onSaveInstanceState(outState)
     }
 
@@ -454,13 +498,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         })
 
         val zoomGestureDetector = ScaleGestureDetector(
-                this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+            this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
-            override fun onScale(detector: ScaleGestureDetector): Boolean {
-                imageProcessorSource.zoomBy(detector.scaleFactor)
-                return true
-            }
-        })
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    imageProcessorSource.zoomBy(detector.scaleFactor)
+                    return true
+                }
+            })
 
         mainLayout.findViewById<View>(R.id.preview_gesture_handler).setOnTouchListener { _, event ->
             flipGestureDetector.onTouchEvent(event)
