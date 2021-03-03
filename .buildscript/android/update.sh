@@ -196,7 +196,7 @@ done
 
 if [[ -n "$next_version_name" ]]
 then
-    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9])+(\+|\-)(.*?)\.([0-9]+) ]]
+    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9]+)+(\+|\-)(.*?)\.([0-9]+) ]]
     then
         next_version="${BASH_REMATCH[1]}"
         next_version_rev="${BASH_REMATCH[3]}"
