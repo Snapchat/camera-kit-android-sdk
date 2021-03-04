@@ -87,6 +87,7 @@ main() {
     rm -f Gemfile
     rm -f Gemfile.lock
     rm -rf .bundle
+    rm -rf .gem-out
     rm -rf gem-out
     rm -f .build
     rm -f focus
