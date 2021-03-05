@@ -26,7 +26,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion+c3dbd3a.17638"
+        cameraKitVersion = "$cameraKitDistributionVersion+c6e829b1.18563"
         // NOTE: replace the value with ID specific to your application
         cameraKitApplicationId = 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
         // NOTE: replace the value with lenses group ID specific to your application

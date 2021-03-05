@@ -82,13 +82,25 @@ public final class DefaultPlugin extends Plugin {
     @Override
     public <P extends ImageProcessor> Bitmap imageProcessorProcessBitmap(
             P processor, ImageProcessor.Input input, Bitmap bitmap, long timeout, TimeUnit timeoutUnit) {
-        return ImageProcessors.processBitmap(processor, input, bitmap, timeout, timeoutUnit);
+        return ImageProcessors.processBitmap(processor, input, bitmap, Integer.MIN_VALUE, timeout, timeoutUnit);
+    }
+
+    @Override
+    public <P extends ImageProcessor> Bitmap imageProcessorProcessBitmap(
+            P processor, ImageProcessor.Input input, Bitmap bitmap, int rotation, long timeout, TimeUnit timeoutUnit) {
+        return ImageProcessors.processBitmap(processor, input, bitmap, rotation, timeout, timeoutUnit);
     }
 
     @Override
     public <P extends ImageProcessor> Bitmap imageProcessorProcessImage(
             P processor, ImageProcessor.Input input, Image image, long timeout, TimeUnit timeoutUnit) {
-        return ImageProcessors.processImage(processor, input, image, timeout, timeoutUnit);
+        return ImageProcessors.processImage(processor, input, image, Integer.MIN_VALUE, timeout, timeoutUnit);
+    }
+
+    @Override
+    public <P extends ImageProcessor> Bitmap imageProcessorProcessImage(
+            P processor, ImageProcessor.Input input, Image image, int rotation, long timeout, TimeUnit timeoutUnit) {
+        return ImageProcessors.processImage(processor, input, image, rotation, timeout, timeoutUnit);
     }
 
     @Override

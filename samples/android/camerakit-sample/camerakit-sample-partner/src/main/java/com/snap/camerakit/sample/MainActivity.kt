@@ -13,6 +13,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.GestureDetector
+import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.TextureView
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private val singleThreadExecutor = Executors.newSingleThreadExecutor()
     private lateinit var mainLayout: ViewGroup
+    private lateinit var captureButton: SnapButtonView
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
     private lateinit var cameraKitSession: Session
 
@@ -124,6 +126,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         setContentView(R.layout.activity_main)
         val rootLayout = findViewById<DrawerLayout>(R.id.root_layout)
         mainLayout = rootLayout.findViewById(R.id.main_layout)
+        captureButton = mainLayout.findViewById(R.id.capture_button)
 
         // This ViewStub is provided to CameraKit to inflate its views into when attached
         val cameraKitStub = findViewById<ViewStub>(R.id.camerakit_stub)
@@ -412,6 +415,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         super.onDestroy()
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        return if (captureButton.dispatchKeyEvent(event)) {
+            true
+        } else {
+            super.dispatchKeyEvent(event)
+        }
+    }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -435,7 +446,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         // We use CameraKit provided SnapButtonView to implement a basic photo/video capture flow
         // that is similar to Snapchat app - single tap to take photo, press & hold to record video.
-        mainLayout.findViewById<SnapButtonView>(R.id.capture_button).apply {
+        captureButton.apply {
 
             // When user scrolls over SnapButtonView, we can re-dispatch touches to CameraKit root view to make
             // lenses carousel respond to the scroll gesture:
