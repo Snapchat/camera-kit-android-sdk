@@ -88,6 +88,9 @@ dependencies {
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
     implementation "com.snap.camerakit:support-snap-button:$cameraKitVersion"
     implementation "com.snap.camerakit:support-gms-location:$cameraKitVersion"
+    //internal>
+    implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
+    //<internal
 
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test:runner:1.3.0'
