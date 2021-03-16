@@ -28,6 +28,7 @@ android {
         ]
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
+        buildConfigField 'String', "LENS_GROUP_ID_AR_CORE", "\"$cameraKitLensesGroupIdArCore\""
     }
 
     testBuildType = project.hasProperty('testBuildType') ? project.property('testBuildType') : 'debug'
@@ -88,6 +89,7 @@ dependencies {
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
     implementation "com.snap.camerakit:support-snap-button:$cameraKitVersion"
     implementation "com.snap.camerakit:support-gms-location:$cameraKitVersion"
+    implementation "com.snap.camerakit:support-arcore:$cameraKitVersion"
     //internal>
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<internal

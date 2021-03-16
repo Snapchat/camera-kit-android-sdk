@@ -10,6 +10,7 @@ task copyCameraKitDependenciesToBundledRepo() {
             'camerakit-kotlin',
             'lenses-bundle-partner',
             'support-camerax',
+            'support-arcore',
             'support-snap-button',
             'support-gms-location',
             'camerakit-plugin-api'

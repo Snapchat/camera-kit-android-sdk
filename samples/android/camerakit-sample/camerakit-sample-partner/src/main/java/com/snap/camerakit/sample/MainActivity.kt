@@ -2,6 +2,7 @@ package com.snap.camerakit.sample
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -16,6 +17,7 @@ import android.view.GestureDetector
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
+import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
@@ -33,7 +35,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
+import com.google.ar.core.ArCoreApk
+import com.snap.camerakit.ImageProcessor
 import com.snap.camerakit.Session
+import com.snap.camerakit.Source
 import com.snap.camerakit.configureLenses
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.invoke
@@ -54,11 +59,13 @@ import com.snap.camerakit.lenses.whenApplied
 import com.snap.camerakit.lenses.whenDeactivated
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
+import com.snap.camerakit.support.arcore.ArCoreImageProcessorSource
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.gms.location.GmsLocationProcessorSource
 import com.snap.camerakit.support.widget.SnapButtonView
 import com.snap.camerakit.supported
 import java.io.Closeable
+import java.io.File
 import java.util.Date
 import java.util.concurrent.Executors
 
@@ -73,6 +80,10 @@ private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle-partner artifact.
     BuildConfig.LENS_GROUP_ID_TEST // temporary lens group for testing
 )
+private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
+    *LENS_GROUPS,
+    BuildConfig.LENS_GROUP_ID_AR_CORE // lens group containing lenses using ARCore functionality.
+)
 
 /**
  * A simple activity which demonstrates how to use [CameraKit] to apply/remove lenses onto a camera preview.
@@ -84,12 +95,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private val singleThreadExecutor = Executors.newSingleThreadExecutor()
     private lateinit var mainLayout: ViewGroup
     private lateinit var captureButton: SnapButtonView
-    private lateinit var imageProcessorSource: CameraXImageProcessorSource
+    private lateinit var activeSource: Source<ImageProcessor>
     private lateinit var cameraKitSession: Session
+    private lateinit var lensGroups: Array<String>
 
     private var appliedLensId: String? = null
     private var cameraFacingFront: Boolean = true
-    private var lensGroups = LENS_GROUPS
     private var capturePhoto: Boolean = true
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
@@ -97,6 +108,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var lensesCarouselEvents = Closeable {}
     private var videoRecording: Closeable? = null
     private var lensesPrefetch: Closeable = Closeable {}
+    private var lensGroupsUpdated: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,7 +132,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         savedInstanceState?.let {
             appliedLensId = it.getString(BUNDLE_ARG_APPLIED_LENS_ID)
             cameraFacingFront = it.getBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT)
-            lensGroups = it.getStringArray(BUNDLE_ARG_LENS_GROUPS) ?: LENS_GROUPS
+        }
+        lensGroups = savedInstanceState?.getStringArray(BUNDLE_ARG_LENS_GROUPS) ?: if (arCoreSourceAvailable) {
+            LENS_GROUPS_ARCORE_AVAILABLE
+        } else {
+            LENS_GROUPS
         }
 
         setContentView(R.layout.activity_main)
@@ -134,12 +150,37 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // This sample implements camera Source through the use of CameraX library which simplifies quite a bit
         // of things related to Android camera management. CameraX is one of many options to implement Source,
         // anything that can provide image frames through a SurfaceTexture can be used by CameraKit.
-        imageProcessorSource = CameraXImageProcessorSource(
+        val cameraXImageProcessorSource = CameraXImageProcessorSource(
             context = this,
             lifecycleOwner = this,
             executorService = singleThreadExecutor,
             videoOutputDirectory = cacheDir
         )
+
+        // Use cameraXImageProcessorSource as an active source by default.
+        activeSource = cameraXImageProcessorSource
+
+        val imageProcessorSource = if (arCoreSourceAvailable) {
+            // ArCoreImageProcessorSource is the only currently supported option to provide surface tracking data or
+            // depth data when required by applied lens.
+            val arCoreSource = ArCoreImageProcessorSource(
+                    context = this,
+                    lifecycleOwner = this,
+                    executorService = singleThreadExecutor,
+                    videoOutputDirectory = cacheDir
+            )
+            // This is an implementation of Source<ImageProcessor> that attach ImageProcessor to one of the provided
+            // sources according to ImageProcessor requirements to input capabilities.
+            SwitchForSurfaceTrackingImageProcessorSource(cameraXImageProcessorSource, arCoreSource, { source ->
+                if (activeSource != source) {
+                    this.activeSource = source
+                    // Call startPreview on attached Source to let it dispatch frames to ImageProcessor.
+                    activeSource.startPreview(cameraFacingFront)
+                }
+            })
+        } else {
+            cameraXImageProcessorSource
+        }
 
         // Some content may request additional data such as user name to personalize lenses. Providing this data is
         // optional, the MockUserProcessorSource class demonstrates a basic example to implement a source of the data.
@@ -355,6 +396,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     if (updatedLensGroups.isNotEmpty() && !updatedLensGroups.contentEquals(lensGroups)) {
                         lensGroups = updatedLensGroups
+                        lensGroupsUpdated = true
                         recreate()
                     }
                 }
@@ -387,7 +429,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             outState.putString(BUNDLE_ARG_APPLIED_LENS_ID, it)
         }
         outState.putBoolean(BUNDLE_ARG_CAMERA_FACING_FRONT, cameraFacingFront)
-        if (lensGroups.isNotEmpty()) {
+        if (lensGroupsUpdated && lensGroups.isNotEmpty()) {
             outState.putStringArray(BUNDLE_ARG_LENS_GROUPS, lensGroups)
         }
         super.onSaveInstanceState(outState)
@@ -457,7 +499,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 override fun onStart(captureType: SnapButtonView.CaptureType) {
                     if (captureType == SnapButtonView.CaptureType.CONTINUOUS) {
                         if (videoRecording == null) {
-                            videoRecording = imageProcessorSource.takeVideo { file ->
+                            videoRecording = activeSource.takeVideo { file ->
                                 PreviewActivity.startUsing(this@MainActivity, mainLayout, file, MIME_TYPE_VIDEO_MP4)
                             }
                         }
@@ -486,9 +528,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                             // than result image quality, this sample allows to test both approaches using a toggle
                             // button located in the debug drawer menu.
                             if (capturePhoto) {
-                                imageProcessorSource.takePhoto(onBitmapAvailable)
+                                activeSource.takePhoto(this@MainActivity, onBitmapAvailable)
                             } else {
-                                imageProcessorSource.takeSnapshot(onBitmapAvailable)
+                                activeSource.takeSnapshot(onBitmapAvailable)
                             }
                         }
                     }
@@ -512,7 +554,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             this, object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
 
                 override fun onScale(detector: ScaleGestureDetector): Boolean {
-                    imageProcessorSource.zoomBy(detector.scaleFactor)
+                    activeSource.zoomBy(detector.scaleFactor)
                     return true
                 }
             })
@@ -528,6 +570,55 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     private fun startPreviewForCurrentCameraFacing() {
-        imageProcessorSource.startPreview(cameraFacingFront)
+        activeSource.startPreview(cameraFacingFront)
     }
+}
+
+private fun Source<ImageProcessor>.startPreview(cameraFacingFront: Boolean) {
+    when (this) {
+        is CameraXImageProcessorSource -> startPreview(cameraFacingFront)
+        is ArCoreImageProcessorSource -> startPreview(cameraFacingFront)
+    }
+}
+
+private fun Source<ImageProcessor>.takeSnapshot(onBitmapAvailable: (Bitmap) -> Unit) {
+    when (this) {
+        is CameraXImageProcessorSource -> takeSnapshot(onBitmapAvailable)
+        is ArCoreImageProcessorSource -> takeSnapshot(onBitmapAvailable)
+    }
+}
+
+private fun Source<ImageProcessor>.takePhoto(context: Context, onBitmapAvailable: (Bitmap) -> Unit) {
+    when (this) {
+        is CameraXImageProcessorSource -> takePhoto(onBitmapAvailable)
+        is ArCoreImageProcessorSource -> Toast.makeText(
+                context,
+                context.getString(R.string.ar_core_take_photo_unsupported),
+                Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
+private fun Source<ImageProcessor>.takeVideo(onAvailable: (File) -> Unit): Closeable {
+    return when (this) {
+        is CameraXImageProcessorSource -> takeVideo(onAvailable)
+        is ArCoreImageProcessorSource -> takeVideo(onAvailable)
+        else -> throw IllegalStateException("Unexpected source is running.")
+    }
+}
+
+private fun Source<ImageProcessor>.zoomBy(scaleFactor: Float) {
+    when (this) {
+        is CameraXImageProcessorSource -> zoomBy(scaleFactor)
+        is ArCoreImageProcessorSource -> Log.d(TAG, "ArCoreImageProcessorSource does not support zoom functionality.")
+    }
+}
+
+private val Activity.arCoreSourceAvailable: Boolean get() {
+    // Currently, ARCore is supported in portrait orientation only.
+    return windowManager.defaultDisplay.rotation == Surface.ROTATION_0 && arCoreSupportedAndInstalled
+}
+
+private val Context.arCoreSupportedAndInstalled: Boolean get() {
+    return ArCoreApk.getInstance().checkAvailability(applicationContext) == ArCoreApk.Availability.SUPPORTED_INSTALLED
 }
