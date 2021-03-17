@@ -1,0 +1,12 @@
+version: 1
+on:
+  pull_request:
+    - jobs:
+      - jenkins_job: https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build
+  push:
+    - branches: [master, 'release/*']
+      jobs:
+        - jenkins_job: https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build
+  cool:
+    job:
+      jenkins_job: https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build
