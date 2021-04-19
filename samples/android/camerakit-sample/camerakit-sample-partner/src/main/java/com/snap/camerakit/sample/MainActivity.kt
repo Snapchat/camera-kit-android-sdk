@@ -50,6 +50,7 @@ import com.snap.camerakit.lenses.configureCache
 import com.snap.camerakit.lenses.configureCarousel
 import com.snap.camerakit.lenses.configureEachItem
 import com.snap.camerakit.lenses.configureHints
+import com.snap.camerakit.lenses.configureMediaPicker
 import com.snap.camerakit.lenses.get
 import com.snap.camerakit.lenses.invoke
 import com.snap.camerakit.lenses.observe
@@ -59,6 +60,7 @@ import com.snap.camerakit.lenses.whenApplied
 import com.snap.camerakit.lenses.whenDeactivated
 import com.snap.camerakit.lenses.whenHasSome
 import com.snap.camerakit.lenses.whenIdle
+import com.snap.camerakit.mediaStoreSourceFor
 import com.snap.camerakit.support.arcore.ArCoreImageProcessorSource
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.support.gms.location.GmsLocationProcessorSource
@@ -93,6 +95,7 @@ private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private val singleThreadExecutor = Executors.newSingleThreadExecutor()
+    private val threadPoolExecutor = Executors.newFixedThreadPool(4)
     private lateinit var mainLayout: ViewGroup
     private lateinit var captureButton: SnapButtonView
     private lateinit var activeSource: Source<ImageProcessor>
@@ -197,6 +200,11 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // so that they do not overlap any UI elements rendered internally by lenses.
         val safeRenderAreaProcessorSource = CameraLayoutSafeRenderAreaProcessorSource(activity = this)
 
+        // Use default implementation of Source<MediaProcessor> that gets media data from android.provider.MediaStore.
+        // That implementation uses GMS FaceDetector so dependency com.google.android.gms:play-services-vision should
+        // be included to enable that functionality.
+        val mediaProcessorSource = mediaStoreSourceFor(context = this, executorService = threadPoolExecutor)
+
         // This block configures and creates a new CameraKit instance that is the main entry point to all its features.
         // The CameraKit instance must be closed when appropriate to avoid leaking any resources.
         cameraKitSession = Session(this) {
@@ -204,6 +212,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             userProcessorSource(mockUserProcessorSource)
             locationProcessorSource(locationProcessorSource)
             safeRenderAreaProcessorSource(safeRenderAreaProcessorSource)
+            mediaProcessorSource(mediaProcessorSource)
             // The provided ViewStub will be used to inflate CameraKit's Session view hierarchy to handle touch events
             // as well as to render camera preview. In this example we set withPreview to true to have Session
             // render the camera preview - this might not be suitable for other use cases that manage camera preview
@@ -236,6 +245,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                             moveToRight()
                         }
                     }
+                }
+                configureMediaPicker {
+                    enabled = true
                 }
                 // An optional configuration to enable lens hints view. When enabled, lens hints are shown using
                 // built-in view that is horizontally and vertically centered on top of camera preview. It is possible

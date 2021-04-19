@@ -9,6 +9,7 @@ allprojects {
         appCompatVersion = '1.2.0'
         recyclerViewVersion = '1.1.0'
         glideVersion = '4.11.0'
+        gmsVisionVersion = '16.2.0'
 
         androidMinSdkVersion = 21
         androidCompileSdkVersion = 29
@@ -26,7 +27,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<internal
-        cameraKitVersion = "$cameraKitDistributionVersion+8749ff90.19083"
+        cameraKitVersion = "$cameraKitDistributionVersion+880547b7.21932"
         // NOTE: replace the value with ID specific to your application
         cameraKitApplicationId = 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
         // NOTE: replace the value with lenses group ID specific to your application
