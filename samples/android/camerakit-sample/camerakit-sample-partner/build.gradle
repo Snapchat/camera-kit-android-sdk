@@ -2,7 +2,9 @@
 buildscript {
     dependencies {
         //noinspection GradleDynamicVersion
-        classpath 'com.snap.karma:karma-gradle-plugin:0.11.0+24da176.100'
+        classpath('com.snap.karma:karma-gradle-plugin:0.20.1+b493410.401') {
+            exclude group: "com.google.guava", module: "guava"
+        }
     }
 }
 //<internal
@@ -111,6 +113,7 @@ def karmaDevicePool = System.getenv('KARMA_DEVICE_POOL') ?: 'SM-G950F-dreamlte-7
 karma {
     initiator karmaServiceAccount
     serviceAccount = karmaServiceAccount
+    useAutopilot = true
     suites {
         from(file('src/androidTest/resources/META-INF/ui-test-metadata-v2.json')) {
             runner('spoon2') {
