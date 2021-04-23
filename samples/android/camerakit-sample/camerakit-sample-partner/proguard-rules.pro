@@ -27,3 +27,6 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+
+# GMS vision is used for the default Source<MediaProcessor> to detect faces on images.
+-keep public class com.google.android.gms.vision.** { *; }
