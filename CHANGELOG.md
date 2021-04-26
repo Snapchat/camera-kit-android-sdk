@@ -3,8 +3,84 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.7.0"></a>
+## [1.7.0] - 2021-04-26
+
 <a name="1.6.0"></a>
-## [1.6.0] - 2020-12-03
+## [1.6.0] - 2021-04-23
+### Features
+- **Android:**  Add support for client defined safe render area
+- **Android:**  Add Media Picker support for sample app
+- **Android:**  Switch to ARCore for surface tracking in the sample app
+- **Android:**  SnapButtonView responds to volume up events to start capture
+- **Android:**  Dialog to update lens group IDs in the sample app
+- **Android:**  SnapButtonView re-dispatch touch events to lenses carousel
+- **Android:**  Landmarker lenses support
+- **iOS:**  Landmarkers support
+- **iOS:**  Media picker support
+- **iOS:**  Safe area support
+
+
+<a name="1.5.11"></a>
+## [1.5.11] - 2021-03-17
+
+<a name="1.5.10"></a>
+## [1.5.10] - 2021-03-03
+### Bug Fixes
+- **Android:**  Negotiate MediaCodec supported resolution when video recording
+
+
+<a name="1.5.9"></a>
+## [1.5.9] - 2021-02-26
+
+<a name="1.5.8"></a>
+## [1.5.8] - 2021-02-24
+### Features
+- **Android:**  Expose outputRotationDegrees parameter for photo processing
+
+
+<a name="1.5.7"></a>
+## [1.5.7] - 2021-02-18
+### Features
+- **Android:**  Better accessibility support
+
+
+<a name="1.5.6"></a>
+## [1.5.6] - 2021-02-03
+### Bug Fixes
+- **Android:**  Lens Single Tap should work without touch blocking
+
+
+<a name="1.5.5"></a>
+## [1.5.5] - 2021-01-26
+### Bug Fixes
+- **Android:**  OpenGL memory leak after Session is closed
+
+
+<a name="1.5.4"></a>
+## [1.5.4] - 2021-01-15
+### Features
+- **Android:**  Expose lens loading overlay configuration
+
+
+<a name="1.5.3"></a>
+## [1.5.3] - 2021-01-06
+### Bug Fixes
+- **Android:**  Crash when client includes grpc-census library
+- **iOS:**  FileHandle exceptions and lens processor crash
+
+
+<a name="1.5.2"></a>
+## [1.5.2] - 2020-12-22
+### Bug Fixes
+- **Android:**  Fix carousel actions being ignored after re-activation
+
+
+<a name="1.5.1"></a>
+## [1.5.1] - 2020-12-22
+### Features
+- **Android:**  Add ability to clear ImageProcessor.Output on disconnect
+
 
 <a name="1.5.0"></a>
 ## [1.5.0] - 2020-12-03
