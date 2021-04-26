@@ -16,7 +16,7 @@ Pod::Spec.new do |spec|
   #
 
   spec.name         = "CameraKitReferenceUI"
-  spec.version = "1.6.0"
+  spec.version = "1.7.0"
   spec.summary      = "Carousel, Camera Ring, and other UI components to support CameraKit"
   spec.dependency "CameraKit"
   spec.module_name = "SCSDKCameraKitReferenceUI"
