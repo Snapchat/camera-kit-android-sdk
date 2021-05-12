@@ -29,7 +29,7 @@ allprojects {
         //<internal
         cameraKitVersion = "$cameraKitDistributionVersion+0a743c2e.23661"
         // NOTE: replace the value with ID specific to your application
-        cameraKitApplicationId = 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
+        cameraKitApplicationId = 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
         // NOTE: replace the value with lenses group ID specific to your application
         cameraKitLensesGroupId = '5685839489138688'
         cameraKitLensesGroupIdArCore = '5755283204734976'
