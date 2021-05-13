@@ -23,6 +23,8 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.source.LoadEventInfo
+import com.google.android.exoplayer2.source.MediaLoadData
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.MediaSourceEventListener
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -150,8 +152,8 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                 override fun onLoadCompleted(
                     windowIndex: Int,
                     mediaPeriodId: MediaSource.MediaPeriodId?,
-                    loadEventInfo: MediaSourceEventListener.LoadEventInfo?,
-                    mediaLoadData: MediaSourceEventListener.MediaLoadData?
+                    loadEventInfo: LoadEventInfo,
+                    mediaLoadData: MediaLoadData
                 ) {
                     mediaSource.removeEventListener(this)
                     startPostponedEnterTransition()
@@ -160,9 +162,9 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                 override fun onLoadError(
                     windowIndex: Int,
                     mediaPeriodId: MediaSource.MediaPeriodId?,
-                    loadEventInfo: MediaSourceEventListener.LoadEventInfo?,
-                    mediaLoadData: MediaSourceEventListener.MediaLoadData?,
-                    error: IOException?,
+                    loadEventInfo: LoadEventInfo,
+                    mediaLoadData: MediaLoadData,
+                    error: IOException,
                     wasCanceled: Boolean
                 ) {
                     mediaSource.removeEventListener(this)

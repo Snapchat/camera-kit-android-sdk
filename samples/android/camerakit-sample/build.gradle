@@ -5,7 +5,7 @@ allprojects {
         //<internal
         bundledMavenRepo = rootProject.file('maven')
         kotlinVersion = '1.4.21'
-        exoPlayerVersion = '2.11.7'
+        exoPlayerVersion = '2.13.3'
         appCompatVersion = '1.2.0'
         recyclerViewVersion = '1.1.0'
         glideVersion = '4.11.0'
@@ -42,8 +42,8 @@ allprojects {
                 url snapMavenUri
             }
             //<internal
+            mavenCentral()
             google()
-            jcenter()
 
         }
         dependencies {
@@ -61,8 +61,8 @@ allprojects {
             url snapMavenUri
         }
         //<internal
+        mavenCentral()
         google()
-        jcenter()
     }
 }
 
