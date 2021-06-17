@@ -35,7 +35,7 @@ Open the `camerakit-sample` project in Android Studio by opening the root [`buil
 
 This project includes several sample apps that demonstrate different approaches to integrating CameraKit SDK:
 
-- [`camerakit-sample-partner`](./camerakit-sample-partner) contains a fully functioning camera capture with lenses and preview flow.
+- [`camerakit-sample-full`](./camerakit-sample-full) contains a fully functioning camera capture with lenses and preview flow.
 - [`camerakit-sample-dynamic-app`](./camerakit-sample-dynamic) contains a basic application that loads CameraKit SDK as a dynamic feature to display a list of available lenses.
 
 ### Configuration
@@ -43,9 +43,9 @@ This project includes several sample apps that demonstrate different approaches 
 The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version (see [CHANGELOG](../../../CHANGELOG.md) for a summary of changes in each release) and it is possible to pick and choose the dependencies necessary for your specific project:
 
 ```groovy
-    implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
+    implementation "com.snap.camerakit:camerakit:$cameraKitVersion"
     implementation "com.snap.camerakit:camerakit-kotlin:$cameraKitVersion"
-    implementation "com.snap.camerakit:lenses-bundle-partner:$cameraKitVersion"
+    implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
 ```
 
@@ -54,7 +54,7 @@ In order for CameraKit to be able to communicate with remote services to get con
 ```groovy
 android {
     defaultConfig {
-        applicationId 'com.snap.camerakit.sample.partner'
+        applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
             // NOTE: replace the value with ID specific to your application
             'cameraKitApplicationId': 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
@@ -63,7 +63,7 @@ android {
 }
 ```
 
-Then, the placeholder can be used within the app's  [AndroidManifest.xml](./camerakit-sample-partner/src/main/AndroidManifest.xml):
+Then, the placeholder can be used within the app's  [AndroidManifest.xml](./camerakit-sample-full/src/main/AndroidManifest.xml):
 
 ```xml
 <application
@@ -89,7 +89,7 @@ android {
 }
 ```
 
-*For more information, see build configuration in `camerakit-sample-partner` [build.gradle](./camerakit-sample-partner/build.gradle).*
+*For more information, see build configuration in `camerakit-sample-full` [build.gradle](./camerakit-sample-full/build.gradle).*
 
 ## Usage
 
@@ -118,7 +118,7 @@ The basic use of CameraKit and its lifecycle can be presented as:
 
 ### Java or Kotlin?
 
-The `camerakit-api` and the base `camerakit-partner` modules are designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions.
+The `camerakit-api` and the base `camerakit` modules are designed to be fully Java compatible therefore it does not require Kotlin standard library nor its toolchain to be available in pure Java projects. On the other hand, Kotlin projects are advised to use the `camerakit-kotlin` for official extensions.
 
 Here is an example of applying a lens with CameraKit in Java:
 
@@ -187,7 +187,7 @@ The following is a list of common issues and suggestions on how to troubleshoot 
 - Check that a camera based `Source<ImageProcessor>` such as `CameraXImageProcessorSource` is provided to the `Session.Builder`. If you cannot provide an implementation of `Source<ImageProcessor>` then make sure to connect a `SurfaceTexture` based input to the current `Session.processor`.
 - If no `ViewStub` is provided to the `Session.Builder` then CameraKit does not attempt to render any views such as lenses carousel as well as camera preview. To see camera preview without any other CameraKit views, a `TextureView`, `SurfaceTexture` or `Surface` based output must be connected to the current `Session.processor`.
 - If a non-null `ViewStub` is provided to the `Session.Builder` check (using [Layout Inspector](https://developer.android.com/studio/debug/layout-inspector)) that the layout dimensions are more than 0 when the `ViewStub` gets inflated. The CameraKit's root view that gets inflated from the provided `ViewStub` inherits layout parameters set on the `ViewStub`, check that `match_parent` or other parameters are applicable to your layout.
-- Compare versions of dependencies of your app to the CameraKit sample apps. If dependency versions differ, for example the `camerakit-sample-partner` uses `androidx.constraintlayout:constraintlayout:1.1.3` while your app uses `androidx.constraintlayout:constraintlayout:2.0.0`, it is possible that code ported from CameraKit sample to your app may not work as expected.
+- Compare versions of dependencies of your app to the CameraKit sample apps. If dependency versions differ, for example the `camerakit-sample-full` uses `androidx.constraintlayout:constraintlayout:1.1.3` while your app uses `androidx.constraintlayout:constraintlayout:2.0.0`, it is possible that code ported from CameraKit sample to your app may not work as expected.
 
 ### Nothing works as expected
 

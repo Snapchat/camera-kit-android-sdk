@@ -5,6 +5,6 @@ def include(String moduleName, String relativePath) {
     project(moduleName).projectDir = new File(rootDir, relativePath)
 }
 
-include ':camerakit-sample-partner'
+include ':camerakit-sample-full'
 include(':camerakit-sample-dynamic-app', 'camerakit-sample-dynamic/app')
 include(':camerakit-sample-dynamic-plugin', 'camerakit-sample-dynamic/plugin')

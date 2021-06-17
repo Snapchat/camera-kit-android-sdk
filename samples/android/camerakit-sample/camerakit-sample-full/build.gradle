@@ -17,7 +17,7 @@ android {
     compileSdkVersion androidCompileSdkVersion
 
     defaultConfig {
-        applicationId 'com.snap.camerakit.sample.partner'
+        applicationId 'com.snap.camerakit.sample.full'
         minSdkVersion androidMinSdkVersion
         targetSdkVersion androidTargetSdkVersion
         versionCode cameraKitDistributionCode
@@ -89,9 +89,9 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
     implementation "com.google.android.gms:play-services-vision:$gmsVisionVersion"
 
-    implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
+    implementation "com.snap.camerakit:camerakit:$cameraKitVersion"
     implementation "com.snap.camerakit:camerakit-kotlin:$cameraKitVersion"
-    implementation "com.snap.camerakit:lenses-bundle-partner:$cameraKitVersion"
+    implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
     implementation "com.snap.camerakit:support-snap-button:$cameraKitVersion"
     implementation "com.snap.camerakit:support-gms-location:$cameraKitVersion"

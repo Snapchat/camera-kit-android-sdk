@@ -1,14 +1,14 @@
 import java.util.regex.Pattern
 
 // Copies all the necessary CameraKit artifacts into an internal maven repository,
-// which gets packaged within the "ejected" project so that external partners don't need to
+// which gets packaged within the "ejected" project so that external users don't need to
 // worry about downloading artifacts from some protected repository.
 task copyCameraKitDependenciesToBundledRepo() {
     def modules = [
             'camerakit-api',
-            'camerakit-partner',
+            'camerakit',
             'camerakit-kotlin',
-            'lenses-bundle-partner',
+            'lenses-bundle',
             'support-camerax',
             'support-arcore',
             'support-snap-button',
@@ -82,8 +82,8 @@ task eject(type: Copy) {
     exclude '**/*proguard-mapping*'
     exclude 'jarRepositories.xml'
     exclude '**/build/**'
-    exclude 'camerakit-sample-partner/src/staging/**'
-    exclude 'camerakit-sample-partner/src/androidTest/resources/META-INF/**'
+    exclude 'camerakit-sample-full/src/staging/**'
+    exclude 'camerakit-sample-full/src/androidTest/resources/META-INF/**'
 
     doFirst {
         logger.lifecycle("Ejecting to $outputDir")
@@ -96,7 +96,7 @@ task eject(type: Copy) {
                 stripTagEndPlainComment
             ), 
             new Tuple3(
-                new File(outputDir, 'camerakit-sample-partner/build.gradle'), 
+                new File(outputDir, 'camerakit-sample-full/build.gradle'),
                 stripTagStartPlainComment, 
                 stripTagEndPlainComment
             )

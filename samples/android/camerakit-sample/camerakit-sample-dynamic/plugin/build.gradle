@@ -37,5 +37,5 @@ android {
 
 dependencies {
     implementation "com.snap.camerakit:camerakit-plugin-api:$cameraKitVersion"
-    implementation "com.snap.camerakit:camerakit-partner:$cameraKitVersion"
+    implementation "com.snap.camerakit:camerakit:$cameraKitVersion"
 }

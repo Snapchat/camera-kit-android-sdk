@@ -79,7 +79,7 @@ private const val BUNDLE_ARG_APPLIED_LENS_ID = "applied_lens_id"
 private const val BUNDLE_ARG_CAMERA_FACING_FRONT = "camera_facing_front"
 private const val BUNDLE_ARG_LENS_GROUPS = "lens_groups"
 private val LENS_GROUPS = arrayOf(
-    LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle-partner artifact.
+    LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle artifact.
     *BuildConfig.LENS_GROUP_ID_TEST.split(',').toTypedArray() // temporary lens group for testing
 )
 private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
