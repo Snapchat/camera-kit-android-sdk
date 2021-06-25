@@ -26,11 +26,19 @@ usage() {
     echo "                          Default: android,ios"
     echo "  -e export-to uri        [optional] specify uri to export artifacts to"
     echo "                          Default: none, no artifacts will be exported"
+    echo "  -k karma-test boolean   [optional] specify if tests on karma automation" 
+    echo "                          service should run to complete build"
+    echo "                          Default: true, tests will be scheduled to run"
+    echo "  -z zip-export boolean   [optional] specify if the export should be zipped" 
+    echo "                          or kept as a directory"
+    echo "                          Default: true, export is zipped"
 }
 
 main() {
     local platforms=$1
     local export_to=$2
+    local karma_test=$3
+    local zip_export=$4
 
     local eject_dir=$(mktemp -d -t "camerakit-eject-XXXXXXXXXX")
 
@@ -54,7 +62,7 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/android"
-            ./build.sh -e "${platform_eject_dir}/camerakit-sample" -k true -b release
+            ./build.sh -e "${platform_eject_dir}/camerakit-sample" -k $karma_test -b release
             popd
             
             echo ""
@@ -82,18 +90,23 @@ main() {
     cp -r "${repo_root}/.doc" "${distribution_dir}"
     sed -e "s/\${version}/${version_name}/" "${repo_root}/README.partner.md" > "${distribution_dir}/README.md"
 
-    pushd "${distribution_basedir}"
-    zip -r "${distribution_zip}" ./*
-    popd
+    local distribution_export="${distribution_dir}/."
+    if [ "$zip_export" = true ]
+    then
+        pushd "${distribution_basedir}"
+        zip -r "${distribution_zip}" ./*
+        popd
+        distribution_export="${distribution_zip}"
+    fi
 
     if [ -n "${export_to}" ]; then
         local export_to_path="${export_to}"
         echo "Exporting artifacts to: ${export_to_path}"
         if [[ $export_to == gs* ]]; then
-            gsutil cp "${distribution_zip}" "${export_to_path}"
+            gsutil cp "${distribution_export}" "${export_to_path}"
         else
             mkdir -p "${export_to_path}"
-            cp "${distribution_zip}" "${export_to_path}"
+            cp -r "${distribution_export}" "${export_to_path}"
         fi
     fi
 
@@ -102,6 +115,8 @@ main() {
 
 platform="android,ios"
 artifact_export_uri=""
+karma_test=true
+zip_export=true
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -117,6 +132,16 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -k | --karma-test)
+        karma_test="$2"
+        shift
+        shift
+        ;;
+    -z | --zip-export)
+        zip_export="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -124,4 +149,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${platform}" "${artifact_export_uri}"
+main "${platform}" "${artifact_export_uri}" "${karma_test}" "${zip_export}"

@@ -45,7 +45,7 @@ main() {
         extra_tasks+=("-PtestBuildType=${build_type}")
     fi
 
-    ./gradlew check "${build_type_assemble_task_name}" "${extra_tasks[@]}"
+    ./gradlew check "${build_type_assemble_task_name}" "${extra_tasks[@]:+${extra_tasks[@]}}"
 
     if [[ -n "$eject_to" ]]; then
         ./gradlew eject -PoutputDir="${eject_to}"
