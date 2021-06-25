@@ -18,6 +18,7 @@ readonly program_name=$0
 readonly version_file="${repo_root}/VERSION"
 readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
 readonly license_file="${repo_root}/LICENSE"
+readonly notice_file="${repo_root}/NOTICE"
 readonly changelog_file="${repo_root}/CHANGELOG.md"
 
 usage() {
@@ -32,6 +33,8 @@ usage() {
     echo "  -z zip-export boolean   [optional] specify if the export should be zipped" 
     echo "                          or kept as a directory"
     echo "                          Default: true, export is zipped"
+    echo "  -f flavor <flavor>      [optional] specify the flavor of the build to perform" 
+    echo "                          Default: partner. Other flavors available: public"
 }
 
 main() {
@@ -86,9 +89,10 @@ main() {
     mv "${eject_dir}" "${distribution_dir}"
     cp "${version_file}" "${distribution_dir}"
     cp "${license_file}" "${distribution_dir}"
+    cp "${notice_file}" "${distribution_dir}"
     cp "${changelog_file}" "${distribution_dir}"
     cp -r "${repo_root}/.doc" "${distribution_dir}"
-    sed -e "s/\${version}/${version_name}/" "${repo_root}/README.partner.md" > "${distribution_dir}/README.md"
+    sed -e "s/\${version}/${version_name}/" "${repo_root}/README.${flavor}.md" > "${distribution_dir}/README.md"
 
     local distribution_export="${distribution_dir}/."
     if [ "$zip_export" = true ]
@@ -117,6 +121,7 @@ platform="android,ios"
 artifact_export_uri=""
 karma_test=true
 zip_export=true
+flavor="partner"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -142,6 +147,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -f | --flavor)
+        flavor="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -149,4 +159,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${platform}" "${artifact_export_uri}" "${karma_test}" "${zip_export}"
+main "${platform}" "${artifact_export_uri}" "${karma_test}" "${zip_export}" "${flavor}"

@@ -39,7 +39,7 @@ main() {
     git checkout -b "${branch}"
     git rm -r .
 
-    "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" 
+    "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" -f "public"
 
     git add .
 
