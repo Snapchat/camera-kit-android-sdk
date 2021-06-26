@@ -91,7 +91,14 @@ main() {
     cp "${license_file}" "${distribution_dir}"
     cp "${notice_file}" "${distribution_dir}"
     cp "${changelog_file}" "${distribution_dir}"
-    cp -r "${repo_root}/.doc" "${distribution_dir}"
+    cp -r "${repo_root}/docs" "${distribution_dir}"
+
+    local android_doc_files_pattern="${distribution_dir}/samples/android/camerakit-sample/maven/com/snap/camerakit/camerakit/${version_name}*/*documentation.zip"
+    local android_doc_files=( $android_doc_files_pattern )
+    local android_docs_version_dir_name="${distribution_dir}/docs/api/${version_name}/android/"
+    mkdir -p "${android_docs_version_dir_name}"
+    unzip "${android_doc_files[0]}" -d "${android_docs_version_dir_name}"
+
     sed -e "s/\${version}/${version_name}/" "${repo_root}/README.${flavor}.md" > "${distribution_dir}/README.md"
 
     local distribution_export="${distribution_dir}/."

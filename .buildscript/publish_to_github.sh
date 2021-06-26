@@ -37,14 +37,16 @@ main() {
     local base_branch=$(git rev-parse --abbrev-ref HEAD)
 
     git checkout -b "${branch}"
-    git rm -r .
+    git rm -r samples || true
+    # legacy dir not needed anymore
+    git rm -r .doc || true
 
     "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" -f "public"
 
     git add .
 
     local update_title="[All] Sync changes for the ${version_name} release"
-    local update_body="This syncs all changes fore the ${version_name} CameraKit release."
+    local update_body="This syncs all changes for the ${version_name} CameraKit release."
 
     git commit -m "$update_title"
     git push --set-upstream origin "${branch}" -f

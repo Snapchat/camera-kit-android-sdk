@@ -1,4 +1,4 @@
-<img align="left" width="64" height="64" src=".doc/camerakit_icon.svg">
+<img align="left" width="64" height="64" src="docs/camerakit_icon.svg">
 
 # CameraKit Sample
 
