@@ -29,22 +29,22 @@ main() {
 
     pushd "${samples_ios_root}/CameraKitSample"
 
-    local sample_info_plist="CameraKitSample/Info.plist"
-    plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
-    plutil -replace CFBundleVersion -string "1.${BUILD_NUMBER}" "${sample_info_plist}"
-
     rm -rf xcarchive_path
 
     ./focus --skip-xcode
 
-    framework_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+    local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+    local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+    local sample_info_plist="CameraKitSample/Info.plist"
+    plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
+    plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
     scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
     refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-    if [[ "$version" != "$framework_version" ]]; then
-        echo "Distribution version ${version} and iOS SDK version ${framework_version} are not equal; exiting..."
+    if [[ "$version" != "$framework_short_version" ]]; then
+        echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
         exit 1
     fi
 
