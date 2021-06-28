@@ -20,8 +20,8 @@ EXTERNAL SOURCES:
     :path: CameraKit
 
 SPEC CHECKSUMS:
-  CameraKit: 55a3761f3742fc6c91d1aede91f5abff7a7544c1
-  CameraKitReferenceUI: d222c10d5dc5b0ffbdc55d11521499bb8b37b542
+  CameraKit: 0df906c8429cbeeabdb1973c922bec67e0bfbc2b
+  CameraKitReferenceUI: 7bab8ba2feed3eb2dbc4ff47f243e36c96ee9fcf
   SnapSDK: 29513fd65172495391394a0999a0388dd136078a
 
 PODFILE CHECKSUM: 3866e747203e212e38ee42c6ab5a35509dbb560e

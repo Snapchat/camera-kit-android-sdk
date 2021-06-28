@@ -19,7 +19,7 @@ CameraKit currently supports CocoaPods.
 #### CocoaPods
 
 The `Podfile` should already be setup correctly to reference the camera kit sdk podpsec directory, but if you choose to move the SDK podspec directory somewhere else just be sure to add/modify this line:
-`pod 'CameraKit', :path => 'camera-kit-ios-releases'`
+`pod 'CameraKit', :path => 'CameraKit'`
 where `:path` points to the directory that contains the camera kit podspec.
 
 Before opening the workspace make sure you run

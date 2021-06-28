@@ -14,6 +14,8 @@ readonly samples_ios_root="${script_dir}/../../samples/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
+readonly version_file="${script_dir}/../../VERSION"
+readonly version="$(sed -n 1p ${version_file})"
 
 usage() {
     echo "usage: ${program_name} [-e --eject-to path]"
@@ -24,8 +26,6 @@ usage() {
 main() {
     local eject_to=$1
     local ipa_dir=$2
-    local version_file="${script_dir}/../../VERSION"
-    local version="$(sed -n 1p ${version_file})"
 
     pushd "${samples_ios_root}/CameraKitSample"
 
