@@ -43,6 +43,8 @@ main() {
     --sdk iphonesimulator \
     --output "${eject_to}"
 
+    rm -f "${eject_to}/docsets/SCSDKCameraKit.tgz"
+
     echo "Outputted docs to ${eject_to}"
 
     popd
