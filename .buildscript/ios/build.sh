@@ -86,7 +86,7 @@ main() {
 
     if [[ -n "$eject_to" ]]; then
         cp -R "${samples_ios_root}/." "${eject_to}"
-        pushd "${eject_to}"
+        pushd "${eject_to}/CameraKitSample"
         # cleanup CI artifacts
         rm -f Gemfile
         rm -f Gemfile.lock
