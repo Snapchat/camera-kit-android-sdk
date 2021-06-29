@@ -50,22 +50,34 @@ main() {
 
     local samples_eject_dir="${eject_dir}/samples"
     mkdir -p "${samples_eject_dir}"
-    
+
     local samples_readme_src="${samples_root}/README.md"
     if [ -e "${samples_readme_src}" ]; then
         cp "${samples_readme_src}" "${samples_eject_dir}/README.md"
     fi
 
+    local docs_eject_dir="${eject_dir}/docs"
+    mkdir -p "${docs_eject_dir}"
+
     for platform in ${platforms//,/ }
     do
-        local platform_eject_dir="${samples_eject_dir}/$platform"
-        mkdir -p "${platform_eject_dir}"
+        local platform_samples_eject_dir="${samples_eject_dir}/$platform"
+        local platform_docs_eject_dir="${docs_eject_dir}/api/$platform"
+        local platform_docs_eject_dir_versioned="${platform_docs_eject_dir}/${version_name}"
+
+        mkdir -p "${platform_samples_eject_dir}"
+        mkdir -p "${platform_docs_eject_dir_versioned}"
+
+        pushd "${platform_docs_eject_dir}"
+        ln -s "./${version_name}" ./latest
+        popd
 
         if [ "${platform}" == "android" ]; then
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/android"
-            ./build.sh -e "${platform_eject_dir}/camerakit-sample" -k $karma_test -b release
+            ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release
+            ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd
             
             echo ""
@@ -73,7 +85,8 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/ios"
-            ./build.sh -e "${platform_eject_dir}"
+            ./build.sh -e "${platform_samples_eject_dir}"
+            ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd
 
             echo ""
@@ -86,20 +99,18 @@ main() {
     local distribution_basedir="$(mktemp -d -t "camerakit-distribution-XXXXXXXXXX")"
     local distribution_dir="${distribution_basedir}/${distribution_archive_basename}"
     local distribution_zip="${distribution_basedir}/${distribution_archive_basename}.zip"
+    local readme_file="${repo_root}/README.${flavor}.md"
     mv "${eject_dir}" "${distribution_dir}"
     cp "${version_file}" "${distribution_dir}"
     cp "${license_file}" "${distribution_dir}"
     cp "${notice_file}" "${distribution_dir}"
     cp "${changelog_file}" "${distribution_dir}"
+    cp "${repo_root}/README.${flavor}.md" "${distribution_dir}/README.md"
     cp -r "${repo_root}/docs" "${distribution_dir}"
 
-    local android_doc_files_pattern="${distribution_dir}/samples/android/camerakit-sample/maven/com/snap/camerakit/camerakit/${version_name}*/*documentation.zip"
-    local android_doc_files=( $android_doc_files_pattern )
-    local android_docs_version_dir_name="${distribution_dir}/docs/api/${version_name}/android/"
-    mkdir -p "${android_docs_version_dir_name}"
-    unzip "${android_doc_files[0]}" -d "${android_docs_version_dir_name}"
-
-    sed -e "s/\${version}/${version_name}/" "${repo_root}/README.${flavor}.md" > "${distribution_dir}/README.md"
+    # Replace using suggestions from https://unix.stackexchange.com/a/112024
+    find $distribution_dir -type f -name "*.md" -exec sed -i'.bak' -e "s/\${version}/${version_name}/g" {} +
+    find $distribution_dir -type f -name "*.bak" -exec rm -rf {} \;
 
     local distribution_export="${distribution_dir}/."
     if [ "$zip_export" = true ]
@@ -117,7 +128,7 @@ main() {
             gsutil cp "${distribution_export}" "${export_to_path}"
         else
             mkdir -p "${export_to_path}"
-            cp -r "${distribution_export}" "${export_to_path}"
+            cp -PR "${distribution_export}" "${export_to_path}"
         fi
     fi
 

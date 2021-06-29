@@ -1,7 +1,7 @@
 <img align="left" width="64" height="64" src="docs/camerakit_icon.svg">
 
-# CameraKit Sample
+# CameraKit Reference
 
 </br>
 
-This repository contains [sample applications](./samples) which demonstrate how to integrate the ${version} version of the CameraKit SDK.
+This repository contains [documentation](./docs) as well as [sample applications](./samples) demonstrating how to integrate the ${version} version of the [CameraKit](https://kit.snapchat.com/camera-kit) SDK.

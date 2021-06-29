@@ -38,12 +38,18 @@ main() {
 
     git checkout -b "${branch}"
     git rm -r samples || true
-    # legacy dir not needed anymore
+    # Legacy dirs not needed anymore
     git rm -r .doc || true
+    git rm -r "docs/api/${version_name}" || true
+    # Remove any lingering symlinks or dirs to latest docs
+    git rm -r "docs/api/android/latest" || true
+    git rm -r "docs/api/android/${version_name}" || true
+    git rm -r "docs/api/ios/latest" || true
+    git rm -r "docs/api/ios/${version_name}" || true
 
     "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" -f "public"
 
-    git add .
+    git add --all
 
     local update_title="[All] Sync changes for the ${version_name} release"
     local update_body="This syncs all changes for the ${version_name} CameraKit release."

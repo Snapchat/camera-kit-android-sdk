@@ -18,6 +18,10 @@ task copyCameraKitDependenciesToBundledRepo() {
     def baseUri = "${snapMavenUri.replace('gcs', 'gs')}/com/snap/camerakit"
     def baseOutputDir = new File(bundledMavenRepo, '/com/snap/camerakit')
 
+    inputs.property('version', cameraKitVersion)
+    outputs.dir(baseOutputDir)
+    outputs.cacheIf { true }
+
     doFirst {
         modules.each { module ->
             new File(baseOutputDir, module).mkdirs()
@@ -75,6 +79,10 @@ task eject(type: Copy) {
             project.getProperty('outputDir') :
             "$buildDir/eject"
 
+    inputs.property('version', cameraKitVersion)
+    outputs.dir(outputDir)
+    outputs.cacheIf { true }
+
     from rootProject.projectDir
     into outputDir
     exclude gitignoreToList(file('.gitignore'))
@@ -108,6 +116,28 @@ task eject(type: Copy) {
             def stripped = stripBlockWithin(file.text, startTag, endTag)
             file.write(stripped)
         }
+    }
+}
+
+task ejectDocs(type: Copy) {
+    dependsOn copyCameraKitDependenciesToBundledRepo
+
+    def outputDir = project.hasProperty('outputDir') ?
+            project.getProperty('outputDir') :
+            "$buildDir/exported-docs"
+
+    inputs.property('version', cameraKitVersion)
+    outputs.dir(outputDir)
+    outputs.cacheIf { true }
+
+    from zipTree(new File(
+            bundledMavenRepo,
+            "/com/snap/camerakit/camerakit/$cameraKitVersion/camerakit-$cameraKitVersion-documentation.zip"
+    ))
+    into outputDir
+
+    doFirst {
+        logger.lifecycle("Ejecting docs to $outputDir")
     }
 }
 
