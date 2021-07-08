@@ -258,7 +258,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // Lens content resources are downloaded and managed by CameraKit internally, however it is possible
                 // to configure certain aspects such as cache size through the LensesComponent.Builder as seen below.
                 configureCache {
-                    lensContentMaxSize = 128 * 1024 * 1024 // 128MB
+                    // 150MB to make sure that some lenses that use large assets such as the ones required for 
+                    // 3D body tracking (https://lensstudio.snapchat.com/templates/object/3d-body-tracking) have 
+                    // enough cache space to fit alongside other lenses.
+                    lensContentMaxSize = 150 * 1024 * 1024
                 }
             }
         }
