@@ -22,7 +22,7 @@ Table of contents
 
 ### Requirements
 
-- Recent Android Studio (3.5+), download latest at: https://developer.android.com/studio.
+- Recent Android Studio (4.0+), download latest at: https://developer.android.com/studio.
 - Android 5.0 device or emulator, with a minimum SDK API level of 21, is required.
 
 ### IDE
