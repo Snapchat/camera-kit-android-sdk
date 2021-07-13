@@ -2,7 +2,7 @@
     <string name="app_name">CameraKit Sample</string>
     <string name="app_name_portrait_locked">CameraKit Sample Portrait</string>
     <string name="camera_kit_unsupported">CameraKit is not supported on this device</string>
-    <string name="required_permissions_not_granted">Required permissions not granted by the user</string>
+    <string name="required_permissions_not_granted">Required permissions not granted by the user: %s</string>
     <string name="available_lenses">Available lenses</string>
     <string name="prefetch_lenses">Prefetch lenses</string>
     <string name="update_lens_groups">Update lens groups</string>

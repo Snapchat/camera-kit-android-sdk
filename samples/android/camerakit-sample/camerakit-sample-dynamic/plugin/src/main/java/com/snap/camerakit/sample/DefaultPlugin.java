@@ -92,6 +92,15 @@ public final class DefaultPlugin extends Plugin {
     }
 
     @Override
+    public <P extends ImageProcessor> Bitmap imageProcessorProcessBitmap(
+            P processor, ImageProcessor.Input input, Bitmap bitmap,
+            boolean mirrorHorizontally, boolean mirrorVertically,
+            int rotation, long timeout, TimeUnit timeoutUnit) {
+        return ImageProcessors.processBitmap(
+                processor, input, bitmap, rotation, timeout, timeoutUnit, mirrorHorizontally, mirrorVertically);
+    }
+
+    @Override
     public <P extends ImageProcessor> Bitmap imageProcessorProcessImage(
             P processor, ImageProcessor.Input input, Image image, long timeout, TimeUnit timeoutUnit) {
         return ImageProcessors.processImage(processor, input, image, Integer.MIN_VALUE, timeout, timeoutUnit);
@@ -101,6 +110,15 @@ public final class DefaultPlugin extends Plugin {
     public <P extends ImageProcessor> Bitmap imageProcessorProcessImage(
             P processor, ImageProcessor.Input input, Image image, int rotation, long timeout, TimeUnit timeoutUnit) {
         return ImageProcessors.processImage(processor, input, image, rotation, timeout, timeoutUnit);
+    }
+
+    @Override
+    public <P extends ImageProcessor> Bitmap imageProcessorProcessImage(
+            P processor, ImageProcessor.Input input, Image image,
+            boolean mirrorHorizontally, boolean mirrorVertically,
+            int rotation, long timeout, TimeUnit timeoutUnit) {
+        return ImageProcessors.processImage(
+                processor, input, image, rotation, timeout, timeoutUnit, mirrorHorizontally, mirrorVertically);
     }
 
     @Override

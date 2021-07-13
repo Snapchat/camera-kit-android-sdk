@@ -89,13 +89,25 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoPlayerVersion"
     implementation "com.google.android.gms:play-services-vision:$gmsVisionVersion"
 
+    // The main CameraKit artifact that provides all the core functionality.
+    // It is not necessary to define it here if support-camera-layout artifact is
+    // used as it transitively depends on it, however it is kept for the reference.
     implementation "com.snap.camerakit:camerakit:$cameraKitVersion"
+    // Provides convenience Kotlin specific extensions to the public CameraKit API.
     implementation "com.snap.camerakit:camerakit-kotlin:$cameraKitVersion"
-    implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
-    implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
-    implementation "com.snap.camerakit:support-snap-button:$cameraKitVersion"
+    // Provides an opinionated but extensible implementation that wraps
+    // camera as well as CameraKit Session management with a View that can be
+    // embedded into any Activity or Fragment where CameraKit integration is needed.
+    implementation "com.snap.camerakit:support-camera-layout:$cameraKitVersion"
+    // Optional dependency that provides location access to certain lenses.
+    // Used by the support-camera-layout when creating the Source<LocationProcessor>
+    // for the CameraKit Session, if removed, falls back to default, no-op implementation.
     implementation "com.snap.camerakit:support-gms-location:$cameraKitVersion"
+    // Optional dependency that provides ArCore backed Source<ImageProcessor> to enable
+    // depth and other ArCore specific features in lenses that require them.
+    // Used by the support-camera-layout but can be safely removed if not needed.
     implementation "com.snap.camerakit:support-arcore:$cameraKitVersion"
+    implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
     //internal>
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<internal

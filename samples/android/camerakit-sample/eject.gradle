@@ -9,10 +9,12 @@ task copyCameraKitDependenciesToBundledRepo() {
             'camerakit',
             'camerakit-kotlin',
             'lenses-bundle',
+            'support-camera-layout',
             'support-camerax',
             'support-arcore',
             'support-snap-button',
             'support-gms-location',
+            'support-permissions',
             'camerakit-plugin-api'
     ]
     def baseUri = "${snapMavenUri.replace('gcs', 'gs')}/com/snap/camerakit"

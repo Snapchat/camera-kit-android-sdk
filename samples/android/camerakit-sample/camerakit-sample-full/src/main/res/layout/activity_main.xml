@@ -8,36 +8,16 @@
     android:fitsSystemWindows="true"
     >
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main_layout"
+    <com.snap.camerakit.support.widget.CameraLayout
+        android:id="@+id/camera_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="false"
         android:splitMotionEvents="true"
+        app:lensesCarouselHeight="@dimen/lenses_carousel_height"
+        app:lensesCarouselMarginBottom="@dimen/lenses_carousel_margin_bottom"
+        app:lensesCarouselCloseButtonMarginBottom="@dimen/lenses_carousel_close_button_margin_bottom"
         >
-
-        <View
-            android:id="@+id/preview_gesture_handler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-        <!-- ViewStub dimensions within ConstraintLayout evaluate to 0 therefore we need to wrap it with FrameLayout -->
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-        >
-            <ViewStub
-                android:id="@+id/camerakit_stub"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:inflatedId="@+id/camerakit_root"
-                app:layout_constraintBottom_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-            />
-        </FrameLayout>
 
         <TextureView
             android:id="@+id/mini_preview"
@@ -68,55 +48,7 @@
             tools:text="Very long lens name that should get ellipsized"
             />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_flip_camera"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@drawable/button_background"
-            android:fitsSystemWindows="true"
-            android:foreground="?attr/selectableItemBackground"
-            android:src="@drawable/ic_flip_camera_32x32"
-            android:contentDescription="@string/button_camera_flip_content_description"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_lens"
-            android:layout_width="39dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:backgroundTint="@drawable/button_background"
-            android:fitsSystemWindows="true"
-            android:src="@drawable/ic_lens_button_39"
-            android:visibility="gone"
-            android:contentDescription="@string/button_lens_activate_content_description"
-            app:layout_constraintStart_toEndOf="@+id/capture_button"
-            app:layout_constraintTop_toTopOf="@+id/capture_button"
-            app:layout_constraintBottom_toBottomOf="@+id/capture_button"
-            tools:visibility="visible"
-            />
-
-        <com.snap.camerakit.support.widget.SnapButtonView
-            android:id="@+id/capture_button"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="56dp"
-            android:padding="@dimen/capture_button_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:strokeWidth="@dimen/capture_button_stroke_width"
-            app:strokeColor="@color/capture_button_idle"
-            app:strokeColorActivated="@color/capture_button_active"
-            app:progressDuration="10000"
-            app:progressCycleRepeatCount="5"
-            app:progressCycleEndCapture="5"
-            app:expandDuration="250"
-            />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.snap.camerakit.support.widget.CameraLayout>
 
     <FrameLayout
         android:id="@+id/debug_container"
