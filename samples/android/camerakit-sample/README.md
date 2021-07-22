@@ -149,7 +149,9 @@ public final class BasicActivity extends AppCompatActivity implements LifecycleO
     @Override
     protected void onResume() {
         super.onResume();
-        cameraKitSession.getLenses().getRepository().get(new Available("1"), available -> {
+        // Fetch lenses from repository and apply them
+        // Replace LENS_GROUP_ID with Lens Group ID from https://camera-kit.snapchat.com
+        cameraKitSession.getLenses().getRepository().get(new Available(LENS_GROUP_ID), available -> {
             Log.d(TAG, "Available lenses: " + available);
             Lenses.whenHasFirst(available, lens -> cameraKitSession.getLenses().getProcessor().apply(lens, result -> {
                 Log.d(TAG,  "Apply lens [" + lens + "] success: " + result);
