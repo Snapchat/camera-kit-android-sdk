@@ -5,8 +5,6 @@ CameraKit follows the process documented below to manage the release flow.
 - `${version}` - the current version.
 - `${version_next}` - the next version.
 
-*We continue bumping the `minor` version element until CameraKit is ready for general release - at this point the version should become `1.0.0` and follow a typical semantic versioning scheme.* 
-
 - [ ] 1. `git checkout master && git pull origin master`.
 
 - [ ] 2. Ensure [`VERSION`](./VERSION) is the `${version}`.
@@ -23,17 +21,17 @@ CameraKit follows the process documented below to manage the release flow.
 
 - [ ] 8. `git push && git push --tags`.
 
-- [ ] 9. Build [job](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build) for the `release/${version}` branch should start automatically, if it doesn't, investigate and not proceed further until issue is fixed. Once build job is done, SDK artifacts are available on the job result page, for [example](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build/330/gcsObjects/). Android and iOS sample apps get published by 2 other jobs:
+- [ ] 9. Build [job](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build) for the `release/${version}` branch should start automatically, if it doesn't, investigate and do not proceed further until issue is fixed. Once build job is done, SDK artifacts are available on the job result page, for [example](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-build/330/gcsObjects/). Android and iOS sample apps get published by 2 other jobs:
    - [Android job](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-android-publish) publishes to [CameraKit-Sample-Partner](https://appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner).
    - [iOS job](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-distribution-ios-publish) to [CameraKit-Sample-Partner-iOS](https://appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS).
    
 - [ ] 10. Create PR to include `release/${version}` to [autocherrypicker](https://github.sc-corp.net/Snapchat/autocherrypicker). Example [PR](https://github.sc-corp.net/Snapchat/autocherrypicker/pull/261).  
 
-- [ ] 11. Create PR to bump version in [Android](https://github.sc-corp.net/Snapchat/android/blob/master/snapchat/sdks/camerakit/core/ext.gradle#L16) to `${version_next}`. Example [PR](https://github.sc-corp.net/Snapchat/android/pull/149334).
+- [ ] 11. Create PR to bump version in [Android](https://github.sc-corp.net/Snapchat/android/blob/master/snapchat/sdks/camerakit/core/ext.gradle#L33) to `${version_next}`. Example [PR](https://github.sc-corp.net/Snapchat/android/pull/149334).
 
-- [ ] 12. Create PR to bump version in [Phantom](https://github.sc-corp.net/Snapchat/phantom/blob/master/Frameworks/CameraKit/CameraKit/Config/Info.plist#L18) to `${version_next}`. Example [PR](https://github.sc-corp.net/Snapchat/phantom/pull/144996).
+- [ ] 12. Create PR to bump version in [Phantom](https://github.sc-corp.net/Snapchat/phantom/blob/master/SDKs/CameraKit/CameraKit/VERSION#L1) to `${version_next}`. Example [PR](https://github.sc-corp.net/Snapchat/phantom/pull/144996).
 
-- [ ] 13. Once #11 is merged, trigger Android publish [job](https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-android-publish/build?delay=0sec) with `master` branch parameter.
+- [ ] 13. Once #11 is merged, trigger Android publish [job](https://snapengine-builder.sc-corp.net/jenkins/job/snap-sdk-android-publish/build?delay=0sec) with `master` branch parameter.
 
 - [ ] 14. `git checkout master`.
 
