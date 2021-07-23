@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CameraKit Sample Simple</string>
+
+    <string name="button_label_capture_lenses">Multiple lenses</string>
+    <string name="button_label_capture_lenses_apply_by_id">Multiple lenses &amp; apply by ID</string>
+    <string name="button_label_capture_lenses_prefetch_all">Multiple lenses &amp; prefetch all</string>
+    <string name="button_label_capture_lenses_idle_state">Multiple lenses with idle state</string>
+    <string name="button_label_capture_lenses_camera_facing_back">Multiple lenses &amp; back camera</string>
+    <string name="button_label_capture_lens">Single lens</string>
+    <string name="button_label_capture_lens_no_icon">Single lens with no icon</string>
+    <string name="title_capture_use_cases">CameraKit Capture Use Cases</string>
+    <string name="label_capture_result_none">No capture result</string>
+    <string name="label_capture_result_failure">Capture failed due to: %s</string>
+    <string name="description_captured_video_preview">Captured video preview</string>
+    <string name="description_captured_image_preview">Captured image preview</string>
+
+</resources>

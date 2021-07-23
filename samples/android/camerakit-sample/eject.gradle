@@ -10,6 +10,7 @@ task copyCameraKitDependenciesToBundledRepo() {
             'camerakit-kotlin',
             'lenses-bundle',
             'support-camera-layout',
+            'support-camera-activity',
             'support-camerax',
             'support-arcore',
             'support-snap-button',
@@ -108,6 +109,11 @@ task eject(type: Copy) {
             new Tuple3(
                 new File(outputDir, 'camerakit-sample-full/build.gradle'),
                 stripTagStartPlainComment, 
+                stripTagEndPlainComment
+            ),
+            new Tuple3(
+                new File(outputDir, 'camerakit-sample-simple/build.gradle'),
+                stripTagStartPlainComment,
                 stripTagEndPlainComment
             )
         ]

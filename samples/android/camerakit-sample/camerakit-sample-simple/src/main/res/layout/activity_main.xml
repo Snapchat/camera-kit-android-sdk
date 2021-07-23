@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    android:fitsSystemWindows="true"
+    >
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_capture_use_cases"
+            android:layout_marginBottom="8dp"
+            style="@style/TextAppearance.AppCompat.Title"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lenses"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lenses"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lenses_apply_by_id"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lenses_apply_by_id"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lenses_prefetch_all"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lenses_prefetch_all"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lenses_idle_state"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lenses_idle_state"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lenses_camera_facing_back"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lenses_camera_facing_back"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lens"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lens"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/button_capture_lens_no_icon"
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="wrap_content"
+            android:text="@string/button_label_capture_lens_no_icon"
+            />
+
+        <FrameLayout
+            android:layout_width="@dimen/button_launch_width"
+            android:layout_height="0dp"
+            android:minHeight="320dp"
+            android:layout_weight="1"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:padding="16dp"
+            android:background="@drawable/border_white"
+            >
+
+            <TextView
+                android:id="@+id/label_capture_result"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/label_capture_result_none"
+                android:textAllCaps="true"
+                style="@style/TextAppearance.AppCompat.Caption"
+                />
+
+            <VideoView
+                android:id="@+id/video_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:contentDescription="@string/description_captured_video_preview"
+                />
+
+            <ImageView
+                android:id="@+id/image_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:contentDescription="@string/description_captured_image_preview"
+                />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</ScrollView>
