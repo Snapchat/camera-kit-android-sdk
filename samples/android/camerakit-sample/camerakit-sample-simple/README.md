@@ -1,6 +1,6 @@
 # CameraKit Sample Simple App
 
-An app that demonstrates how to launch the CameraKit's support `CameraActivity` with different parameters to start a camera capture flow and get results back:
+An app that demonstrates how to launch the CameraKit's support `CameraActivity` with different parameters and get results back:
 
 ![demo](../.doc/sample_simple_demo.gif)
 
@@ -19,7 +19,7 @@ The full-featured `CameraActivity` is a great option for existing apps to integr
         }
     }
     findViewById<Button>(R.id.some_button).setOnClickListener {
-        captureLauncher.launch(CameraActivity.Capture.Request.WithLenses(
+        captureLauncher.launch(CameraActivity.Configuration.WithLenses(
             // NOTE: replace the value with ID of your app registered on https://kit.snapchat.com/manage
             cameraKitApplicationId = "feba9432-74f4-4226-aa3e-21c1e3775f1a",
             // NOTE: replace the value with lenses group ID from https://camera-kit.snapchat.com

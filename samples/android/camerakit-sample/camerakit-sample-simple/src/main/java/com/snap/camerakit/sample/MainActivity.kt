@@ -16,10 +16,10 @@ private val LENS_GROUP_IDS = arrayOf(BuildConfig.LENS_GROUP_ID_TEST)
 private const val APPLY_LENS_BY_ID = "172e89fb-5d74-46af-9fea-f0ac458443f9"
 
 /**
- * A simple activity that demonstrates how to launch the CameraKit's support [CameraActivity] and to get media results
- * back. [CameraActivity] exposes all the possible capture flow parameters through the [CameraActivity.Capture.Request]
+ * A simple activity that demonstrates how to launch the CameraKit's support [CameraActivity] and to get results back.
+ * [CameraActivity] exposes all the possible start parameters through the [CameraActivity.Configuration] class
  * which is passed to an [androidx.activity.result.ActivityResultLauncher] obtained by registering this activity to
- * receive results using the [CameraActivity.Capture] contract.
+ * receive results using either the [CameraActivity.Capture] or the [CameraActivity.Play] contract.
  */
 class MainActivity : AppCompatActivity() {
 
@@ -48,18 +48,22 @@ class MainActivity : AppCompatActivity() {
                     videoView.setVideoURI(result.uri)
                     videoView.start()
                     imageView.visibility = View.GONE
+                    captureResultLabel.text = null
                 }
                 is CameraActivity.Capture.Result.Success.Image -> {
                     imageView.visibility = View.VISIBLE
                     imageView.setImageURI(result.uri)
                     videoView.visibility = View.GONE
+                    captureResultLabel.text = null
                 }
                 is CameraActivity.Capture.Result.Cancelled -> {
-                    captureResultLabel.text = getString(R.string.label_capture_result_none)
+                    captureResultLabel.text = getString(R.string.label_result_none)
                     clearMediaPreviews()
                 }
                 is CameraActivity.Capture.Result.Failure -> {
-                    captureResultLabel.text = getString(R.string.label_capture_result_failure, result.message)
+                    captureResultLabel.text = getString(
+                        R.string.label_result_failure, result.exception.toString()
+                    )
                     clearMediaPreviews()
                 }
             }
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lenses).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLenses(
+                CameraActivity.Configuration.WithLenses(
                     lensGroupIds = LENS_GROUP_IDS
                 )
             )
@@ -75,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lenses_apply_by_id).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLenses(
+                CameraActivity.Configuration.WithLenses(
                     lensGroupIds = LENS_GROUP_IDS,
                     applyLensById = APPLY_LENS_BY_ID
                 )
@@ -84,7 +88,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lenses_prefetch_all).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLenses(
+                CameraActivity.Configuration.WithLenses(
                     lensGroupIds = LENS_GROUP_IDS,
                     prefetchLensByIdPattern = "\\S+"
                 )
@@ -93,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lenses_idle_state).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLenses(
+                CameraActivity.Configuration.WithLenses(
                     lensGroupIds = LENS_GROUP_IDS,
                     disableIdleState = false
                 )
@@ -102,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lenses_camera_facing_back).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLenses(
+                CameraActivity.Configuration.WithLenses(
                     lensGroupIds = LENS_GROUP_IDS,
                     applyLensById = APPLY_LENS_BY_ID,
                     cameraFacingFront = false
@@ -112,7 +116,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lens).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLens(
+                CameraActivity.Configuration.WithLens(
                     lensGroupId = LENS_GROUP_IDS.first(),
                     lensId = APPLY_LENS_BY_ID
                 )
@@ -121,10 +125,41 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button_capture_lens_no_icon).setOnClickListener {
             captureLauncher.launch(
-                CameraActivity.Capture.Request.WithLens(
+                CameraActivity.Configuration.WithLens(
                     lensGroupId = LENS_GROUP_IDS.first(),
                     lensId = APPLY_LENS_BY_ID,
                     displayLensIcon = false
+                )
+            )
+        }
+
+        val playLauncher = (this as ComponentActivity).registerForActivityResult(CameraActivity.Play) { result ->
+            Log.d(TAG, "Got play result: $result")
+            when (result) {
+                is CameraActivity.Play.Result.Completed -> {
+                    captureResultLabel.text = getString(R.string.label_result_completed)
+                    clearMediaPreviews()
+                }
+                is CameraActivity.Play.Result.Failure -> {
+                    captureResultLabel.text = getString(R.string.label_result_failure, result.exception.toString())
+                    clearMediaPreviews()
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.button_play_lenses).setOnClickListener {
+            playLauncher.launch(
+                CameraActivity.Configuration.WithLenses(
+                    lensGroupIds = LENS_GROUP_IDS
+                )
+            )
+        }
+
+        findViewById<Button>(R.id.button_play_lens).setOnClickListener {
+            playLauncher.launch(
+                CameraActivity.Configuration.WithLens(
+                    lensGroupId = LENS_GROUP_IDS.first(),
+                    lensId = APPLY_LENS_BY_ID
                 )
             )
         }
