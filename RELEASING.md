@@ -39,7 +39,7 @@ CameraKit follows the process documented below to manage the release flow.
 
 - [ ] 16. `echo "${version_next}" > VERSION`
 
-- [ ] 17. Update Android SDK [version](samples/android/camerakit-sample/build.gradle) to the one built by #13.
+- [ ] 17. Update Android SDK [version](samples/android/camerakit-sample/build.gradle) and build [metadata](samples/android/camerakit-sample/gradle.properties) from the SDK built by #13.
 
 - [ ] 18. Update iOS SDK release [commit](.buildscript/ios/build.sh) to the one built by #12. Update iOS SDK [version](samples/ios/CameraKitSample/Podfile) to `${version_next}`.
 

@@ -13,9 +13,10 @@ readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 readonly program_name=$0
 readonly repo_root="${script_dir}/../.."
 readonly version_file="${repo_root}/VERSION"
-readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
+readonly current_version=$( cat "${version_file}" | tr -d " \t\n\r" )
 readonly samples_android_root="${script_dir}/../../samples/android"
 readonly samples_android_root_build="${samples_android_root}/camerakit-sample/build.gradle"
+readonly samples_android_root_properties="${samples_android_root}/camerakit-sample/gradle.properties"
 readonly github_api_repos_url="https://github.sc-corp.net/api/v3/repos"
 readonly camerakit_distro_repo_base_path="Snapchat/camera-kit-distribution"
 readonly android_repo_base_path="Snapchat/android"
@@ -23,9 +24,13 @@ readonly android_repo_camerakit_sdk_path="snapchat/sdks/camerakit"
 
 usage() {
     echo "usage: ${program_name} [-v, --version] [-p, --create-pr]"
-    echo "  -v, --version [required] specify the version of SDK to update to"
+    echo "  -v, --version   [required] specify the version of SDK to update to"
+    echo "  -r, --revision  [optional] specify the revision (commit) of SDK to update to"
+    echo "                   Default: attempt to parse revision from the supplied version"
+    echo "  -b, --build     [optional] specify the build number of SDK to update to"
+    echo "                   Default: attempt to parse build number from the supplied version"
     echo "  -p, --create-pr [optional] indicate if PR should be opened"
-    echo "                  Default: false"
+    echo "                   Default: false"
 }
 
 fetch_commit() {
@@ -53,27 +58,23 @@ create_pr_draft() {
 
 main() {
     local next_version_name=$1
-    local next_version_rev=$2
-    local next_version_build_number=$3
-    local create_pr=$4
+    local next_version_metadata=$2
+    local next_version_rev=$3
+    local next_version_build_number=$4
+    local create_pr=$5
 
-    local current_version_rev=""
-    local current_version_build_number=""
-    if [[ $(cat "${samples_android_root_build}") =~ \"(\$cameraKitDistributionVersion)(\+|\-)(.*?)\.([0-9]+)\" ]]
-    then
-        current_version_rev="${BASH_REMATCH[3]}"
-        current_version_build_number="${BASH_REMATCH[4]}"
-    fi
+    local current_version_rev=$( sed -n 's/com.snap.camerakit.build.revision=//p' "${samples_android_root_properties}" )
+    local current_version_build_number=$( sed -n 's/com.snap.camerakit.build.number=//p' "${samples_android_root_properties}" )
 
-    if [[ $version_name != $next_version_name ]]
+    if [[ $next_version_name != $current_version* ]]
     then
-        echo "This script does not support different version names, current: ${version_name}, next: ${next_version_name}"
+        echo "This script does not support different version names, current: ${current_version}, next: ${next_version_name}"
         exit 1
     fi
 
     if [[ -n "$current_version_rev" ]] 
     then
-        echo "Current version: ${version_name}, revision: ${current_version_rev}, build number: ${current_version_build_number}"
+        echo "Current version: ${current_version}, revision: ${current_version_rev}, build number: ${current_version_build_number}"
 
         local included_sdk_commits=()
         local current_version_rev_element=$( fetch_commit $current_version_rev )
@@ -126,7 +127,6 @@ main() {
             exit 1
         fi
 
-        local next_version_name="${version_name}+${next_version_rev}.${next_version_build_number}"
         local update_title="[Build][Android] Update SDK to ${next_version_name}"
         local update_body="This updates Android SDK to \`${next_version_name}\` built in https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-android-publish/${next_version_build_number}"
 
@@ -142,11 +142,14 @@ main() {
            update_body="${update_body}"$'\n'"- ${commit_message}: ${commit_http_url}"
         done
 
-        echo "Updating current version ${version_name}+${current_version_rev}.${current_version_build_number} to ${next_version_name}+${next_version_rev}.${next_version_build_number} in ${samples_android_root_build}"
+        echo "Updating current version ${current_version}+${current_version_rev}.${current_version_build_number} to ${next_version_name} in ${samples_android_root_build}"
 
-        sed -i "s/${current_version_rev}.${current_version_build_number}/${next_version_rev}.${next_version_build_number}/g" "${samples_android_root_build}" 
+        sed -i "s/cameraKitVersion =.*/cameraKitVersion = \"\$cameraKitDistributionVersion${next_version_metadata}\"/g" "${samples_android_root_build}" 
+        sed -i "s/com.snap.camerakit.build.revision=.*/com.snap.camerakit.build.revision=${next_version_rev}/g" "${samples_android_root_properties}"
+        sed -i "s/com.snap.camerakit.build.number=.*/com.snap.camerakit.build.number=${next_version_build_number}/g" "${samples_android_root_properties}"
 
         git add "${samples_android_root_build}"
+        git add "${samples_android_root_properties}"
         local branch="android-sdk-update/${next_version_name}"
         local base_branch=$(git rev-parse --abbrev-ref HEAD)
         git checkout -B "${branch}"
@@ -171,8 +174,11 @@ main() {
     fi
 }
 
+major_minor_patch=""
+next_version_metadata=""
 next_version_name=""
 next_version_rev=""
+next_version_build_number=""
 create_pr=false
 
 while [[ $# -gt 0 ]]; do
@@ -180,6 +186,16 @@ while [[ $# -gt 0 ]]; do
     case $key in
     -v | --version)
         next_version_name="$2"
+        shift
+        shift
+        ;;
+    -r | --revision)
+        next_version_rev="$2"
+        shift
+        shift
+        ;;
+    -b | --build)
+        next_version_build_number="$2"
         shift
         shift
         ;;
@@ -196,18 +212,31 @@ done
 
 if [[ -n "$next_version_name" ]]
 then
-    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9]+)+(\+|\-)(.*?)\.([0-9]+) ]]
+    if [[ "$next_version_name" =~ ^([0-9]+\.[0-9]+\.[0-9]+)?(.*) ]]
     then
-        next_version="${BASH_REMATCH[1]}"
-        next_version_rev="${BASH_REMATCH[3]}"
-        next_version_build_number="${BASH_REMATCH[4]}"
+        major_minor_patch="${BASH_REMATCH[1]}"
+        next_version_metadata="${BASH_REMATCH[2]}"
 
-        echo "Next version: ${next_version}, revision: ${next_version_rev}, build number: ${next_version_build_number}" 
-
-        main "${next_version}" "${next_version_rev}" "${next_version_build_number}" $create_pr
+        if [[ "$next_version_metadata" =~ (\+)(.*?)\.([0-9]+) ]]
+        then
+            next_version_rev="${BASH_REMATCH[2]}"
+            next_version_build_number="${BASH_REMATCH[3]}"
+        fi
     else
-        echo "Could not parse version parts from ${next_version_name}"
+        echo "Could not parse the provided version: $next_version_name"
     fi
+
+    echo "Next version: ${major_minor_patch}, revision: '${next_version_rev}', build number: '${next_version_build_number}'" 
+
+    if [[ -n "$next_version_rev" && -n "$next_version_build_number" ]]
+    then
+        main "${next_version_name}" "${next_version_metadata}" "${next_version_rev}" "${next_version_build_number}" $create_pr
+    else
+        echo "Missing parameters to update version to: ${next_version_name}"
+        usage
+        exit 1
+    fi
+    
 else 
     usage
     exit 1
