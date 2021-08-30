@@ -8,11 +8,11 @@ set -o nounset
 set -o pipefail
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-readonly ck_info_plist="${script_dir}/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-armv7_arm64/SCSDKCameraKit.framework/Info.plist"
+readonly ck_info_plist="${script_dir}/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist"
 readonly sk_info_plist="${script_dir}/SnapKit/SCSDKCoreKit.framework/Info.plist"
 
 ck_fetch_latest() {
-	local gs_root="gs://snapengine-builder-artifacts/camera-kit-ios-sdk/${CAMERA_KIT_COMMIT}/Frameworks/CameraKit/.buildscript/build"
+	local gs_root="gs://snapengine-builder-artifacts/camera-kit-ios-sdk/${CAMERA_KIT_COMMIT}/SDKs/CameraKit/.buildscript/build"
 	local gs_sdk="${gs_root}/SCSDKCameraKit.xcframework.zip"
 	local gs_ref="${gs_root}/Reference.zip"
 	local sources="CameraKit/Sources"
