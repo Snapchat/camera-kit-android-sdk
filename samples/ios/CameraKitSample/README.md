@@ -24,7 +24,7 @@ where `:path` points to the directory that contains the camera kit podspec.
 
 Before opening the workspace make sure you run
 `pod install`
-and open `CameraKitSandbox.xcworkspace`
+and open `CameraKitSample.xcworkspace`
 
 #### Configure your AVCaptureSession Pipeline
 
