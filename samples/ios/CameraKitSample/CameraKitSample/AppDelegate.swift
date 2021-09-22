@@ -5,6 +5,9 @@ import UIKit
 import SCSDKCameraKit
 import SCSDKCameraKitReferenceUI
 import SCSDKCreativeKit
+// Reenable if using SwiftUI reference UI
+//import SCSDKCameraKitReferenceSwiftUI
+//import SwiftUI
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
@@ -18,13 +21,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
 
     let snapAPI = SCSDKSnapAPI()
+    let cameraController = CameraController()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let cameraViewController = CameraViewController(repoGroups: [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId])
+        
+        cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
+        cameraController.snapchatDelegate = self
+        let cameraViewController = CameraViewController(cameraController: cameraController)
         cameraViewController.appOrientationDelegate = self
-        cameraViewController.snapchatDelegate = self
         window?.rootViewController = cameraViewController
+        
+//        If your application has a deployment target of 14.0 or higher, CameraKit Reference UI
+//        supports a preview SwiftUI implementation.
+//        let view = CameraView(cameraController: cameraController)
+//        let cameraViewController = UIHostingController(rootView: view)
+//        window?.rootViewController = cameraViewController
+        
         window?.makeKeyAndVisible()
 
         return true

@@ -8,6 +8,12 @@ let package = Package(
     ],
     products: [
         .library(
+            name: "SCSDKCameraKitReferenceSwiftUI",
+            targets: [
+                "SCSDKCameraKitReferenceSwiftUI"
+            ]
+        ),
+        .library(
             name: "SCSDKCameraKitReferenceUI",
             targets: [
                 "SCSDKCameraKitReferenceUI"
@@ -34,5 +40,12 @@ let package = Package(
             resources: [
                 .process("Resources/Reference.xcassets")
             ]),
+        .target(
+            name: "SCSDKCameraKitReferenceSwiftUI",
+            dependencies: [
+                "SCSDKCameraKit",
+                "SCSDKCameraKitReferenceUI"
+            ],
+            resources: []),
     ]
 )
