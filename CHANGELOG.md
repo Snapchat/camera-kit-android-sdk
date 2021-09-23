@@ -9,6 +9,7 @@
 - **Android:** Fix touch re-dispatch when lenses carousel de-activated
 - **Android:** Fix multiple startPreview leading to a crash in CameraX
 - **iOS:**  Deadlock on stopping session
+- **iOS:** Process images at video resolution (scaling was causing layers of lens to disappear or objects to move their location in photos)
 
 ### Features
 - **Android:** CameraActivity for simple use cases
