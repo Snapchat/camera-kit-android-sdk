@@ -4,10 +4,125 @@
 ## [Unreleased]
 
 <a name="1.7.0"></a>
-## [1.7.0] - 2021-04-26
+## [1.7.0] - 2021-09-22
+### Bug Fixes
+- **Android:** Fix touch re-dispatch when lenses carousel de-activated
+- **Android:** Fix multiple startPreview leading to a crash in CameraX
+- **iOS:**  Deadlock on stopping session
+
+### Features
+- **Android:** CameraActivity for simple use cases
+- **Android:** CameraLayout support view for simplified integration
+- **Android:** Lenses Carousel reference UI
+- **Android:** Gallery media source support for the MediaProcessor
+- **Android:** Enable/disable SnapButtonView based on lens download status
+- **Android:** Added SRE metrics
+- **iOS:** SwiftUI support
+- **iOS:** Added SRE metrics
+
+<a name="1.6.17"></a>
+## [1.6.17] - 2021-09-22
+### Bug Fixes
+- **Android:** Fixes for the face tracking issues introduced in 1.6.15
+
+<a name="1.6.16"></a>
+## [1.6.16] - 2021-09-20
+### Bug Fixes
+- **iOS:** Button hit target may not have aligned with rendered UI
+
+<a name="1.6.15"></a>
+## [1.6.15] - 2021-09-13
+### Features
+- **Android:** Lens Studio 4.4 support
+- **iOS:** Lens Studio 4.4 support
+
+<a name="1.6.14"></a>
+## [1.6.14] - 2021-09-03
+### Bug Fixes
+- **Android:**  Use max batch size limit when publishing metrics
+- **Android:**  Wait for metric reports finished on computation thread
+- **iOS:**  Stability fixes
+
+<a name="1.6.13"></a>
+## [1.6.13] - 2021-09-01
+### Features
+- **iOS:**  Bitcode support
+
+<a name="1.6.12"></a>
+## [1.6.12] - 2021-08-17
+### Bug Fixes
+- **Android:**  Avoid reading cache size config on the Main thread
+- **Android:**  Lenses Carousel does not appear on some devices
+
+
+<a name="1.6.11"></a>
+## [1.6.11] - 2021-08-06
+### Bug Fixes
+- **Android:**  Lens processing failure after image/video capture
+- **Android:**  SurfaceTexture based Output Surface leak
+
+
+<a name="1.6.10"></a>
+## [1.6.10] - 2021-07-23
+### Bug Fixes
+- **Android:**  Too broad Proguard rule for GMS FaceDetector
+
+
+<a name="1.6.9"></a>
+## [1.6.9] - 2021-07-19
+### Bug Fixes
+- **iOS:**  Localization always giving priority to preferred languages with 3 letter ISO 639-2 codes
+
+
+<a name="1.6.8"></a>
+## [1.6.8] - 2021-07-13
+### Bug Fixes
+- **Android:**  Fix Surface not released if Output connection is cancelled
+
+
+<a name="1.6.7"></a>
+## [1.6.7] - 2021-07-08
+### Bug Fixes
+- **Android:**  Increase max lenses content size
+- **Android:**  Late input connection leads to no processed frames
+- **iOS:**  Increase max lenses content size
+- **iOS:**  Some lenses turn grayscale when recording
+
+
+<a name="1.6.6"></a>
+## [1.6.6] - 2021-06-22
+### Bug Fixes
+- **iOS:**  Large photo picker images (panorama) exceed memory
+
+
+<a name="1.6.5"></a>
+## [1.6.5] - 2021-06-17
+### Bug Fixes
+- **Android:**  Lens localized hint strings are cached incorrectly
+- **Android:**  Incorrect lens download status
+
+
+<a name="1.6.4"></a>
+## [1.6.4] - 2021-06-16
+### Bug Fixes
+- **iOS:**  Previous lens would sometimes be applied after new one was applied
+
+
+<a name="1.6.3"></a>
+## [1.6.3] - 2021-06-16
+### Bug Fixes
+- **Android:**  Carousel accessibility improvements
+
+
+<a name="1.6.1"></a>
+## [1.6.1] - 2021-05-10
+### Bug Fixes
+- **Android:**  Lens is not applied when carousel's disableIdle = true
+- **iOS:**  Deadlock on stopping session
+
 
 <a name="1.6.0"></a>
-## [1.6.0] - 2021-04-23
+## [1.6.0] - 2021-04-26
 ### Features
 - **Android:**  Add support for client defined safe render area
 - **Android:**  Add Media Picker support for sample app
@@ -136,10 +251,46 @@
 ## [1.3.6] - 2020-11-04
 ### Bug Fixes
 - **Android:**  Missing lens placeholder icon
+- **Android:**  Better portrait orientation support
+- **Android:**  Missing lenses carousel center icon
+- **Android:**  Crash when user app targets API level 30 on Android Q (11) devices
+- **Android:**  Crash after required permissions accepted
+- **iOS:**  Some lenses won't download after the internet is back
+- **iOS:**  Race condition sometimes when retrying requests due to no internet
+- **iOS:**  Requests sometime failing if app is open for too long
 - **iOS:**  Lens repo sometimes returning stale data
 
 ### Features
 - **Android:**  Added Configuration for Processor to support different input frame rotation behaviors
+- **Android:**  Customize lenses carousel with custom item positions and activation flow
+- **Android:**  Expose lens preview model
+- **Android:**  Improve dynamic loading sample plugin example
+- **Android:**  Expose API to disable default camera preview rendering
+- **Android:**  Dynamic feature-as-a-plugin example
+- **iOS:**  Expose lens preview model
+
+
+<a name="1.4.0"></a>
+## [1.4.0] - 2020-10-28
+### Bug Fixes
+- **Android:**  Missing lenses carousel center icon
+- **Android:**  Better portrait orientation support
+- **iOS:**  ARKit video is stretched
+- **iOS:**  Image hints are present in videos
+- **iOS:**  Some lenses won't download after the internet is back
+- **iOS:**  Bundled hints not localizing properly if host app doesn't support localization
+- **iOS:**  Recorded video frozen when returning from background
+
+### Features
+- **Android:**  Customize lenses carousel with custom item positions
+- **Android:**  Expose API to disable default camera preview rendering
+- **Android:**  Expose lens preview model
+- **Android:**  Use exposed lenses carousel API to implement lens button
+- **Android:**  Improve dynamic loading sample plugin example
+- **Android:**  Camera zoom support example
+- **iOS:**  Add LiDAR support
+- **iOS:**  Improve AVSessionInput camera performance
+- **iOS:**  Expose lens preview model
 
 
 <a name="1.3.5"></a>
