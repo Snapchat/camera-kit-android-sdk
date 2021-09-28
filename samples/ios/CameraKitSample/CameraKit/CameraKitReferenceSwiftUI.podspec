@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name               = "CameraKitReferenceSwiftUI"
-  spec.version = "1.7.0"
+  spec.version = "1.8.0"
   spec.summary            = "SwiftUI implementations of Carousel, Camera Ring, and other UI components to support CameraKit"
   spec.dependency           "CameraKitReferenceUI"
   spec.module_name        = "SCSDKCameraKitReferenceSwiftUI"

@@ -3,6 +3,9 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.8.0"></a>
+## [1.8.0] - 2021-09-24
+
 <a name="1.7.0"></a>
 ## [1.7.0] - 2021-09-22
 ### Bug Fixes

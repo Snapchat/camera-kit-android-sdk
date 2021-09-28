@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "CameraKit"
-  spec.version = "1.7.0"
+  spec.version = "1.8.0"
   spec.summary      = "Bring the power of Snapchat’s Camera into your app and create unique AR experiences."
   spec.homepage     = "https://kit.snapchat.com/camera-kit"
   spec.license      = { :type => "Copyright", :text => "Copyright Snap Inc. All rights reserved." }
