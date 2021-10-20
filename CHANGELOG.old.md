@@ -1,32 +1,3 @@
-# CHANGELOG
-
-<a name="unreleased"></a>
-## [Unreleased]
-
-<a name="1.7.4"></a>
-## [1.7.4] - 2021-10-20
-### Bug Fixes
-- **Android:**  Fix an issue introduced in 1.7.1 that downgraded SDK performance
-
-
-<a name="1.7.3"></a>
-## [1.7.3] - 2021-10-11
-### Bug Fixes
-- **iOS:**  Cache size config being ignored
-
-
-<a name="1.7.2"></a>
-## [1.7.2] - 2021-10-07
-### Bug Fixes
-- **iOS:**  Remove private API usage
-
-
-<a name="1.7.1"></a>
-## [1.7.1] - 2021-10-01
-### Bug Fixes
-- **iOS:**  Borders on captured images and videos
-- **iOS:**  Process images at video resolution
-
 
 <a name="1.7.0"></a>
 ## [1.7.0] - 2021-09-22
@@ -505,9 +476,9 @@
 - **Android:**  Save applied lens ID and camera facing in instance state
 - **Android:**  Add camera flip button
 - **Android:**  Open side drawer on lens button click
-- **Android:**  Add next/previous lens buttons to the sample app ([#8](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/8))
+- **Android:**  Add next/previous lens buttons to the sample app
 - **Android:**  Use Lens name in side bar listing
 - **iOS:**  Add Camera Flip Button
-- **iOS:**  add prev next buttons to flip between lenses ([#6](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/6))
-- **iOS:**  use lens name property ([#3](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/3))
+- **iOS:**  add prev next buttons to flip between lenses
+- **iOS:**  use lens name property
 
