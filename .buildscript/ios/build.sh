@@ -27,6 +27,8 @@ main() {
     local eject_to=$1
     local ipa_dir=$2
 
+    $script_dir/setup.sh
+
     pushd "${samples_ios_root}/CameraKitSample"
 
     rm -rf xcarchive_path
