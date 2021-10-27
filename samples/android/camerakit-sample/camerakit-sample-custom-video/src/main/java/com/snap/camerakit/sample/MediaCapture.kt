@@ -13,8 +13,11 @@ import java.io.File
 import java.io.IOException
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.atomic.AtomicReference
 import kotlin.math.ceil
 
 // Mime types for video/audio encoding
@@ -62,7 +65,6 @@ internal class MediaCapture(
     // Surface used as input for video encoder
     val surface: Surface
 
-    private val endOfAudioStreamSignal: AtomicBoolean = AtomicBoolean(true)
     private val endOfVideoStreamSignal: AtomicBoolean = AtomicBoolean(true)
     private val endOfAudioVideoSignal: AtomicBoolean = AtomicBoolean(true)
 
@@ -137,10 +139,9 @@ internal class MediaCapture(
         }
 
         endOfVideoStreamSignal.set(false)
-        endOfAudioStreamSignal.set(false)
         endOfAudioVideoSignal.set(false)
 
-        val isRecording = AtomicBoolean(true)
+        val audioEncodingTask = AtomicReference<Future<*>>()
 
         try {
             Log.d(TAG, "Starting video encoder")
@@ -178,7 +179,7 @@ internal class MediaCapture(
                     // In this sample, its 2048B (2MB)
                     // Copy processed byte array data into cleared input buffer for audio encoder
                     buffer.put(byteArray)
-                    val flags = if (isRecording.get()) 0 else MediaCodec.BUFFER_FLAG_END_OF_STREAM
+                    val flags = if (!Thread.currentThread().isInterrupted) 0 else MediaCodec.BUFFER_FLAG_END_OF_STREAM
                     audioEncoder.queueInputBuffer(
                         inputBufferIdx,
                         0,
@@ -190,159 +191,160 @@ internal class MediaCapture(
             }
         }
 
-        if (isAudioProvided) {
-            executorService.execute {
-                Log.d(TAG, "Encoding audio")
+        try {
+            if (isAudioProvided) {
+                audioEncodingTask.getAndSet(
+                    executorService.submit {
+                        Log.d(TAG, "Encoding audio")
 
-                var endOfStream = false
-                var lastTimestamp = 0L
-                val bufferInfo = MediaCodec.BufferInfo()
+                        var endOfStream = false
+                        var lastTimestamp = 0L
+                        val bufferInfo = MediaCodec.BufferInfo()
 
-                while (!endOfStream && isRecording.get()) {
-                    if (endOfAudioStreamSignal.get()) {
-                        Log.d(TAG, "End of audio stream signaled")
-                        endOfAudioStreamSignal.set(false)
-                        isRecording.set(false)
+                        while (!endOfStream && !Thread.currentThread().isInterrupted) {
+                            when (val outputBufferIdx =
+                                audioEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_AUDIO_OUTPUT)) {
+                                MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                                    synchronized(muxerLock) {
+                                        audioTrackIndex.set(muxer.addTrack(audioEncoder.outputFormat))
+                                        Log.d(TAG, "Added audio track to muxer. Track: ${audioTrackIndex.get()}")
+                                    }
+
+                                    if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
+                                        || (!isAudioProvided && videoTrackIndex.get() >= 0)
+                                    ) {
+                                        Log.d(TAG, "Starting muxer - encodeAudio")
+                                        muxerStarted.set(true)
+                                        muxer.start()
+                                    }
+                                }
+                                MediaCodec.INFO_TRY_AGAIN_LATER -> {
+                                    // Timed out. Wait until next attempt to deque
+                                    /* no-op */
+                                }
+                                else -> {
+                                    if (bufferInfo.presentationTimeUs > lastTimestamp) {
+                                        endOfStream = writeAudioEncodedBuffer(
+                                            outputBufferIdx,
+                                            bufferInfo,
+                                            audioTrackIndex.get(),
+                                            muxerStarted.get()
+                                        )
+                                        lastTimestamp = bufferInfo.presentationTimeUs
+                                    } else {
+                                        Log.d(
+                                            TAG, "Dropping out of order frame. " +
+                                                    "Current frame timestamp: ${bufferInfo.presentationTimeUs}, " +
+                                                    "last frame timestamp: $lastTimestamp"
+                                        )
+                                        audioEncoder.releaseOutputBuffer(outputBufferIdx, false)
+                                    }
+                                }
+                            }
+                        }
+
+                        try {
+                            Log.d(TAG, "Stopping audio encoder")
+                            audioEncoder.stop()
+                        } catch (e: IllegalStateException) {
+                            captureCallback.onError(e)
+                        }
+
+                        endOfVideoStreamSignal.set(true)
                     }
+                )?.cancel(true)
+            }
 
-                    when (val outputBufferIdx =
-                        audioEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_AUDIO_OUTPUT)) {
-                        MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-                            synchronized(muxerLock) {
-                                audioTrackIndex.set(muxer.addTrack(audioEncoder.outputFormat))
-                                Log.d(TAG, "Added audio track to muxer. Track: ${audioTrackIndex.get()}")
-                            }
+            executorService.execute {
+                Log.d(TAG, "Encoding video")
 
-                            if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
-                                || (!isAudioProvided && videoTrackIndex.get() >= 0)
-                            ) {
-                                Log.d(TAG, "Starting muxer - encodeAudio")
-                                muxerStarted.set(true)
-                                muxer.start()
+                var errorOccurred = false
+                var endOfStream = false
+
+                try {
+                    val bufferInfo = MediaCodec.BufferInfo()
+
+                    while (!endOfStream && !errorOccurred) {
+                        if (endOfVideoStreamSignal.get()) {
+                            Log.d(TAG, "End of video stream signaled")
+                            videoEncoder.signalEndOfInputStream()
+                            endOfVideoStreamSignal.set(false)
+                        }
+
+                        when (val outputBufferIdx =
+                            videoEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_VIDEO)) {
+                            MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                                if (muxerStarted.get()) {
+                                    captureCallback.onError(IllegalStateException("Unexpected change in video encoding format"))
+                                    errorOccurred = true
+                                }
+
+                                synchronized(muxerLock) {
+                                    videoTrackIndex.set(muxer.addTrack(videoEncoder.outputFormat))
+                                    Log.d(TAG, "Added video track to muxer. Track: $videoTrackIndex")
+                                }
+
+                                if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
+                                    || (!isAudioProvided && videoTrackIndex.get() >= 0)
+                                ) {
+                                    Log.d(TAG, "Starting muxer - encodeVideo")
+                                    muxerStarted.set(true)
+                                    muxer.start()
+                                }
                             }
-                        }
-                        MediaCodec.INFO_TRY_AGAIN_LATER -> {
-                            // Timed out. Wait until next attempt to deque
-                            /* no-op */
-                        }
-                        else -> {
-                            if (bufferInfo.presentationTimeUs > lastTimestamp) {
-                                endOfStream = writeAudioEncodedBuffer(
+                            MediaCodec.INFO_TRY_AGAIN_LATER -> {
+                                // Timed out. Wait until next attempt to deque
+                                /* no-op */
+                            }
+                            else -> {
+                                endOfStream = writeVideoEncodedBuffer(
                                     outputBufferIdx,
                                     bufferInfo,
-                                    audioTrackIndex.get(),
+                                    videoTrackIndex.get(),
                                     muxerStarted.get()
                                 )
-                                lastTimestamp = bufferInfo.presentationTimeUs
-                            } else {
-                                Log.d(
-                                    TAG, "Dropping out of order frame. " +
-                                            "Current frame timestamp: ${bufferInfo.presentationTimeUs}, " +
-                                            "last frame timestamp: $lastTimestamp"
-                                )
-                                audioEncoder.releaseOutputBuffer(outputBufferIdx, false)
                             }
                         }
                     }
-                }
 
-                try {
-                    Log.d(TAG, "Stopping audio encoder")
-                    audioEncoder.stop()
-                } catch (e: IllegalStateException) {
-                    captureCallback.onError(e)
-                }
-
-                endOfVideoStreamSignal.set(true)
-            }
-        }
-
-        executorService.execute {
-            Log.d(TAG, "Encoding video")
-
-            var errorOccurred = false
-            var endOfStream = false
-
-            try {
-                val bufferInfo = MediaCodec.BufferInfo()
-
-                while (!endOfStream && !errorOccurred) {
-                    if (endOfVideoStreamSignal.get()) {
-                        Log.d(TAG, "End of video stream signaled")
-                        videoEncoder.signalEndOfInputStream()
-                        endOfVideoStreamSignal.set(false)
+                    try {
+                        Log.d(TAG, "Stopping video encoder")
+                        videoEncoder.stop()
+                    } catch (e: IllegalStateException) {
+                        captureCallback.onError(e)
+                        errorOccurred = true
                     }
 
-                    when (val outputBufferIdx =
-                        videoEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_VIDEO)) {
-                        MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                    try {
+                        synchronized(muxerLock) {
                             if (muxerStarted.get()) {
-                                captureCallback.onError(IllegalStateException("Unexpected change in video encoding format"))
-                                errorOccurred = true
+                                Log.d(TAG, "Stopping muxer")
+                                muxer.stop()
                             }
-
-                            synchronized(muxerLock) {
-                                videoTrackIndex.set(muxer.addTrack(videoEncoder.outputFormat))
-                                Log.d(TAG, "Added video track to muxer. Track: $videoTrackIndex")
-                            }
-
-                            if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
-                                || (!isAudioProvided && videoTrackIndex.get() >= 0)
-                            ) {
-                                Log.d(TAG, "Starting muxer - encodeVideo")
-                                muxerStarted.set(true)
-                                muxer.start()
-                            }
+                            Log.d(TAG, "Releasing muxer")
+                            muxer.release()
                         }
-                        MediaCodec.INFO_TRY_AGAIN_LATER -> {
-                            // Timed out. Wait until next attempt to deque
-                            /* no-op */
-                        }
-                        else -> {
-                            endOfStream = writeVideoEncodedBuffer(
-                                outputBufferIdx,
-                                bufferInfo,
-                                videoTrackIndex.get(),
-                                muxerStarted.get()
-                            )
-                        }
+                    } catch (e: IllegalStateException) {
+                        captureCallback.onError(e)
+                        errorOccurred = true
                     }
+
+                    muxerStarted.set(false)
+                    endOfAudioVideoSignal.set(true)
+                } finally {
+                    Log.d(TAG, "Releasing resources")
+                    audioEncoder.release()
+                    videoEncoder.release()
+                    surface.release()
                 }
 
-                try {
-                    Log.d(TAG, "Stopping video encoder")
-                    videoEncoder.stop()
-                } catch (e: IllegalStateException) {
-                    captureCallback.onError(e)
-                    errorOccurred = true
+                if (!errorOccurred) {
+                    captureCallback.onSaved(file)
                 }
-
-                try {
-                    synchronized(muxerLock) {
-                        if (muxerStarted.get()) {
-                            Log.d(TAG, "Stopping muxer")
-                            muxer.stop()
-                        }
-                        Log.d(TAG, "Releasing muxer")
-                        muxer.release()
-                    }
-                } catch (e: IllegalStateException) {
-                    captureCallback.onError(e)
-                    errorOccurred = true
-                }
-
-                muxerStarted.set(false)
-                endOfAudioVideoSignal.set(true)
-            } finally {
-                Log.d(TAG, "Releasing resources")
-                audioEncoder.release()
-                videoEncoder.release()
-                surface.release()
             }
-
-            if (!errorOccurred) {
-                captureCallback.onSaved(file)
-            }
+        } catch (e: RejectedExecutionException) {
+            Log.e(TAG, "Could not start encoding tasks due to ExecutorService shutdown")
+            captureCallback.onError(e)
         }
 
         // Stop audio/video encoding on close
@@ -350,17 +352,12 @@ internal class MediaCapture(
             // Disconnect audio input and stop encoding
             inputCloseable?.close()
 
-            if (isRecording.get()) {
-                Log.d(TAG, "Stop recording. Signaling end of stream")
-                if (isAudioProvided) {
-                    // If audio is provided, start with signaling end of audio stream
-                    // After end of audio encoding, end of video encoding will be signalled automatically
-                    endOfAudioStreamSignal.set(true)
-                } else {
-                    endOfVideoStreamSignal.set(true)
-                    isRecording.set(false)
-                }
-            }
+            Log.d(TAG, "Stop recording. Signaling end of stream")
+
+            // If audio task is set, cancel it to stop audio encoding, otherwise end video stream
+            // After end of audio encoding, end of video encoding will be signalled automatically
+            audioEncodingTask.getAndSet(null)?.cancel(true)
+                ?: endOfVideoStreamSignal.set(true)
         }
     }
 

@@ -36,6 +36,7 @@ Open the `camerakit-sample` project in Android Studio by opening the root [`buil
 This project includes several sample apps that demonstrate different approaches to integrating CameraKit SDK:
 
 - [`camerakit-sample-full`](./camerakit-sample-full) contains a fully functioning camera capture with lenses and preview flow.
+- [`camerakit-sample-custom-video`](./camerakit-sample-custom-video) demonstrates how to set up a custom video/audio encoding and audio source implementation.
 - [`camerakit-sample-simple`](./camerakit-sample-simple) demonstrates how to setup a simple, CameraKit powered, camera capture flow via the standalone, batteries-included `CameraActivity`.
 - [`camerakit-sample-dynamic-app`](./camerakit-sample-dynamic) contains a basic application that loads CameraKit SDK as a dynamic feature to display a list of available lenses.
 

@@ -11,7 +11,8 @@ import com.snap.camerakit.inputFrameFrom
 import java.io.Closeable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.concurrent.atomic.AtomicBoolean
+import java.util.concurrent.Future
+import java.util.concurrent.RejectedExecutionException
 import java.util.concurrent.atomic.AtomicReference
 
 // Audio recording config constants
@@ -37,7 +38,7 @@ internal class AudioProcessorSource(
 ) : Source<AudioProcessor>, MediaCapture.AudioSource {
 
     private val audioProcessor: AtomicReference<AudioProcessor> = AtomicReference()
-    private val isRecording: AtomicBoolean = AtomicBoolean(false)
+    private val recordingTask: AtomicReference<Future<*>> = AtomicReference()
     private var inputConsumer: Consumer<ByteArray> = Consumers.empty()
 
     override fun attach(processor: AudioProcessor): Closeable {
@@ -61,83 +62,84 @@ internal class AudioProcessorSource(
     private fun startRecording(): Closeable {
         Log.d(TAG, "Start audio recording")
 
-        executorService.submit {
-            if (isRecording.get()) {
-                Log.d(TAG, "Audio recording already in progress!")
-            } else {
-                isRecording.set(true)
-                var audioRecorder: AudioRecord? = null
-
-                try {
-                    audioRecorder = AudioRecord(
-                        MediaRecorder.AudioSource.CAMCORDER,
-                        AUDIO_SAMPLE_RATE_HZ,
-                        AUDIO_CHANNEL_CONFIG,
-                        AUDIO_RECORDING_FORMAT,
-                        AUDIO_BUFFER_SIZE
-                    )
-
-                    if (audioRecorder.state == AudioRecord.STATE_UNINITIALIZED) {
-                        audioRecorder.release()
-                        throw IllegalStateException("Audio recorder failed to initialize properly")
-                    }
-
-                    audioRecorder.startRecording()
-
-                    val buffer = ByteArray(AUDIO_BUFFER_SIZE)
-                    val audioInput = AudioInput(
-                        AUDIO_CHANNEL_COUNT,
-                        AUDIO_SAMPLE_RATE_HZ,
-                        AUDIO_BUFFER_SIZE,
-                        AUDIO_SAMPLE_SIZE
-                    )
-
-                    var inputCloseable: Closeable? = null
-                    while (isRecording.get()) {
-                        if (inputCloseable == null && audioProcessor.get() != null) {
-                            inputCloseable = audioProcessor.get().connectInput(audioInput)
-                        }
-
-                        val result = audioRecorder.read(buffer, 0, AUDIO_BUFFER_SIZE)
-                        when {
-                            result > 0 -> {
-                                audioInput.processFrame(buffer)
-                                inputConsumer.accept(buffer)
-                            }
-                            result < 0 -> {
-                                val error = when (result) {
-                                    AudioRecord.ERROR -> "ERROR"
-                                    AudioRecord.ERROR_BAD_VALUE -> "ERROR_BAD_VALUE"
-                                    AudioRecord.ERROR_DEAD_OBJECT -> "ERROR_DEAD_OBJECT"
-                                    AudioRecord.ERROR_INVALID_OPERATION -> "ERROR_INVALID_OPERATION"
-                                    else -> "Unknown error code ($result)"
-                                }
-
-                                Log.e(TAG, "Failed to read audio buffer: $error")
-                                isRecording.set(false)
-                            }
-                            else -> {
-                                Log.d(TAG, "Audio recorder read 0 bytes, EOF reached")
-                                isRecording.set(false)
-                            }
-                        }
-                    }
-
-                    inputCloseable?.close()
+        try {
+            recordingTask.getAndSet(
+                executorService.submit {
+                    var audioRecorder: AudioRecord? = null
 
                     try {
-                        audioRecorder.stop()
-                    } catch (e: IllegalStateException) {
-                        Log.e(TAG, "Failed to stop audio recorder")
+                        audioRecorder = AudioRecord(
+                            MediaRecorder.AudioSource.CAMCORDER,
+                            AUDIO_SAMPLE_RATE_HZ,
+                            AUDIO_CHANNEL_CONFIG,
+                            AUDIO_RECORDING_FORMAT,
+                            AUDIO_BUFFER_SIZE
+                        )
+
+                        if (audioRecorder.state == AudioRecord.STATE_UNINITIALIZED) {
+                            audioRecorder.release()
+                            throw IllegalStateException("Audio recorder failed to initialize properly")
+                        }
+
+                        audioRecorder.startRecording()
+
+                        val buffer = ByteArray(AUDIO_BUFFER_SIZE)
+                        val audioInput = AudioInput(
+                            AUDIO_CHANNEL_COUNT,
+                            AUDIO_SAMPLE_RATE_HZ,
+                            AUDIO_BUFFER_SIZE,
+                            AUDIO_SAMPLE_SIZE
+                        )
+
+                        var inputCloseable: Closeable? = null
+                        while (!Thread.currentThread().isInterrupted) {
+                            if (inputCloseable == null && audioProcessor.get() != null) {
+                                inputCloseable = audioProcessor.get().connectInput(audioInput)
+                            }
+
+                            val result = audioRecorder.read(buffer, 0, AUDIO_BUFFER_SIZE)
+                            when {
+                                result > 0 -> {
+                                    audioInput.processFrame(buffer)
+                                    inputConsumer.accept(buffer)
+                                }
+                                result < 0 -> {
+                                    val error = when (result) {
+                                        AudioRecord.ERROR -> "ERROR"
+                                        AudioRecord.ERROR_BAD_VALUE -> "ERROR_BAD_VALUE"
+                                        AudioRecord.ERROR_DEAD_OBJECT -> "ERROR_DEAD_OBJECT"
+                                        AudioRecord.ERROR_INVALID_OPERATION -> "ERROR_INVALID_OPERATION"
+                                        else -> "Unknown error code ($result)"
+                                    }
+
+                                    Log.e(TAG, "Failed to read audio buffer: $error")
+                                    Thread.currentThread().interrupt()
+                                }
+                                else -> {
+                                    Log.d(TAG, "Audio recorder read 0 bytes, EOF reached")
+                                    Thread.currentThread().interrupt()
+                                }
+                            }
+                        }
+
+                        inputCloseable?.close()
+
+                        try {
+                            audioRecorder.stop()
+                        } catch (e: IllegalStateException) {
+                            Log.e(TAG, "Failed to stop audio recorder")
+                        }
+                    } finally {
+                        audioRecorder?.release()
                     }
-                } finally {
-                    audioRecorder?.release()
                 }
-            }
+            )?.cancel(true)
+        } catch (e: RejectedExecutionException) {
+            Log.e(TAG, "Could not start recording task due to ExecutorService shutdown", e)
         }
 
         return Closeable {
-            isRecording.set(false)
+            recordingTask.getAndSet(null)?.cancel(true)
         }
     }
 

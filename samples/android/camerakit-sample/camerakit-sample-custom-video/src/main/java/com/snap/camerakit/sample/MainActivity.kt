@@ -20,6 +20,8 @@ import java.io.File
 import java.util.UUID
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import android.content.pm.ResolveInfo
+import android.content.pm.PackageManager
 
 private const val TAG = "MainActivity"
 private val LENS_GROUPS = arrayOf(
@@ -53,8 +55,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 uiThreadHandler.post {
                     // Using an intent action to play final video in system video player
                     val authority = "${this@MainActivity.applicationContext.packageName}.provider"
+                    val uri = FileProvider.getUriForFile(this@MainActivity, authority, file)
                     val intent = Intent(Intent.ACTION_VIEW).apply {
-                        data = FileProvider.getUriForFile(this@MainActivity, authority, file)
+                        data = uri
+                    }
+
+                    val resolveInfoList: List<ResolveInfo> =
+                        this@MainActivity.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+
+                    for (resolveInfo in resolveInfoList) {
+                        val packageName = resolveInfo.activityInfo.packageName
+                        this@MainActivity.grantUriPermission(
+                            packageName,
+                            uri,
+                            Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        )
                     }
 
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
