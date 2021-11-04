@@ -6,6 +6,7 @@
     <string name="available_lenses">Available lenses</string>
     <string name="prefetch_lenses">Prefetch lenses</string>
     <string name="update_lens_groups">Update lens groups</string>
+    <string name="trigger_legal_prompt">Trigger legal prompt</string>
     <string name="lens_groups">Lens groups</string>
     <string name="version_info">v%s (%d)</string>
     <string name="mini_preview_off">Mini Preview OFF</string>

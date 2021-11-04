@@ -210,6 +210,16 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     }
                 }
             }
+
+            // CameraKit prompts user to agree to Snap's legal terms using a built-in dialog which is presented
+            // on-demand, when lens apply request is issued. It is possible to trigger the legal prompt dialog
+            // earlier if required, the following block demonstrates how to do so using the LegalProcessor#waitFor
+            // method in response to a button click.
+            rootLayout.findViewById<Button>(R.id.trigger_legal_prompt_button).setOnClickListener {
+                session.processor.waitFor(requestUpdate = true) { result ->
+                    Log.d(TAG, "Got legal processor result: $result")
+                }
+            }
         }
 
         // Register for a callback to present a captured video.

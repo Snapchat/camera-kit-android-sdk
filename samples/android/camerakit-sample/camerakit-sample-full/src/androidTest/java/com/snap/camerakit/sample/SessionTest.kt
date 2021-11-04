@@ -73,6 +73,7 @@ class SessionTest {
                         }
                     }
                 }
+                acceptIfLegalPromptIsDisplayed()
             }
 
             if (!applied.await(10L, TimeUnit.SECONDS)) {
