@@ -107,6 +107,20 @@
                 android:textOn="@string/capture_photo_on"
                 />
 
+            <ToggleButton
+                android:id="@+id/mute_audio_toggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_gravity="center_vertical|start"
+                android:padding="8dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textAllCaps="true"
+                android:textOff="@string/mute_audio_off"
+                android:textOn="@string/mute_audio_on"
+                />
+
             <Button
                 android:id="@+id/lenses_prefetch_button"
                 android:layout_width="match_parent"

@@ -23,8 +23,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
+import com.snap.camerakit.Session
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
+import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
 import com.snap.camerakit.lenses.configureEachItem
 import com.snap.camerakit.lenses.observe
@@ -41,6 +43,7 @@ import java.util.Date
 private const val TAG = "MainActivity"
 private const val BUNDLE_ARG_LENS_GROUPS = "lens_groups"
 private const val BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL = "use_custom_lenses_carousel"
+private const val BUNDLE_ARG_MUTE_AUDIO = "mute_audio"
 private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle artifact.
     *BuildConfig.LENS_GROUP_ID_TEST.split(',').toTypedArray() // temporary lens group for testing
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var lensesPrefetch: Closeable = Closeable {}
     private var lensGroupsUpdated: Boolean = false
     private var useCustomLensesCarouselView = false
+    private var muteAudio = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,6 +87,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             LENS_GROUPS
         }
         useCustomLensesCarouselView = savedInstanceState?.getBoolean(BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL) ?: false
+        muteAudio = savedInstanceState?.getBoolean(BUNDLE_ARG_MUTE_AUDIO) ?: false
 
         setContentView(R.layout.activity_main)
         val rootLayout = findViewById<DrawerLayout>(R.id.root_layout)
@@ -144,6 +149,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
 
         cameraLayout.onSessionAvailable { session ->
+            // Adjust lenses volume considering current muteAudio value.
+            session.adjustLensesVolume(muteAudio)
+            
             val lensAttribution = findViewById<TextView>(R.id.lens_attribution)
             // This block demonstrates how to receive and react to lens lifecycle events. When Applied event is received
             // we keep the ID of applied lens to persist and restore it via savedInstanceState later on.
@@ -193,6 +201,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             rootLayout.findViewById<ToggleButton>(R.id.capture_photo_toggle).apply {
                 setOnCheckedChangeListener { _, isChecked ->
                     cameraLayout.changeImageCaptureMethod(photo = isChecked)
+                }
+            }
+
+            // This block demonstrates how to switch between lenses audio mute and unmute states.
+            rootLayout.findViewById<ToggleButton>(R.id.mute_audio_toggle).apply {
+                isChecked = muteAudio
+                setOnCheckedChangeListener { _, isChecked ->
+                    muteAudio = isChecked
+                    session.adjustLensesVolume(muteAudio)
                 }
             }
 
@@ -308,6 +325,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             outState.putStringArray(BUNDLE_ARG_LENS_GROUPS, lensGroups)
         }
         outState.putBoolean(BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL, useCustomLensesCarouselView)
+        outState.putBoolean(BUNDLE_ARG_MUTE_AUDIO, muteAudio)
         super.onSaveInstanceState(outState)
     }
 
@@ -331,4 +349,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 private val Activity.arCoreSourceAvailable: Boolean get() {
     // Currently, ARCore is supported in portrait orientation only.
     return windowManager.defaultDisplay.rotation == Surface.ROTATION_0 && arCoreSupportedAndInstalled
+}
+
+/**
+ * Mute lenses audio if [mute] is true. Unmute lenses audio otherwise.
+ */
+private fun Session.adjustLensesVolume(mute: Boolean) {
+    val adjustVolume = if (mute) {
+        LensesComponent.Audio.Adjustment.Volume.Mute
+    } else {
+        LensesComponent.Audio.Adjustment.Volume.UnMute
+    }
+    lenses.audio.adjust(adjustVolume) { success ->
+        Log.d(TAG, "Adjust volume to $adjustVolume success: $success")
+    }
 }
