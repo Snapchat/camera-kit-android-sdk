@@ -26,7 +26,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders = [
-            'cameraKitApplicationId': cameraKitApplicationId
+            'cameraKitApplicationId': cameraKitApplicationId,
+            'cameraKitApiToken': cameraKitApiToken
         ]
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""

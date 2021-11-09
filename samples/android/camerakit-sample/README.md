@@ -58,8 +58,9 @@ android {
     defaultConfig {
         applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
-            // NOTE: replace the value with ID specific to your application
-            'cameraKitApplicationId': 'feba9432-74f4-4226-aa3e-21c1e3775f1a'
+            // NOTE: replace the values with values obtained from the SnapKit dev portal
+            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471',
+            'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSld...'
         ]
     }
 }

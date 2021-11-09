@@ -12,7 +12,8 @@ android {
         versionName cameraKitDistributionVersion
 
         manifestPlaceholders = [
-            'cameraKitApplicationId': cameraKitApplicationId
+            'cameraKitApplicationId': cameraKitApplicationId,
+            'cameraKitApiToken': cameraKitApiToken
         ]
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
