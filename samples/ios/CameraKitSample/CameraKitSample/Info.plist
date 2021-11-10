@@ -6,6 +6,8 @@
 	<string>b21cfb27-04e9-4b77-bd1a-1435522fb471</string>
 	<key>SCSDKClientId</key>
 	<string>522b9a5c-3366-4ef8-9c35-4efed7e4a0d0</string>
+	<key>SCCameraKitAPIToken</key>
+	<string>eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM0ODE0NTU2LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-UFJPRFVDVElPTn4wYmM1Y2JkMi0yMTVlLTRmNjMtOWU3Zi05OWYwNzFhMGY3MDcifQ.p-DEYB6DoEeJafCnYkdV6t0Egu3dd1dV5YQ4N5jF6do</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>snapchat</string>

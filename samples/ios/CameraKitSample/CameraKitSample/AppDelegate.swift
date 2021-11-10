@@ -22,6 +22,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
     let snapAPI = SCSDKSnapAPI()
     let cameraController = CameraController()
+    // This is how you configure properties for a CameraKit Session
+    // Pass in applicationID and apiToken through a SessionConfig which will override the ones stored in the app's Info.plist
+    // which is useful to dynamically update your apiToken in case it ever gets revoked.
+    // let cameraController = CameraController(
+    //    sessionConfig: SessionConfig(
+    //        applicationID: "application_id_here", apiToken: "api_token_here"))
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)

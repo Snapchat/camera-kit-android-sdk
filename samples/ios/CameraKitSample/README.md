@@ -10,6 +10,13 @@ In general, CameraKit attaches to your existing camera workflow. You are still r
 
 CameraKit requires a minimum of iOS 11, and a 64 bit processor. CameraKit will compile, but not run on a Simulator (due to lack of AVCaptureSession support).
 
+Make sure you also update `SCCameraKitClientID` and `SCCameraKitAPIToken` in your application's `Info.plist` with the application ID and API token from the Snap Kit developer portal. Note that you can also pass in these values when creating a session like:
+```swift
+let sessionConfig = SessionConfig(applicationID: "application_id_here", apiToken: "api_token_here")
+let session = Session(sessionConfig: sessionConfig, lensesConfig: nil, errorHandler: nil)
+```
+This is useful in case you need to dynamically update your API token which may happen in the case where your API token gets revoked for some reason.
+
 In order to test sharing to Snapchat, make sure you also add your Snap Kit client id `SCSDKClientId` in `Info.plist`
 
 ### Dependency Management
@@ -31,7 +38,7 @@ and open `CameraKitSample.xcworkspace`
 First, create and configure an AVCaptureSession. Apple provides a full-featured [reference](https://developer.apple.com/documentation/avfoundation/cameras_and_media_capture/setting_up_a_capture_session).
 
 For example, if you want to setup a regular capture session for the front facing camera you'd do:
-```
+```swift
 let captureSession = AVCaptureSession()
 captureSession.beginConfiguration()
 guard let videoDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front),
