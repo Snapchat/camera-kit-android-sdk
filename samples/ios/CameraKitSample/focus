@@ -28,9 +28,9 @@ ck_fetch_latest() {
 	local ref_zip="Reference.zip"
 	local refui_dir="SCSDKCameraKitReferenceUI"
 
-	unzip "${xcframework_zip}"
+	unzip -q "${xcframework_zip}"
 	mkdir -p "${refui_dir}"
-	unzip "${ref_zip}" -d "${refui_dir}"
+	unzip -q "${ref_zip}" -d "${refui_dir}"
 
 	rm -f "${xcframework_zip}"
 	rm -f "${ref_zip}"
