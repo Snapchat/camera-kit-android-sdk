@@ -186,7 +186,6 @@
 			buildConfigurationList = 0FF07EF423D79DC500CFFA3F /* Build configuration list for PBXNativeTarget "CameraKitSample" */;
 			buildPhases = (
 				B90536E1DBB6B27804972524 /* [CP] Check Pods Manifest.lock */,
-				51DEB53CEA970E0910221686 /* [CP] Prepare Artifacts */,
 				0FF07EC623D79DC400CFFA3F /* Sources */,
 				0FF07EC723D79DC400CFFA3F /* Frameworks */,
 				0FF07EC823D79DC400CFFA3F /* Resources */,
@@ -331,23 +330,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		51DEB53CEA970E0910221686 /* [CP] Prepare Artifacts */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample-artifacts-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Prepare Artifacts";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample-artifacts-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample-artifacts.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8E108F9EA042CC6216849660 /* [CP] Copy Pods Resources */ = {

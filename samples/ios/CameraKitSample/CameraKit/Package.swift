@@ -37,15 +37,19 @@ let package = Package(
             dependencies: [
                 "SCSDKCameraKit"
             ],
+            path: "Sources/SCSDKCameraKitReferenceUI/UIKit",
             resources: [
                 .process("Resources/Reference.xcassets")
-            ]),
+            ]
+        ),
         .target(
             name: "SCSDKCameraKitReferenceSwiftUI",
             dependencies: [
                 "SCSDKCameraKit",
                 "SCSDKCameraKitReferenceUI"
             ],
-            resources: []),
+            path: "Sources/SCSDKCameraKitReferenceUI/SwiftUI",
+            resources: []
+        ),
     ]
 )
