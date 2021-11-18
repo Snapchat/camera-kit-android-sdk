@@ -8,32 +8,23 @@ set -o nounset
 set -o pipefail
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-readonly ck_info_plist="${script_dir}/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist"
-readonly sk_info_plist="${script_dir}/SnapKit/SCSDKCoreKit.framework/Info.plist"
+readonly ck_info_plist="${script_dir}/CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist"
 
 ck_fetch_latest() {
-	local gs_root="gs://snapengine-builder-artifacts/camera-kit-ios-sdk/${CAMERA_KIT_COMMIT}/SDKs/CameraKit/.buildscript/build"
-	local gs_sdk="${gs_root}/SCSDKCameraKit.xcframework.zip"
-	local gs_ref="${gs_root}/Reference.zip"
-	local sources="CameraKit/Sources"
+	local gcs_packages="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/packages.zip"
+	local sources_dir="${script_dir}/CameraKit"
+	local packages_zip="${sources_dir}/packages.zip"
 
-	rm -rf "${sources}"
-	mkdir -p "${sources}"
-	gsutil cp "${gs_sdk}" "${sources}"
-	gsutil cp "${gs_ref}" "${sources}"
+	rm -rf "${sources_dir}"
+	mkdir -p "${sources_dir}"
 
-	pushd "${sources}"
+	gsutil cp "${gcs_packages}" "${packages_zip}"
 
-	local xcframework_zip="SCSDKCameraKit.xcframework.zip"
-	local ref_zip="Reference.zip"
-	local refui_dir="SCSDKCameraKitReferenceUI"
+	pushd "${sources_dir}"
 
-	unzip -q "${xcframework_zip}"
-	mkdir -p "${refui_dir}"
-	unzip -q "${ref_zip}" -d "${refui_dir}"
+	unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*"
 
-	rm -f "${xcframework_zip}"
-	rm -f "${ref_zip}"
+	rm -f "${packages_zip}"
 
 	popd
 }
@@ -46,44 +37,6 @@ ck_fetch_if_needed() {
 		fi
 	else
 		ck_fetch_latest
-	fi
-}
-
-sk_fetch_latest() {
-	local snapkit="SnapKit"
-	local creativekit_url="https://github.com/Snapchat/snap-kit-carthage/raw/repo/SCSDKCreativeKit/${SNAP_KIT_VERSION}/SCSDKCreativeKit-${SNAP_KIT_VERSION}.zip"
-	local creativekit_zip="SCSDKCreativeKit-${SNAP_KIT_VERSION}.zip"
-	local carthage_dir="Carthage/Build/iOS"
-	local creativekit_framework="SCSDKCreativeKit.framework"
-	local corekit_framework="SCSDKCoreKit.framework"
-	local carthage_creative="${carthage_dir}/${creativekit_framework}"
-	local carthage_core="${carthage_dir}/${corekit_framework}"
-
-	rm -rf "${snapkit}"
-	mkdir -p "${snapkit}"
-
-	pushd "${snapkit}"
-	curl -LO "${creativekit_url}"
-
-	unzip "${creativekit_zip}"
-
-	mv "${carthage_creative}" "${creativekit_framework}"
-	mv "${carthage_core}" "${corekit_framework}"
-
-	rm -rf "Carthage"
-	rm -rf "${creativekit_zip}"
-
-	popd
-}
-
-sk_fetch_if_needed() {
-	if [[ -f "${sk_info_plist}" ]]; then
-		local sk_framework_version="$(plutil -extract CFBundleVersion xml1 -o - "${sk_info_plist}" | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
-		if [[ "${sk_framework_version}" != "${SNAP_KIT_VERSION}" ]]; then
-			sk_fetch_latest
-		fi
-	else
-		sk_fetch_latest
 	fi
 }
 
