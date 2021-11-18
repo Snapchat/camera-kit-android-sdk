@@ -8,7 +8,7 @@ set -o nounset
 set -o pipefail
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-readonly ck_info_plist="${script_dir}/CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist"
+readonly ck_info_plist="${script_dir}/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-x86_64-simulator/SCSDKCameraKit.framework/Info.plist"
 
 ck_fetch_latest() {
 	local gcs_packages="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/packages.zip"
@@ -22,7 +22,7 @@ ck_fetch_latest() {
 
 	pushd "${sources_dir}"
 
-	unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*"
+	unzip -q "${packages_zip}" "CameraKit" "CameraKitReferenceUI" "CameraKitReferenceSwiftUI"
 
 	rm -f "${packages_zip}"
 
