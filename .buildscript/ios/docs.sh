@@ -22,7 +22,7 @@ main() {
     local eject_to=$1
     local docs_zip="${eject_to}/docs.zip"
     source "$script_dir/../../samples/ios/CameraKitSample/.build"
-    local gs_docs="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/docs.zip"
+    local gs_docs="gs://snapengine-builder-artifacts/camera-kit-ios-sdk/${CAMERA_KIT_COMMIT}/SDKs/CameraKit/.buildscript/build/docs.zip"
     gsutil cp "${gs_docs}" "${docs_zip}"
 
     unzip -q "${docs_zip}" -d "${eject_to}"
