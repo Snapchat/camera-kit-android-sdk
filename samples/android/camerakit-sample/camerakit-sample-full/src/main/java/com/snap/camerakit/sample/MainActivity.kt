@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
+import com.snap.camerakit.LegalProcessor
 import com.snap.camerakit.Session
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
@@ -233,7 +234,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             // earlier if required, the following block demonstrates how to do so using the LegalProcessor#waitFor
             // method in response to a button click.
             rootLayout.findViewById<Button>(R.id.trigger_legal_prompt_button).setOnClickListener {
-                session.processor.waitFor(requestUpdate = true) { result ->
+                session.processor.waitFor(requestUpdate = LegalProcessor.Input.RequestUpdate.ALWAYS) { result ->
                     Log.d(TAG, "Got legal processor result: $result")
                 }
             }
