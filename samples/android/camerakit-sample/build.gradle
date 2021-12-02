@@ -1,9 +1,11 @@
 allprojects {
     ext {
-        //internal>
+        //dev>
         snapMavenUri = 'gcs://snapengine-maven-publish/releases'
-        //<internal
+        //<dev
+        //partner>
         bundledMavenRepo = rootProject.file('maven')
+        //<partner
         kotlinVersion = '1.4.21'
         ktxVersion = '1.3.2'
         exoPlayerVersion = '2.13.3'
@@ -22,7 +24,7 @@ allprojects {
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
         cameraKitDistributionCode = 1
 
-        //internal>
+        //dev>
         def buildNumber = System.getenv('BUILD_NUMBER')
         if (buildNumber && buildNumber.isInteger()) {
             cameraKitDistributionCode = buildNumber.toInteger()
@@ -30,7 +32,7 @@ allprojects {
         cameraKitRemoteServiceGateway = System.getenv('CAMERAKIT_REMOTE_SERVICE_GATEWAY') ?: ''
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
-        //<internal
+        //<dev
         cameraKitVersion = "$cameraKitDistributionVersion+e69c1340.151"
         // NOTE: replace the value with an ID specific to your application
         cameraKitApplicationId = 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
@@ -47,11 +49,11 @@ allprojects {
 
     buildscript {
         repositories {
-            //internal>
+            //dev>
             maven {
                 url snapMavenUri
             }
-            //<internal
+            //<dev
             mavenCentral()
             google()
 
@@ -63,14 +65,16 @@ allprojects {
     }
 
     repositories {
+        //partner>
         maven {
             url bundledMavenRepo.toURI()
         }
-        //internal>
+        //<partner
+        //dev>
         maven {
             url snapMavenUri
         }
-        //<internal
+        //<dev
         mavenCentral()
         google()
     }
@@ -80,6 +84,6 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-//internal>
+//dev>
 apply from: 'eject.gradle'
-//<internal
+//<dev

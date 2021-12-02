@@ -74,16 +74,36 @@ task copyCameraKitDependenciesToBundledRepo() {
     }
 }
 
-def stripTagStartPlainComment = '//internal>'
-def stripTagEndPlainComment = '//<internal'
-
 task eject(type: Copy) {
-    dependsOn copyCameraKitDependenciesToBundledRepo
+    def flavor = project.hasProperty('flavor') ?
+            project.getProperty('flavor') : 'partner'
+
+    def supportedFlavors = [
+            // Includes anything that uses Snap's dev infrastructure like our GCS based Maven repo,
+            // Karma (Autopilot) tests and build types used for internal testing. The code/resources
+            // marked with this flavor should never be exposed outside Snap.
+            'dev',
+            // Same as public but includes the SDK artifacts in a bundled Maven repo so that we can
+            // distribute early releases to partners without exposing features/fixes to public first
+            'partner',
+            // All code and resources that external world should see and be able to consume without
+            // requiring to access any internal Snap services or bundled Maven repo. All SDK
+            // artifacts are expected to be available on the Maven Central.
+            'public'
+    ]
+
+    if (!supportedFlavors.contains(flavor)) {
+        throw new IllegalArgumentException(
+                "Unexpected flavor [$flavor], " +
+                        "only the following are supported: [$supportedFlavors]"
+        )
+    }
 
     def outputDir = project.hasProperty('outputDir') ?
             project.getProperty('outputDir') :
             "$buildDir/eject"
 
+    inputs.property('flavor', flavor)
     inputs.property('version', cameraKitVersion)
     outputs.dir(outputDir)
     outputs.cacheIf { true }
@@ -98,33 +118,40 @@ task eject(type: Copy) {
     exclude 'camerakit-sample-full/src/staging/**'
     exclude 'camerakit-sample-full/src/androidTest/resources/META-INF/**'
 
+    if (flavor == 'public') {
+        exclude '**/maven/**'
+    } else {
+        dependsOn copyCameraKitDependenciesToBundledRepo
+    }
+
     doFirst {
-        logger.lifecycle("Ejecting to $outputDir")
+        delete outputDir
+        logger.lifecycle("Ejecting selected flavor [$flavor] to: $outputDir")
     }
     doLast {
-        def buildFilesToStrip = [
-            new Tuple3(
-                new File(outputDir, 'build.gradle'), 
-                stripTagStartPlainComment, 
-                stripTagEndPlainComment
-            ), 
-            new Tuple3(
+        def flavorsToStripContent = supportedFlavors - flavor
+
+        def filesToStrip = [
+                new File(outputDir, 'build.gradle'),
                 new File(outputDir, 'camerakit-sample-full/build.gradle'),
-                stripTagStartPlainComment, 
-                stripTagEndPlainComment
-            ),
-            new Tuple3(
                 new File(outputDir, 'camerakit-sample-simple/build.gradle'),
-                stripTagStartPlainComment,
-                stripTagEndPlainComment
-            )
+                new File(outputDir, 'README.md'),
         ]
-        buildFilesToStrip.each { tuple -> 
-            def file = tuple.first
-            def startTag = tuple.second
-            def endTag = tuple.third
-            def stripped = stripBlockWithin(file.text, startTag, endTag)
-            file.write(stripped)
+
+        filesToStrip.each { file ->
+            def strippedFileText = file.text
+            flavorsToStripContent.each { flavorToStrip ->
+                def tags = stripTagsFor(flavorToStrip, file)
+                logger.lifecycle("Stripping [$file] contents within the tags: $tags")
+                strippedFileText = stripBlockWithin(strippedFileText, tags.first, tags.second)
+
+            }
+            // Also cleanup any leftover comments for the selected flavor
+            def tags = stripTagsFor(flavor, file)
+            logger.lifecycle("Striping [$file] from flavor comment tags $tags")
+            strippedFileText = stripAll(strippedFileText, tags.first, tags.second)
+
+            file.write(strippedFileText)
         }
     }
 }
@@ -166,4 +193,19 @@ def static stripBlockWithin(String text, String start, String end) {
     def d2 = Pattern.quote(end)
     def r = Pattern.compile("""(?s)$d1.*?$d2""")
     return text.replaceAll(r, "")
+}
+
+def static stripAll(String text, String... tags) {
+    def r = Pattern.compile(tags.collect { tag -> Pattern.quote(tag)}.join("|"))
+    return text.replaceAll(r, "")
+}
+
+def static stripTagsFor(String name, File file) {
+    if (file.name.endsWith('.gradle')) {
+        return new Tuple2("//$name>", "//<$name")
+    } else if (file.name.endsWith('.md')) {
+        return new Tuple2("<!--$name-start-->", "<!--$name-end-->")
+    } else {
+        throw IllegalArgumentException("Cannot determine strip tags for: $file")
+    }
 }

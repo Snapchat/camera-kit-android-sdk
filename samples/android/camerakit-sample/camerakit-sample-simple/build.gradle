@@ -47,7 +47,7 @@ dependencies {
     // The artifact that provides CameraKit support CameraActivity which transitively pulls all the necessary
     // dependencies to get a full-featured CameraKit based camera capture flow.
     implementation "com.snap.camerakit:support-camera-activity:$cameraKitVersion"
-    //internal>
+    //dev>
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
-    //<internal
+    //<dev
 }

@@ -14,11 +14,13 @@ readonly samples_android_root="${script_dir}/../../samples/android"
 readonly program_name=$0
 
 usage() {
-    echo "usage: ${program_name} [-e, --eject-to path] [-b, --build-type]"
+    echo "usage: ${program_name} [-e, --eject-to path] [-b, --build-type] [-f, --build-flavor] [-k, --run-karma]"
     echo "  -e, --eject-to path [optional] specify filesystem path to eject publishable project sources to"
     echo "                      Default: none, build only, no sources are ejected"
     echo "  -b, --build-type    [optional] specify Android application build type"
     echo "                      Default: debug"
+    echo "  -f  --build-flavor  [optional] specify the flavor of the build to perform" 
+    echo "                      Default: partner. Other flavors available: public, dev"
     echo "  -k, --run-karma     [optional] specify if tests should run on Karma"
     echo "                      Default: false"
 }
@@ -26,7 +28,8 @@ usage() {
 main() {
     local eject_to=$1
     local build_type=$2
-    local run_karma=$3
+    local build_flavor=$3
+    local run_karma=$4
 
     source "${script_dir}/prepare_build_environment.sh"
     echo "Android SDK root: ${ANDROID_SDK_ROOT}"
@@ -48,7 +51,7 @@ main() {
     ./gradlew check "${build_type_assemble_task_name}" "${extra_tasks[@]:+${extra_tasks[@]}}"
 
     if [[ -n "$eject_to" ]]; then
-        ./gradlew eject -PoutputDir="${eject_to}"
+        ./gradlew eject -PoutputDir="${eject_to}" -Pflavor="${build_flavor}"
         echo "Sanity check of ejected project build in: ${eject_to}"
         pushd "${eject_to}"
         ./gradlew assembleDebug
@@ -63,6 +66,7 @@ main() {
 
 eject_to_directory=""
 build_type="debug"
+build_flavor="partner"
 run_karma=false
 
 while [[ $# -gt 0 ]]; do
@@ -78,6 +82,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -f | --build-flavor)
+        build_flavor="$2"
+        shift
+        shift
+        ;;
     -k | --run-karma)
         run_karma="$2"
         shift
@@ -90,4 +99,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${eject_to_directory}" "${build_type}" "${run_karma}"
+main "${eject_to_directory}" "${build_type}" "${build_flavor}" "${run_karma}"

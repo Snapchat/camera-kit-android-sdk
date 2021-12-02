@@ -43,7 +43,10 @@ This project includes several sample apps that demonstrate different approaches 
 
 ### Configuration
 
-The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build. All CameraKit artifacts are published under a single version (see [CHANGELOG](../../../CHANGELOG.md) for a summary of changes in each release) and it is possible to pick and choose the dependencies necessary for your specific project:
+<!--partner-start-->
+The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build.
+<!--partner-end-->
+All CameraKit artifacts are published under a single version (see [CHANGELOG](../../../CHANGELOG.md) for a summary of changes in each release) and it is possible to pick and choose the dependencies necessary for your specific project:
 
 ```groovy
     implementation "com.snap.camerakit:camerakit:$cameraKitVersion"

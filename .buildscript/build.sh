@@ -42,6 +42,7 @@ main() {
     local export_to=$2
     local karma_test=$3
     local zip_export=$4
+    local flavor=$5
 
     local eject_dir=$(mktemp -d -t "camerakit-eject-XXXXXXXXXX")
 
@@ -76,7 +77,7 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/android"
-            ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release
+            ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release -f "${flavor}"
             ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd
             
