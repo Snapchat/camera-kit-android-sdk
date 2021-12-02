@@ -1,4 +1,5 @@
 import java.util.regex.Pattern
+import org.apache.tools.ant.DirectoryScanner
 
 // Copies all the necessary CameraKit artifacts into an internal maven repository,
 // which gets packaged within the "ejected" project so that external users don't need to
@@ -125,6 +126,8 @@ task eject(type: Copy) {
     }
 
     doFirst {
+        DirectoryScanner.removeDefaultExclude("**/.gitignore")
+
         delete outputDir
         logger.lifecycle("Ejecting selected flavor [$flavor] to: $outputDir")
     }
@@ -153,6 +156,8 @@ task eject(type: Copy) {
 
             file.write(strippedFileText)
         }
+
+        DirectoryScanner.resetDefaultExcludes()
     }
 }
 
