@@ -48,7 +48,7 @@ main() {
 	ck_fetch_if_needed
 
 	bundle install --path .gem-out
-	bundle exec pod install --repo-update
+	bundle exec pod install
 
 	if [[ $skip_xcode == "0" ]]; then
 		open "CameraKitSample.xcworkspace"
