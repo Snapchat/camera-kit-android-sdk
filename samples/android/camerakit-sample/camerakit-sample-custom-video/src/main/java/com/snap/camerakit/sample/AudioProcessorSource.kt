@@ -1,9 +1,11 @@
 package com.snap.camerakit.sample
 
+import android.Manifest
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
+import androidx.annotation.RequiresPermission
 import com.snap.camerakit.AudioProcessor
 import com.snap.camerakit.Source
 import com.snap.camerakit.common.Consumer
@@ -59,6 +61,7 @@ internal class AudioProcessorSource(
         }
     }
 
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO, conditional = true)
     private fun startRecording(): Closeable {
         Log.d(TAG, "Start audio recording")
 

@@ -1,5 +1,6 @@
 package com.snap.camerakit.sample
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -22,6 +23,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import android.content.pm.ResolveInfo
 import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 private const val TAG = "MainActivity"
 private val LENS_GROUPS = arrayOf(
@@ -87,7 +89,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
 
         // Create custom audio source
-        val audioSource = AudioProcessorSource(audioProcessorExecutor)
+        val audioSource = if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            AudioProcessorSource(audioProcessorExecutor)
+        } else {
+            null
+        }
 
         // Creating output file for saving video
         val videoOutputDirectory = cacheDir
@@ -104,7 +114,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         cameraLayout = findViewById<CameraLayout>(R.id.camera_layout).apply {
             // Setting custom audio processor source
             configureSession {
-                audioProcessorSource(audioSource)
+                if (audioSource != null) {
+                    audioProcessorSource(audioSource)
+                }
             }
 
             configureLensesCarousel {
