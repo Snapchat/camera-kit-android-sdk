@@ -32,7 +32,7 @@ android {
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
         //dev>
-        buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"com.snap.camerakit.extension.lenses.injected,$cameraKitLensesGroupId\""
+        buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"com.snap.camerakit.extension.lenses.injected:PLensesInjector,$cameraKitLensesGroupId\""
         //<dev
         buildConfigField 'String', "LENS_GROUP_ID_AR_CORE", "\"$cameraKitLensesGroupIdArCore\""
     }
