@@ -18,7 +18,10 @@
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
         <meta-data android:name="com.snap.camerakit.api.token" android:value="${cameraKitApiToken}" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.INFO" />

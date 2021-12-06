@@ -6,19 +6,19 @@ allprojects {
         //partner>
         bundledMavenRepo = rootProject.file('maven')
         //<partner
-        kotlinVersion = '1.4.21'
-        ktxVersion = '1.3.2'
-        exoPlayerVersion = '2.13.3'
-        appCompatVersion = '1.2.0'
-        constraintLayoutVersion = '2.0.4'
-        materialVersion = '1.3.0'
-        recyclerViewVersion = '1.1.0'
+        kotlinVersion = '1.6.0'
+        ktxVersion = '1.7.0'
+        exoPlayerVersion = '2.16.1'
+        appCompatVersion = '1.4.0'
+        constraintLayoutVersion = '2.1.2'
+        materialVersion = '1.4.0'
+        recyclerViewVersion = '1.2.1'
         drawerLayoutVersion = '1.1.1'
         glideVersion = '4.11.0'
         gmsVisionVersion = '16.2.0'
 
         androidMinSdkVersion = 21
-        androidCompileSdkVersion = 29
+        androidCompileSdkVersion = 31
         androidTargetSdkVersion = androidCompileSdkVersion
 
         cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
@@ -59,7 +59,7 @@ allprojects {
 
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:4.0.2'
+            classpath 'com.android.tools.build:gradle:4.2.2'
             classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         }
     }
@@ -77,6 +77,23 @@ allprojects {
         //<dev
         mavenCentral()
         google()
+    }
+
+    // AS has a bug where it incorrectly constructs a dependency version string for an artifact that
+    // is published with .aar extension (Maven packaging) when executing a "download sources" task
+    // that is built-in, see similar issue: https://youtrack.jetbrains.com/issue/IDEA-234036.
+    // We fix it for CameraKit artifacts by removing @aar extension from version name using
+    // a custom resolutionStrategy:
+    configurations.all {
+        if (it.name.startsWith('downloadSources')) {
+            resolutionStrategy {
+                eachDependency { DependencyResolveDetails details ->
+                    if (details.requested.group == 'com.snap.camerakit') {
+                        details.useVersion details.requested.version.replaceAll("@aar", "")
+                    }
+                }
+            }
+        }
     }
 }
 

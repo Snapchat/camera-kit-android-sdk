@@ -2,7 +2,7 @@
 buildscript {
     dependencies {
         //noinspection GradleDynamicVersion
-        classpath('com.snap.karma:karma-gradle-plugin:0.20.1+b493410.401') {
+        classpath('com.snap.karma:karma-gradle-plugin:0.22.3+5819484.472') {
             exclude group: "com.google.guava", module: "guava"
         }
     }
@@ -115,18 +115,16 @@ dependencies {
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<dev
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test:runner:1.3.0'
-    androidTestImplementation 'androidx.test:rules:1.3.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test:rules:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
 }
 //dev>
 def karmaServiceAccount = System.getenv('KARMA_SERVICE_ACCOUNT')
         ?: 'gcloud auth list --filter=status:ACTIVE --format=value(account)'.execute().text.trim()
-def karmaDeviceName = System.getenv('KARMA_DEVICE_NAME') ?: 'dreamlte'
-def karmaDevicePool = System.getenv('KARMA_DEVICE_POOL') ?: 'SM-G950F-dreamlte-7'
 
 karma {
     initiator karmaServiceAccount
@@ -138,10 +136,6 @@ karma {
                 testApk = file("build/outputs/apk/androidTest/${android.testBuildType}/${project.name}-${android.testBuildType}-androidTest.apk")
                 apks += file("build/outputs/apk/${android.testBuildType}/${project.name}-${android.testBuildType}.apk")
                 recordVideo = true
-            }
-            device { testCase ->
-                name = karmaDeviceName
-                pool = karmaDevicePool
             }
         }
     }

@@ -22,7 +22,6 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.LoadEventInfo
 import com.google.android.exoplayer2.source.MediaLoadData
 import com.google.android.exoplayer2.source.MediaSource
@@ -30,7 +29,6 @@ import com.google.android.exoplayer2.source.MediaSourceEventListener
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.ui.PlayerView
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.video.VideoListener
 import java.io.File
 import java.io.IOException
 import java.util.concurrent.Executors
@@ -138,10 +136,10 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
 
     private fun setupMediaIfNeeded() {
         if (player == null && mediaMimeType == MIME_TYPE_VIDEO_MP4) {
-            val simpleExoPlayer = SimpleExoPlayer.Builder(this)
+            val exoPlayer = ExoPlayer.Builder(this)
                 .build()
 
-            videoPreview.player = simpleExoPlayer
+            videoPreview.player = exoPlayer
 
             val dataSourceFactory = DefaultDataSourceFactory(this, "camera-kit-sample")
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -172,18 +170,18 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                 }
             })
 
-            simpleExoPlayer.addVideoListener(object : VideoListener {
+            exoPlayer.addListener(object : Player.Listener {
                 override fun onRenderedFirstFrame() {
                     videoPreview.setBackgroundColor(Color.BLACK)
                 }
             })
 
-            simpleExoPlayer.repeatMode = Player.REPEAT_MODE_ALL
-            simpleExoPlayer.playWhenReady = true
-            simpleExoPlayer.seekTo(playerWindowIndex, playerPosition)
-            simpleExoPlayer.prepare(mediaSource, false, false)
+            exoPlayer.repeatMode = Player.REPEAT_MODE_ALL
+            exoPlayer.playWhenReady = true
+            exoPlayer.seekTo(playerWindowIndex, playerPosition)
+            exoPlayer.prepare(mediaSource, false, false)
 
-            player = simpleExoPlayer
+            player = exoPlayer
         } else if (mediaMimeType == MIME_TYPE_IMAGE_JPEG) {
             imagePreview.post {
                 Glide.with(this)
@@ -212,7 +210,7 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                             return false
                         }
                     })
-                    .apply {
+                    .run {
                         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                             fitCenter()
                         } else {
