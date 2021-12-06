@@ -39,9 +39,9 @@ allprojects {
         // NOTE: replace the value with a token specific to your application
         cameraKitApiToken = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSld' +
                 'UIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIj' +
-                'oxNjM0ODE0NTU2LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-UFJPR' +
-                'FVDVElPTn4wYmM1Y2JkMi0yMTVlLTRmNjMtOWU3Zi05OWYwNzFhMGY3MDcifQ.p-DEYB6DoEeJafCnY' +
-                'kdV6t0Egu3dd1dV5YQ4N5jF6do'
+                'oxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR' +
+                '0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVw' +
+                'kWNXZGMHQ0s4tRJst9qfwE'
         // NOTE: replace the value with a lenses group ID specific to your application
         cameraKitLensesGroupId = '5685839489138688'
         cameraKitLensesGroupIdArCore = '5755283204734976'
