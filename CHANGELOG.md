@@ -3,6 +3,47 @@
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.8.0"></a>
+## [1.8.0] - 2021-12-07
+### Bug Fixes
+- **Android:**  Add audio recording permission check for Custom Video Sample app
+- **Android:**  Rendering performance improvement
+- **Android:**  Add thread monitoring and safety to video sample
+- **iOS:**  Touch targets in lenses are not aligned with actual elements
+- **iOS:**  Recording keeps going past duration but animation stops
+- **iOS:**  Memory leak when device is offline
+- **iOS:**  gRPC objective c runtime conflicts
+
+### Features
+- **Android:**  Legal agreement prompt pop-up dialog support
+- **Android:**  Rotation detection for continuous focus
+- **Android:**  Tap-To-Focus support
+- **Android:**  Support API token based authorization
+- **Android:**  Lenses audio mute/unmute support
+- **Android:**  Add sample app for custom implementation of audio and video recording
+- **iOS:**  Support API token based authorization
+- **iOS:**  Legal agreement prompt pop-up dialog support
+
+
+<a name="1.7.6"></a>
+## [1.7.6] - 2021-11-08
+### Bug Fixes
+-  Extension API mismatch
+
+
+<a name="1.7.5"></a>
+## [1.7.5] - 2021-10-28
+### Bug Fixes
+- **Android:**  Kotlin Intrinsics leak into the public Plugin API
+- **Android:**   CameraLayout treats optional permissions as required
+- **iOS:**  Memory leak when device is offline
+- **iOS:**  Potential gRPC objective c runtime conflicts when host app contains gRPC
+- **iOS:**  Surface tracking behaves incorrectly in portrait mode
+
+### Features
+-  Lens Studio 4.7 support
+
+
 <a name="1.7.4"></a>
 ## [1.7.4] - 2021-10-20
 ### Bug Fixes
@@ -505,9 +546,9 @@
 - **Android:**  Save applied lens ID and camera facing in instance state
 - **Android:**  Add camera flip button
 - **Android:**  Open side drawer on lens button click
-- **Android:**  Add next/previous lens buttons to the sample app ([#8](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/8))
+- **Android:**  Add next/previous lens buttons to the sample app
 - **Android:**  Use Lens name in side bar listing
 - **iOS:**  Add Camera Flip Button
-- **iOS:**  add prev next buttons to flip between lenses ([#6](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/6))
-- **iOS:**  use lens name property ([#3](https://github.sc-corp.net/Snapchat/camera-kit-distribution/issues/3))
+- **iOS:**  add prev next buttons to flip between lenses
+- **iOS:**  use lens name property
 
