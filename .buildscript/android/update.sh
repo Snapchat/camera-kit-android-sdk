@@ -31,6 +31,8 @@ usage() {
     echo "                   Default: attempt to parse build number from the supplied version"
     echo "  -p, --create-pr [optional] indicate if PR should be opened"
     echo "                   Default: false"
+    echo "  -n, --no-branch [optional] indicate if a new branch should not be created"
+    echo "                   Default: false"
 }
 
 fetch_commit() {
@@ -62,6 +64,7 @@ main() {
     local next_version_rev=$3
     local next_version_build_number=$4
     local create_pr=$5
+    local no_branch=$6
 
     local current_version_rev=$( sed -n 's/com.snap.camerakit.build.revision=//p' "${samples_android_root_properties}" )
     local current_version_build_number=$( sed -n 's/com.snap.camerakit.build.number=//p' "${samples_android_root_properties}" )
@@ -152,14 +155,17 @@ main() {
         git add "${samples_android_root_properties}"
         local branch="android-sdk-update/${next_version_name}"
         local base_branch=$(git rev-parse --abbrev-ref HEAD)
-        git checkout -B "${branch}"
+        if [ "$no_branch" = false ]
+        then
+            git checkout -B "${branch}"
+        fi
 
         local update_commit_message="${update_title}
 
         ${update_body}"
         git commit -m "${update_commit_message}"
 
-        if [ "$create_pr" = true ]
+        if [ "$create_pr" = true ] && [ "$no_branch" = false ]
         then
             git push origin "${branch}"
 
@@ -180,6 +186,7 @@ next_version_name=""
 next_version_rev=""
 next_version_build_number=""
 create_pr=false
+no_branch=false
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -201,6 +208,10 @@ while [[ $# -gt 0 ]]; do
         ;;
     -p | --create-pr)
         create_pr=true
+        shift
+        ;;
+    -n | --no-branch)
+        no_branch=true
         shift
         ;;
     *)
@@ -230,7 +241,7 @@ then
 
     if [[ -n "$next_version_rev" && -n "$next_version_build_number" ]]
     then
-        main "${next_version_name}" "${next_version_metadata}" "${next_version_rev}" "${next_version_build_number}" $create_pr
+        main "${next_version_name}" "${next_version_metadata}" "${next_version_rev}" "${next_version_build_number}" $create_pr $no_branch
     else
         echo "Missing parameters to update version to: ${next_version_name}"
         usage
