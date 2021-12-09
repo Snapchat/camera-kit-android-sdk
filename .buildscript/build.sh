@@ -113,6 +113,18 @@ main() {
     find $distribution_dir -type f -name "*.md" -exec sed -i'.bak' -e "s/\${version}/${version_name}/g" {} +
     find $distribution_dir -type f -name "*.bak" -exec rm -rf {} \;
 
+    # When hosting statically we need to convert all markdown files to html,
+    # if installed (in the global CI env) we use: https://github.com/joeyespo/grip.
+    if ! command -v grip &> /dev/null
+    then
+        echo "python grip not found, will not convert markdown files to html"
+    else
+        echo "Converting documentation markdown files to html with python grip"
+        for file in $(find "${distribution_dir}/docs" -name '*.md'); do 
+            grip "${file}" --export "${file%/*}/index.html" --title=" "; 
+        done
+    fi
+
     local distribution_export="${distribution_dir}/."
     if [ "$zip_export" = true ]
     then
