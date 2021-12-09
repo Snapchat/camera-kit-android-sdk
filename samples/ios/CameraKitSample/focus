@@ -15,7 +15,10 @@ ck_fetch_latest() {
 	local sources_dir="${script_dir}/CameraKit"
 	local packages_zip="${sources_dir}/packages.zip"
 
-	rm -rf "${sources_dir}"
+	rm -rf "${sources_dir}/CameraKit"
+	rm -rf "${sources_dir}/CameraKitReferenceUI"
+	rm -rf "${sources_dir}/CameraKitReferenceSwiftUI"
+
 	mkdir -p "${sources_dir}"
 
 	gsutil cp "${gcs_packages}" "${packages_zip}"
