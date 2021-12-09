@@ -1,5 +1,39 @@
 rootProject.name = 'camera-kit-sample-root'
+//dev>
+ext {
+    isCi = System.getenv('CI') != null || System.getenv('JENKINS_HOME') != null
+}
 
+buildscript {
+    repositories {
+        maven {
+            url 'gcs://snapengine-maven-publish/releases'
+            mavenCentral()
+        }
+    }
+
+    dependencies {
+        //noinspection GradleDynamicVersion
+        classpath 'com.snapchat.gradle:gradle-build-cache-gcs-plugin:0.5.0+2c71a7e.135'
+    }
+
+    configurations.classpath {
+        resolutionStrategy {
+            force 'com.google.guava:guava:28.1-jre'
+        }
+    }
+}
+
+apply plugin: com.snapchat.gradle.caching.GcsBuildCachePlugin
+
+buildCache {
+    remote(com.snapchat.gradle.caching.GcsBuildCache) {
+        url = 'gcs://snapchat-gradle-build-cache/Snapchat/camera-kit-distribution/6.9.1'
+        projectId = 'snapchat-build-artifacts'
+        push = isCi
+    }
+}
+//<dev
 def include(String moduleName, String relativePath) {
     include(moduleName)
     project(moduleName).projectDir = new File(rootDir, relativePath)

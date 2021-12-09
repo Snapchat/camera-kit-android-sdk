@@ -136,6 +136,7 @@ task eject(type: Copy) {
 
         def filesToStrip = [
                 new File(outputDir, 'build.gradle'),
+                new File(outputDir, 'settings.gradle'),
                 new File(outputDir, 'camerakit-sample-full/build.gradle'),
                 new File(outputDir, 'camerakit-sample-simple/build.gradle'),
                 new File(outputDir, 'README.md'),
