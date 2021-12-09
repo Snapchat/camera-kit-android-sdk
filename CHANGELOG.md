@@ -1,7 +1,21 @@
 # CHANGELOG
 
+All notable changes to the CameraKit SDK will be documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.8.1"></a>
+## [1.8.1] - 2021-12-09
+### Bug Fixes
+-  Too-large images fail to load in media picker
+-  Lens content downloads use non-optimal CDN links
+- **iOS:**  unknown_lens_hint blinks on activation
+- **iOS:**  Rear camera not using LiDAR for depth when supported
+
 
 <a name="1.8.0"></a>
 ## [1.8.0] - 2021-12-07

@@ -1,5 +1,7 @@
 # Releasing
 
+## WARNING: this guide is deprecated, to be removed once https://github.sc-corp.net/Snapchat/camera-kit-distribution/pull/567 lands.
+
 CameraKit follows the process documented below to manage the release flow.
 
 - `${version}` - the current version.
