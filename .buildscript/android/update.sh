@@ -147,9 +147,11 @@ main() {
 
         echo "Updating current version ${current_version}+${current_version_rev}.${current_version_build_number} to ${next_version_name} in ${samples_android_root_build}"
 
-        sed -i "s/cameraKitVersion =.*/cameraKitVersion = \"\$cameraKitDistributionVersion${next_version_metadata}\"/g" "${samples_android_root_build}" 
-        sed -i "s/com.snap.camerakit.build.revision=.*/com.snap.camerakit.build.revision=${next_version_rev}/g" "${samples_android_root_properties}"
-        sed -i "s/com.snap.camerakit.build.number=.*/com.snap.camerakit.build.number=${next_version_build_number}/g" "${samples_android_root_properties}"
+        sed -i'.bak' "s/cameraKitVersion =.*/cameraKitVersion = \"\$cameraKitDistributionVersion${next_version_metadata}\"/g" "${samples_android_root_build}" 
+        sed -i'.bak' "s/com.snap.camerakit.build.revision=.*/com.snap.camerakit.build.revision=${next_version_rev}/g" "${samples_android_root_properties}"
+        sed -i'.bak' "s/com.snap.camerakit.build.number=.*/com.snap.camerakit.build.number=${next_version_build_number}/g" "${samples_android_root_properties}"
+
+        find "${samples_android_root}" -type f -name "*.bak" -exec rm -rf {} \;
 
         git add "${samples_android_root_build}"
         git add "${samples_android_root_properties}"
