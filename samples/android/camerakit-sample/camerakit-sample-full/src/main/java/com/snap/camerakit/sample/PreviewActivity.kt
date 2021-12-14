@@ -119,7 +119,7 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                         exportedMediaUri = if (exportedMediaUri != null) {
                             exportedMediaUri
                         } else {
-                            tryInsertToMediaStore(mediaFile, mediaMimeType)
+                            generateContentUri(mediaFile)
                         }?.also { uri ->
                             shareExternally(uri, mediaMimeType)
                         }

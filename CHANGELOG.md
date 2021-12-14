@@ -7,6 +7,7 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+- **Android:**  Fix sharing captured media in sample app for some Android OS versions.
 
 <a name="1.8.1"></a>
 ## [1.8.1] - 2021-12-09

@@ -18,6 +18,16 @@
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
         <meta-data android:name="com.snap.camerakit.api.token" android:value="${cameraKitApiToken}" />
 
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
         <activity android:name=".MainActivity"
             android:exported="true"
             >
