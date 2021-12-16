@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -42,7 +43,6 @@ import java.io.Closeable
 import java.util.Date
 
 private const val TAG = "MainActivity"
-private const val BUNDLE_ARG_LENS_GROUPS = "lens_groups"
 private const val BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL = "use_custom_lenses_carousel"
 private const val BUNDLE_ARG_MUTE_AUDIO = "mute_audio"
 private val LENS_GROUPS = arrayOf(
@@ -53,6 +53,8 @@ private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
     *LENS_GROUPS,
     BuildConfig.LENS_GROUP_ID_AR_CORE // lens group containing lenses using ARCore functionality.
 )
+private const val PREFS_CAMERA_KIT_SAMPLE = "camera_kit_sample"
+private const val KEY_LENS_GROUPS = "lens_groups"
 
 /**
  * A simple activity which demonstrates how to use CameraKit to apply/remove lenses onto a camera preview.
@@ -62,13 +64,13 @@ private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private lateinit var cameraLayout: CameraLayout
+    private lateinit var sharedPreferences: SharedPreferences
     private lateinit var lensGroups: Array<String>
 
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
     private var lensesProcessorEvents = Closeable {}
     private var lensesPrefetch: Closeable = Closeable {}
-    private var lensGroupsUpdated: Boolean = false
     private var useCustomLensesCarouselView = false
     private var muteAudio = false
 
@@ -82,11 +84,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
-        lensGroups = savedInstanceState?.getStringArray(BUNDLE_ARG_LENS_GROUPS) ?: if (arCoreSourceAvailable) {
-            LENS_GROUPS_ARCORE_AVAILABLE
-        } else {
-            LENS_GROUPS
-        }
+        sharedPreferences = getSharedPreferences(PREFS_CAMERA_KIT_SAMPLE, MODE_PRIVATE)
+
+        lensGroups = sharedPreferences.getStringSet(KEY_LENS_GROUPS, null)?.toTypedArray()
+            ?: if (arCoreSourceAvailable) {
+                LENS_GROUPS_ARCORE_AVAILABLE
+            } else {
+                LENS_GROUPS
+            }
         useCustomLensesCarouselView = savedInstanceState?.getBoolean(BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL) ?: false
         muteAudio = savedInstanceState?.getBoolean(BUNDLE_ARG_MUTE_AUDIO) ?: false
 
@@ -287,18 +292,26 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // Setup a way to change lens groups for easier testing via debug side-menu.
         findViewById<Button>(R.id.update_lens_groups_button).setOnClickListener {
             var updatedLensGroups = lensGroups
+
+            fun updateLensGroupsIfNeeded(newLensGroups: Array<String>) {
+                if (newLensGroups.isNotEmpty() && !newLensGroups.contentEquals(lensGroups)) {
+                    lensGroups = newLensGroups
+                    sharedPreferences.edit().putStringSet(KEY_LENS_GROUPS, lensGroups.toSet()).apply()
+                    recreate()
+                }
+            }
+
             val dialog = AlertDialog.Builder(this)
                 .setView(R.layout.dialog_groups_edit)
                 .setCancelable(true)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
-                    if (updatedLensGroups.isNotEmpty() && !updatedLensGroups.contentEquals(lensGroups)) {
-                        lensGroups = updatedLensGroups
-                        lensGroupsUpdated = true
-                        recreate()
-                    }
+                    updateLensGroupsIfNeeded(updatedLensGroups)
                 }
                 .setNegativeButton(android.R.string.cancel) { dialog, _ ->
                     dialog.cancel()
+                }
+                .setNeutralButton(R.string.reset) { _, _ ->
+                    updateLensGroupsIfNeeded(LENS_GROUPS)
                 }
                 .create()
                 .apply {
@@ -322,9 +335,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        if (lensGroupsUpdated && lensGroups.isNotEmpty()) {
-            outState.putStringArray(BUNDLE_ARG_LENS_GROUPS, lensGroups)
-        }
         outState.putBoolean(BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL, useCustomLensesCarouselView)
         outState.putBoolean(BUNDLE_ARG_MUTE_AUDIO, muteAudio)
         super.onSaveInstanceState(outState)
