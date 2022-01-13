@@ -7,12 +7,29 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
-### Bug Fixes
-- **Android:**  Sharing captured media issue in sample app for some Android OS versions
-
-
 ### Features
 - **Android:**  Persist custom lens groups in sample app
+
+<a name="1.8.3"></a>
+## [1.8.3] - 2022-01-12
+### Bug Fixes
+- **Android:** Fix sharing captured media in sample app for some Android OS versions
+- **Android:** Eliminate native libraries binary size regression
+- **Android:** Extension fail to register when Kotlin reflect library is included
+- **Android:** Remove unused code which gets flagged as [zip path traversal vulnerability](https://support.google.com/faqs/answer/9294009)
+- **iOS:**  Clear out queue file if it is corrupted
+
+### Features
+- **Android:** Expose a method to observe LegalProcessor results
+- **Android:** Flash functionality in `CameraLayout` and `CameraXImageProcessorSource`
+- **iOS:** Expose legal agreement URLs
+
+<a name="1.8.2"></a>
+## [1.8.2] - 2021-12-15
+### Bug Fixes
+-  Missing localized strings
+- **Android:** Lenses using ML features crash when app targets Android 12 (API level 31) 
+- **Android:** Crop ARCore video to screen size by default
 
 <a name="1.8.1"></a>
 ## [1.8.1] - 2021-12-09
@@ -571,4 +588,3 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 - **iOS:**  Add Camera Flip Button
 - **iOS:**  add prev next buttons to flip between lenses
 - **iOS:**  use lens name property
-

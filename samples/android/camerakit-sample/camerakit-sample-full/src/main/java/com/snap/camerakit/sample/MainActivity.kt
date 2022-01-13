@@ -70,6 +70,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var miniPreviewOutput: Closeable = Closeable {}
     private var availableLensesQuery = Closeable {}
     private var lensesProcessorEvents = Closeable {}
+    private var legalProcessorEvents = Closeable {}
     private var lensesPrefetch: Closeable = Closeable {}
     private var useCustomLensesCarouselView = false
     private var muteAudio = false
@@ -170,6 +171,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     event.whenIdle {
                         lensAttribution.text = null
                     }
+                }
+            }
+            // When CameraKit presents a legal prompt dialog, application may want to know if user has dismissed it
+            // in order to de-activate lenses carousel for example.
+            // The following block demonstrates how to observe and optionally handle LegalProcessor results:
+            legalProcessorEvents = session.processor.observe { result ->
+                Log.d(TAG, "Observed legal processor result: $result")
+                if (result is LegalProcessor.Input.Result.Dismissed) {
+                    session.lenses.carousel.deactivate()
                 }
             }
 
@@ -344,6 +354,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         miniPreviewOutput.close()
         availableLensesQuery.close()
         lensesProcessorEvents.close()
+        legalProcessorEvents.close()
         lensesPrefetch.close()
         super.onDestroy()
     }
