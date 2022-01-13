@@ -2,7 +2,7 @@ target 'CameraKitSample' do
 	pod 'CameraKit', :path => 'CameraKit/CameraKit'
 	pod 'CameraKitReferenceUI', :path => 'CameraKit/CameraKitReferenceUI'
 	pod 'CameraKitReferenceSwiftUI', :path => 'CameraKit/CameraKitReferenceSwiftUI'
-	pod 'SnapSDK', '1.6.8', :subspecs => ['SCSDKCreativeKit']
+	pod 'SnapSDK', '1.14.0', :subspecs => ['SCSDKCreativeKit']
 
 	target 'CameraKitSampleTests' do
 		inherit! :search_paths

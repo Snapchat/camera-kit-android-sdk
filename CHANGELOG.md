@@ -9,6 +9,7 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 ## [Unreleased]
 ### Features
 - **Android:**  Persist custom lens groups in sample app
+- **iOS:**  M1/arm64 simulator support
 
 <a name="1.8.3"></a>
 ## [1.8.3] - 2022-01-12
