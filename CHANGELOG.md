@@ -11,6 +11,11 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 - **Android:**  Persist custom lens groups in sample app
 - **iOS:**  M1/arm64 simulator support
 
+<a name="1.8.4"></a>
+## [1.8.4] - 2022-01-14
+### Bug Fixes
+- **iOS:**  SessionConfig values not being used correctly
+
 <a name="1.8.3"></a>
 ## [1.8.3] - 2022-01-12
 ### Bug Fixes
