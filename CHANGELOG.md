@@ -7,9 +7,18 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.9.0"></a>
+## [1.9.0] - 2022-01-18
 ### Features
+- Lens Studio 4.13 support
 - **Android:**  Persist custom lens groups in sample app
 - **iOS:**  M1/arm64 simulator support
+- **iOS:**  Add support for tap to focus
+
+### Bug Fixes
+- **Android:** Custom `Source<ImageProcessor>>` is not respected in `CameraLayout`
+- **Android:** Warn if no API token is provided	
 
 <a name="1.8.4"></a>
 ## [1.8.4] - 2022-01-14
