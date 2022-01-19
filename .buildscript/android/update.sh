@@ -131,7 +131,7 @@ main() {
         fi
 
         local update_title="[Build][Android] Update SDK to ${next_version_name}"
-        local update_body="This updates Android SDK to \`${next_version_name}\` built in https://snapengine-builder.sc-corp.net/jenkins/job/camerakit-android-publish/${next_version_build_number}"
+        local update_body="This updates Android SDK to \`${next_version_name}\` built in https://snapengine-builder.sc-corp.net/jenkins/job/snap-sdk-android-publish/${next_version_build_number}"
 
         if (( "${#included_sdk_commits[@]}" > 0 ))
         then
