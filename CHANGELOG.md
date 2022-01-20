@@ -17,8 +17,9 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 - **iOS:**  Add support for tap to focus
 
 ### Bug Fixes
-- **Android:** Custom `Source<ImageProcessor>>` is not respected in `CameraLayout`
-- **Android:** Warn if no API token is provided	
+- **Android:**  Custom `Source<ImageProcessor>>` is not respected in `CameraLayout`
+- **Android:**  Warn if no API token is provided	
+- **iOS:**  Audio cuts out when swapping camera
 
 <a name="1.8.4"></a>
 ## [1.8.4] - 2022-01-14
