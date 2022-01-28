@@ -7,12 +7,14 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **iOS:**  Binary size optimizations (1.3MB uncompressed savings)
 
 <a name="1.9.1"></a>
 ## [1.9.1] - 2022-01-26
 ### Bug Fixes
 - **Android:**  Don't start LegalPromptActivity if the legal prompt is already accepted
-- **iOS:** Fixed bug where `additionalConfigurationFlags` would not be processed correctly.
+- **iOS:**  Fixed bug where `additionalConfigurationFlags` would not be processed correctly.
 
 <a name="1.9.0"></a>
 ## [1.9.0] - 2022-01-18
