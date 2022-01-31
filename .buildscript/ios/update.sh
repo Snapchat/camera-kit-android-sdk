@@ -56,7 +56,7 @@ update_build_file() {
 
     if [[ "$no_branch" = false ]]
     then
-        git checkout -b $update_branch
+        git checkout -B $update_branch
     fi
 
     echo "CAMERA_KIT_COMMIT=\"${revision}\"" > $build_file_path
@@ -206,7 +206,7 @@ main() {
     local -r no_branch=$4
 
     local -r base_branch=$(git rev-parse --abbrev-ref HEAD)
-    local -r update_branch="ios-sdk-update/${base_branch}"
+    local -r update_branch="ios-sdk-update/${revision}/${build_number}"
 
     local -r artifacts_base_url="gs://snapengine-maven-publish/camera-kit-ios/releases/${revision}/${build_number}"
 
