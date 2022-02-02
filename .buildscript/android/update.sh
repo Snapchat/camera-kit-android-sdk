@@ -232,8 +232,14 @@ then
 
         if [[ "$next_version_metadata" =~ (\+)(.*?)\.([0-9]+) ]]
         then
-            next_version_rev="${BASH_REMATCH[2]}"
-            next_version_build_number="${BASH_REMATCH[3]}"
+            if [[ -z "$next_version_rev" ]]
+            then
+                next_version_rev="${BASH_REMATCH[2]}"
+            fi
+            if [[ -z "$next_version_build_number" ]]
+            then
+                next_version_build_number="${BASH_REMATCH[3]}"
+            fi
         fi
     else
         echo "Could not parse the provided version: $next_version_name"
