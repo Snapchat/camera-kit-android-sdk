@@ -9,13 +9,14 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 ## [Unreleased]
 ### Features
 - **iOS:**  Binary size optimizations (1.3MB uncompressed savings)
+- **Android:**  Expose new API to switch camera facing based on lens facing preference
 
 <a name="1.9.1"></a>
 ## [1.9.1] - 2022-01-26
 ### Bug Fixes
 - **Android:**  Don't start LegalPromptActivity if the legal prompt is already accepted
-- **Android:**  Remote service calls fail after `Session` is used for more than 60 seconds. 
-- **iOS:**  Fixed bug where `additionalConfigurationFlags` would not be processed correctly.
+- **Android:**  Remote service calls fail after `Session` is used for more than 60 seconds
+- **iOS:**  Fixed bug where `additionalConfigurationFlags` would not be processed correctly
 
 <a name="1.9.0"></a>
 ## [1.9.0] - 2022-01-18

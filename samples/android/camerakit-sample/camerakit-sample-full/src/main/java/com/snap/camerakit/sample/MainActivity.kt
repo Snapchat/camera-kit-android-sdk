@@ -281,6 +281,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             finish()
         }
 
+        // Certain lenses specify a camera facing that they would like to be applied on. CameraLayout provides a way
+        // to use a lens specified preference to change the current camera facing by supplying a callback that is
+        // invoked whenever a lens is applied:
+        cameraLayout.onChooseFacingForLens { lens ->
+            lens.facingPreference
+        }
+
         // Present basic app version information to make it easier for QA to report it.
         rootLayout.findViewById<TextView>(R.id.version_info).apply {
             val versionNameAndCode = getString(
