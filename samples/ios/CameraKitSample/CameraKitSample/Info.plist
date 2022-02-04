@@ -39,7 +39,9 @@
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>CameraKit Sample uses photo library to save captured photos and recorded videos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Sandbox uses photo library to save captured photos and recorded videos</string>
+	<string>CameraKit Sample uses photo library to save captured photos and recorded videos</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>CameraKit Sample uses your location for location-aware lenses.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>

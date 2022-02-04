@@ -7,8 +7,11 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
-### Features
+### Bug Fixes
 - **iOS:**  Binary size optimizations (1.3MB uncompressed savings)
+
+### Features
+- - **iOS**:  Added missing "Privacy - Location When In Use Usage Description" entry in Sample App Info.plist.
 - **Android:**  Expose new API to switch camera facing based on lens facing preference
 
 <a name="1.9.1"></a>
