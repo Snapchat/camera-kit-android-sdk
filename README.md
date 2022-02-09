@@ -8,4 +8,4 @@ Resources for publishing CameraKit to 3rd-parties.
 
 ## Releasing
 
-See the [RELEASING](./RELEASING.md) document.
+The release process is [documented](https://docs.google.com/document/d/1JP1KB7_CylrwYWqCimXjALuobyM_X0SpKN9E4TllxTw) and formalized into a runbook [script](.buildscript/runbook.sh), please execute based on the current release cadance.
