@@ -14,6 +14,12 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 - - **iOS**:  Added missing "Privacy - Location When In Use Usage Description" entry in Sample App Info.plist.
 - **Android:**  Expose new API to switch camera facing based on lens facing preference
 
+<a name="1.9.2"></a>
+## [1.9.2] - 2022-02-10
+### Bug Fixes
+- **Android:**  Remove R8 specific consumer rules to support legacy Proguard builds
+- **Android:**  Fix race conditions during face detection in the default Media Picker
+
 <a name="1.9.1"></a>
 ## [1.9.1] - 2022-01-26
 ### Bug Fixes
