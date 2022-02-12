@@ -222,7 +222,7 @@ To find a commit hash, copy the value from a COMMIT_SHA environment variable tha
 
     prompt_run_next_step "git checkout ${release_branch_name} && git pull origin ${release_branch_name}"
 
-    prompt_run_next_step ".buildscript/android/update.sh -v ${release_version_name} -r ${android_sdk_commit} -b ${android_build_job_number} --create-pr"
+    prompt_run_next_step ".buildscript/android/update.sh -v ${next_version_name} -r ${android_sdk_commit} -b ${android_build_job_number} --create-pr"
 
     prompt_next_step "Open the PR created by running the above command. Get approval, :cool: and then wait for the PR to get merged" ""
 
