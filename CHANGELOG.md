@@ -7,6 +7,9 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.10.0"></a>
+## [1.10.0] - 2022-02-28
 ### Bug Fixes
 - **iOS:**  Binary size optimizations (1.3MB uncompressed savings)
 - **Android:**  Use consistent directory names for files related to CameraKit
