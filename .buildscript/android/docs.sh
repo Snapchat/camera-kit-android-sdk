@@ -22,6 +22,9 @@ usage() {
 main() {
     local eject_to=$1
 
+    source "${script_dir}/prepare_build_environment.sh"
+    echo "Android SDK root: ${ANDROID_SDK_ROOT}"
+
     pushd "${samples_android_root}/camerakit-sample"
 
     if [[ -z "$eject_to" ]]; then

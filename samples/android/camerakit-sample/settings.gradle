@@ -43,5 +43,8 @@ include ':camerakit-sample-full'
 include ':camerakit-sample-simple'
 include ':camerakit-sample-custom-video'
 include ':camerakit-sample-custom-input'
-include(':camerakit-sample-dynamic-app', 'camerakit-sample-dynamic/app')
-include(':camerakit-sample-dynamic-plugin', 'camerakit-sample-dynamic/plugin')
+include(':camerakit-sample-dynamic-app-host-apk', 'camerakit-sample-dynamic/app-host-apk')
+include(':camerakit-sample-dynamic-app-host-dfm', 'camerakit-sample-dynamic/app-host-dfm')
+include(':camerakit-sample-dynamic-plugin-shared', 'camerakit-sample-dynamic/plugin-shared')
+include(':camerakit-sample-dynamic-plugin-apk', 'camerakit-sample-dynamic/plugin-apk')
+include(':camerakit_sample_dynamic_plugin_dfm', 'camerakit-sample-dynamic/plugin-dfm')

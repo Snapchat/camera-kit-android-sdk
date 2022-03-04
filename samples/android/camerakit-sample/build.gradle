@@ -95,6 +95,14 @@ allprojects {
             }
         }
     }
+
+    tasks.whenTaskAdded { task ->
+        if (task.class.name.contains('PackagedDependenciesWriterTask')) {
+            task.outputs.doNotCacheIf('https://issuetracker.google.com/196847356')  {
+                true
+            }
+        }
+    }
 }
 
 task clean(type: Delete) {

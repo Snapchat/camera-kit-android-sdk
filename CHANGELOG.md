@@ -7,6 +7,8 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android:**  Add dynamic feature loading (DFM) reference sample app
 
 <a name="1.10.0"></a>
 ## [1.10.0] - 2022-02-28
