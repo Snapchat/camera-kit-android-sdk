@@ -55,16 +55,16 @@ All CameraKit artifacts are published under a single version (see [CHANGELOG](..
     implementation "com.snap.camerakit:support-camerax:$cameraKitVersion"
 ```
 
-In order for CameraKit to be able to communicate with remote services to get content such as lenses, app needs to provide CameraKit its unique "application ID" which is associated with app's package name (Android application ID).  The easiest way to do this is to first define a manifest placeholder with CameraKit application ID value:
+In order for CameraKit to be able to communicate with remote services to get content such as lenses, app needs to provide CameraKit its unique "application ID" and "API token", both can be found at [Snap Developer Portal](https://kit.snapchat.com/manage/). The easiest way to do this is to first define a manifest placeholder with CameraKit application ID and API token values:
 
 ```groovy
 android {
     defaultConfig {
         applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
-            // NOTE: replace the values with values obtained from the SnapKit dev portal
-            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471',
-            'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSld...'
+            // NOTE: replace the values with values obtained from the Snap dev portal
+            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
+            'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM5NTMxMzQ2LCJzdWIiOiI2YzM4YjhlOC0xM2MzLTQ0YjUtYmU0ZC0yMzAwMDQ3Y2I3ODl-U1RBR0lOR35jODEzOTc1OS0yMzljLTQxMzItOGM2MS1hMTU2ZjhiZGYwOTYifQ.LTftVynow44q2ahCwv3pe8ngjeQZc65S6CNbV9VDx-A'
         ]
     }
 }
@@ -81,6 +81,7 @@ Then, the placeholder can be used within the app's  [AndroidManifest.xml](./came
         android:theme="@style/AppTheme">
 
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
+        <meta-data android:name="com.snap.camerakit.api.token" android:value="${cameraKitApiToken}" />
 
 </application>
 ```
@@ -100,7 +101,9 @@ android {
 
 ## Usage
 
-The main point of entry to all CameraKit SDK features is the `Session` interface which can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. 
+**Option 1**: You can simply launch CameraKit's support `CameraActivity` and get the results back. It exposes all the possible start parameters through the `CameraActivity.Configuration` class which is passed to an `ActivityResultLauncher`. Please check [`camerakit-sample-simple`](./camerakit-sample-simple) for the example usage.
+
+**Option 2**: For more customizations you can use `Session` interface which is the main point of entry to all CameraKit SDK features. `Session` can be built using a traditional builder which allows to customize certain aspects of the SDK such as lenses data sources etc. `Session` builder accepts a `ViewStub` that is used to inflate default CameraKit UI elements into your app; you could use `CameraLayout` helper that covers the most common CameraKit use cases and takes care of runtime permissions. Please check [`camerakit-sample-full`](./camerakit-sample-full) for the example usage.
 
 To obtain a new `Session`, use of one of the provided static or extension builder methods:
 
@@ -203,3 +206,5 @@ The following is a list of common issues and suggestions on how to troubleshoot 
 - Attach debugger to your app, enable Java exception breakpoints and build a `Session` while checking that there are no unexpected exceptions with stacktraces related to CameraKit.
 - Attach debugger to your app, pause all threads and export their state into a text file - check that there are no deadlocked threads related to CameraKit.
 - Capture Android bug report with `adb bugreport` and send it to CameraKit developers for further investigation.
+- Check Camera Kit [FAQ page](https://docs.snap.com/docs/snap-kit/camera-kit/faq)
+- Reach out to your Camera Kit partner at Snap or fill out [this form](https://docs.snap.com/docs/snap-kit/support) to reach us directly.
