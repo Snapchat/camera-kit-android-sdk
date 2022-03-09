@@ -275,7 +275,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     R.string.required_permissions_not_granted, error.permissions.joinToString(", ")
                 )
                 is CameraLayout.Failure.DeviceNotSupported -> getString(R.string.camera_kit_unsupported)
-                else -> throw error
+                else -> {
+                    if (!BuildConfig.DEBUG) {
+                        // This allows app to catch unrecoverable errors and not cause app to crash in production. It is
+                        // recommended to propagate this event to your crash reporter of choice for monitoring on the
+                        // backend.
+                        getString(R.string.camera_kit_error).also {
+                            Log.e(TAG, it, error)
+                        }
+                    } else {
+                        throw error
+                    }
+                }
             }
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
             finish()
