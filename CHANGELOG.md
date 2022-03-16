@@ -10,6 +10,15 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 ### Features
 - **Android:**  Add dynamic feature loading (DFM) reference sample app
 
+<a name="1.11.0"></a>
+## [1.11.0] - 2022-03-14
+### Bug Fixes
+- **iOS:**  Allow recording videos up to 60 seconds by default
+
+### Features
+- Add support for text input in lenses
+- Lens Studio 4.16 support
+
 <a name="1.10.0"></a>
 ## [1.10.0] - 2022-02-28
 ### Bug Fixes
