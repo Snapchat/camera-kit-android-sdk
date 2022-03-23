@@ -9,6 +9,14 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 ## [Unreleased]
 ### Features
 - **Android:**  Add dynamic feature loading (DFM) reference sample app
+- **Android:**  Integration of the new `adjustments` API to apply adaptive tone mapping pre-processing step to camera input stream. Usage example:
+    ```kotlin
+    session.adjustments.processor.apply(AdaptiveToneMappingAdjustment) { result ->
+        result.whenApplied { applied ->
+            applied.controller.amount = 0.75f
+        }
+    }                 
+    ```
 
 <a name="1.11.0"></a>
 ## [1.11.0] - 2022-03-14

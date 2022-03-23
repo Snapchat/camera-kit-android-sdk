@@ -33,7 +33,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<dev
-        cameraKitVersion = "$cameraKitDistributionVersion+ebc6a3e5.309"
+        cameraKitVersion = "$cameraKitDistributionVersion+1d36eba8.350"
         // NOTE: replace the value with an ID specific to your application
         cameraKitApplicationId = 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
         // NOTE: replace the value with a token specific to your application
