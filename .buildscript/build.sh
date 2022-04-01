@@ -43,6 +43,7 @@ main() {
     local karma_test=$3
     local zip_export=$4
     local flavor=$5
+    local docs_only=$6
 
     local eject_dir=$(mktemp -d -t "camerakit-eject-XXXXXXXXXX")
 
@@ -77,7 +78,10 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/android"
-            ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release -f "${flavor}"
+            if [ "$docs_only" = false ]
+            then
+                ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release -f "${flavor}"
+            fi
             ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd
             
@@ -86,7 +90,10 @@ main() {
             echo "Building platform: ${platform}"
 
             pushd "${script_dir}/ios"
-            ./build.sh -e "${platform_samples_eject_dir}"
+            if [ "$docs_only" = false ]
+            then
+                ./build.sh -e "${platform_samples_eject_dir}"
+            fi
             ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd
 
@@ -153,6 +160,7 @@ artifact_export_uri=""
 karma_test=true
 zip_export=true
 flavor="partner"
+docs_only=false
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -183,6 +191,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -d | --docs-only)
+        docs_only="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -190,4 +203,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${platform}" "${artifact_export_uri}" "${karma_test}" "${zip_export}" "${flavor}"
+main "${platform}" "${artifact_export_uri}" "${karma_test}" "${zip_export}" "${flavor}" "${docs_only}"
