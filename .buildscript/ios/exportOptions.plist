@@ -10,8 +10,8 @@
 	<string>manaual</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.snap.camerakit.sample.enterprise</key>
-		<string>CameraKit Sample Enterprise</string>
+		<key>com.snapchat.secret.camerakit.sample</key>
+		<string>Dev Tools Wildcard Provisioning Profile"</string>
 	</dict>
 </dict>
 </plist>

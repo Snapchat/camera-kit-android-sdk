@@ -74,7 +74,7 @@ main() {
             -configuration Enterprise \
             -archivePath ${archive_path} \
             CODE_SIGN_IDENTITY='iPhone Distribution: Snapchat Inc' \
-            PROVISIONING_PROFILE_SPECIFIER='CameraKit Sample Enterprise' \
+            PROVISIONING_PROFILE_SPECIFIER='Dev Tools Wildcard Provisioning Profile' \
             DEVELOPMENT_TEAM='RRXKNUJYAH'
 
         xcodebuild -exportArchive \
