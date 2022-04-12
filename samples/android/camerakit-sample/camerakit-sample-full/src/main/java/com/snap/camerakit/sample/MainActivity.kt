@@ -17,7 +17,6 @@ import android.view.TextureView
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import android.widget.ToggleButton
@@ -27,9 +26,6 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.LifecycleOwner
 import com.snap.camerakit.LegalProcessor
 import com.snap.camerakit.Session
-import com.snap.camerakit.adjustments.AdaptiveToneMappingAdjustment
-import com.snap.camerakit.adjustments.AdaptiveToneMappingAdjustment.amount
-import com.snap.camerakit.adjustments.whenApplied
 import com.snap.camerakit.connectOutput
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
@@ -255,60 +251,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             rootLayout.findViewById<Button>(R.id.trigger_legal_prompt_button).setOnClickListener {
                 session.processor.waitFor(requestUpdate = LegalProcessor.Input.RequestUpdate.ALWAYS) { result ->
                     Log.d(TAG, "Got legal processor result: $result")
-                }
-            }
-
-            // TODO(CAMKIT-1147): remove when a standalone tone mode UI is wired up in the CameraLayout
-            val toneAmountSlider = rootLayout.findViewById<SeekBar>(R.id.slider_tone_amount)
-            rootLayout.findViewById<View>(R.id.button_toggle_tone).apply {
-                session.adjustments.processor.available(AdaptiveToneMappingAdjustment) { available ->
-                    runOnUiThread {
-                        visibility = if (available) View.VISIBLE else View.GONE
-                    }
-                }
-
-                var adaptiveToneMappingApplied = false
-
-                setOnClickListener {
-                    if (adaptiveToneMappingApplied) {
-                        toneAmountSlider.visibility = View.GONE
-                        toneAmountSlider.setOnSeekBarChangeListener(null)
-                        adaptiveToneMappingApplied = false
-                        session.adjustments.processor.remove(AdaptiveToneMappingAdjustment)
-                    } else {
-                        session.adjustments.processor.apply(AdaptiveToneMappingAdjustment) { result ->
-                            result.whenApplied { applied ->
-                                runOnUiThread {
-                                    adaptiveToneMappingApplied = true
-                                    toneAmountSlider.apply {
-                                        fun updateAmountFromProgress() {
-                                            val amount = progress / 100.0f
-                                            applied.controller.amount = amount
-                                        }
-                                        visibility = View.VISIBLE
-                                        setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                                            override fun onProgressChanged(
-                                                seekBar: SeekBar,
-                                                progress: Int,
-                                                fromUser: Boolean
-                                            ) {
-                                                updateAmountFromProgress()
-                                            }
-
-                                            override fun onStartTrackingTouch(seekBar: SeekBar) {
-                                            }
-
-                                            override fun onStopTrackingTouch(seekBar: SeekBar) {
-                                            }
-                                        })
-                                        // When slider is shown we want to update the applied adjustment amount property
-                                        // based on the slider stored state immediately:
-                                        updateAmountFromProgress()
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
             }
         }

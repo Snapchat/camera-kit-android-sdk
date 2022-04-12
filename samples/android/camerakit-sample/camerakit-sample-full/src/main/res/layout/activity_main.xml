@@ -48,31 +48,6 @@
             tools:text="Very long lens name that should get ellipsized"
             />
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/button_toggle_tone"
-            android:layout_width="@dimen/control_strip_button_width"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="@drawable/button_background"
-            android:fitsSystemWindows="true"
-            android:src="@drawable/ic_tone_32x32"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_toggle_flash"
-            />
-
-        <SeekBar
-            android:id="@+id/slider_tone_amount"
-            android:layout_height="wrap_content"
-            android:layout_width="120dp"
-            android:max="100"
-            android:progress="66"
-            android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@id/button_toggle_tone"
-            app:layout_constraintTop_toTopOf="@id/button_toggle_tone"
-            app:layout_constraintBottom_toBottomOf="@id/button_toggle_tone"
-            />
-
     </com.snap.camerakit.support.widget.CameraLayout>
 
     <FrameLayout
