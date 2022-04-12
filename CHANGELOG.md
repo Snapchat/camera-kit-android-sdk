@@ -17,6 +17,11 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
         }
     }                 
     ```
+    
+<a name="1.11.1"></a>
+## [1.11.1] - 2022-04-05
+### Bug Fixes
+- Fix bug where landmarkers would not work properly
 
 <a name="1.11.0"></a>
 ## [1.11.0] - 2022-03-14
