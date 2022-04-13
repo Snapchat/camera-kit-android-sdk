@@ -13,7 +13,7 @@ readonly install_path="$1"
 
 echo "Android SDK will be installed to: $install_path"
 
-if [ ! -f "$install_path/tools/android" ]
+if [ ! -f "${install_path}/cmdline-tools/latest/bin/sdkmanager" ]
 then
     echo "Installing Android SDK $install_path"
     echo "$(uname) $(uname -m)"
@@ -22,11 +22,11 @@ then
     sha512sum="none"
     if [ "$(uname)" == "Darwin" ]
     then
-        downloadUrl="https://dl.google.com/android/repository/sdk-tools-darwin-3859397.zip"
-        sha512sum=2e0a32b0db836b7692e28ccf80f277a71d90383cb515771e41f9bacbe803c144167bcb6e1215811a9e533aa5b43c5a022048b0229d2700f0b3592d2e96dd8cf2
+        downloadUrl="https://dl.google.com/android/repository/commandlinetools-mac-8092744_latest.zip"
+        sha512sum=92959263d4a7ea5c701c84145d185c71324ea97c59967e59d2be7a819cabaf1b0c602eb2f7a82b70c5cd6a71b92cf1e92e84a3899edc5ab657e984c04aa2b7bc
     else
-        downloadUrl="https://dl.google.com/android/repository/sdk-tools-linux-3859397.zip"
-        sha512sum=ad0d271ca1b1ee5eb41caa3ab0265e882a0f7813810426dedb35ffd357dd6cd3edce2131f23b0182c0845f20d6f04bc5de6767abfd309bb3a3a7e26a8894bdd6
+        downloadUrl="https://dl.google.com/android/repository/commandlinetools-linux-8092744_latest.zip"
+        sha512sum=db80ec1466acc4fdc2ef2eaa68450b947f6302a1e340411ff5be828d0c2ecfbbdab85d20f3607b939882cfa3a5db2dfd5ad1180e085af4e0c1482bd8bf208d52
     fi
 
     echo "Downloading $downloadUrl"
@@ -41,9 +41,17 @@ then
     fi
 
     unzip "${downloadPath}" -d "${install_path}"
-    rm $downloadPath
+
+    # sdkmanager checks if it is under /cmdline-tools/latest/bin so move it there.
+    if [[ ! -f "${install_path}/cmdline-tools/latest/bin/sdkmanager" ]]; then
+        mkdir $install_path/latest
+        mv $install_path/cmdline-tools/* $install_path/latest
+        mv $install_path/latest $install_path/cmdline-tools
+    fi
+
+    rm "${downloadPath}"
 else
    echo "Looks like Android SDK is already installed into ${install_path}"
 fi
 
-yes | "${install_path}/tools/bin/sdkmanager" --licenses || true
+yes | "${install_path}/cmdline-tools/latest/bin/sdkmanager" --licenses || true
