@@ -17,6 +17,8 @@ main() {
     sudo xcrun simctl shutdown all
     sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService
     sudo xcrun simctl erase all
+
+    $script_dir/clean_gems.sh
 }
 
 main
