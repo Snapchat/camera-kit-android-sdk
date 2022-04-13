@@ -30,7 +30,9 @@ import com.snap.camerakit.connectOutput
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
+import com.snap.camerakit.lenses.apply
 import com.snap.camerakit.lenses.configureEachItem
+import com.snap.camerakit.lenses.invoke
 import com.snap.camerakit.lenses.observe
 import com.snap.camerakit.lenses.run
 import com.snap.camerakit.lenses.whenApplied
@@ -158,6 +160,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         cameraLayout.onSessionAvailable { session ->
             // Adjust lenses volume considering current muteAudio value.
             session.adjustLensesVolume(muteAudio)
+
+            // An example of how dynamic launch data can be used. Vendor specific metadata is added into
+            // LaunchData so it can be used by lens on launch.
+            val reApplyLensWithVendorData = { lens: LensesComponent.Lens ->
+                if (lens.vendorData.isNotEmpty()) {
+                    val launchData = LensesComponent.Lens.LaunchData {
+                        for ((key, value) in lens.vendorData) {
+                            putString(key, value)
+                        }
+                    }
+                    session.lenses.processor.apply(lens, launchData) { success ->
+                        Log.d(TAG, "Apply lens [$lens] with launch data [$launchData] success: $success")
+                    }
+                }
+            }
             
             val lensAttribution = findViewById<TextView>(R.id.lens_attribution)
             // This block demonstrates how to receive and react to lens lifecycle events. When Applied event is received
@@ -165,8 +182,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             lensesProcessorEvents = session.lenses.processor.observe { event ->
                 Log.d(TAG, "Observed lenses processor event: $event")
                 runOnUiThread {
-                    event.whenApplied {
-                        lensAttribution.text = it.lens.name
+                    event.whenApplied { event ->
+                        reApplyLensWithVendorData(event.lens)
+                        lensAttribution.text = event.lens.name
                     }
                     event.whenIdle {
                         lensAttribution.text = null
