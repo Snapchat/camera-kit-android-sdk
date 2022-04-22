@@ -7,9 +7,29 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.12.0"></a>
+## [1.12.0] - 2022-04-22
+### Notes
+- Starting with this release, an API token **must** be provided as part of the CameraKit configuration, failure to do so will result in a runtime exception. See [Android](https://docs.snap.com/snap-kit/camera-kit/configuration/android#service-authorization) and [iOS](https://docs.snap.com/snap-kit/camera-kit/configuration/ios/#service-authorization) documentation for examples on how to obtain and provide an API token.
+- The legal agreement prompt has been updated to use a more user friendly text copy. Updating to this release will result in users needing to accept the updated prompt which includes a new link to the CameraKit's "learn more" [page](https://support.snapchat.com/en-US/article/camera-information-use).
+
 ### Features
+- Lens Studio 4.19 support
 - **Android:**  Add dynamic feature loading (DFM) reference sample app
-    
+- **Android:**  New `ImageProcessor.Input.Option.Crop` which allows to specify the crop region that should be applied to each frame before processing
+- **Android:**  `CameraXImageProcessorSource#startPreview` takes aspect ratio and crop option parameters
+- **Android:**  Further binary size reduction of about 500KB
+
+### Bug Fixes
+- **Android:**  Missing `android.permission.ACCESS_COARSE_LOCATION` permission added to the `camerakit-support-gms-location` artifact to support apps targeting Android API 31
+- **Android:**  Image capture of certain lenses results in an unexpected alpha channel
+- **Android:**  Race condition of incorrectly evicting currently applied lens content from cache while prefetching other lenses
+- **iOS:**  `LensProcessor.setAudioMuted` doesn't mute/unmute audio coming from lenses
+
+### Known Issues
+- Lenses using the new [Text to Speech](https://docs.snap.com/lens-studio/references/guides/lens-features/audio/text-to-speech) feature throw a runtime exception on Android and simply do nothing on iOS. This is expected as the feature is currently unavailable in CameraKit.  
+
 <a name="1.11.1"></a>
 ## [1.11.1] - 2022-04-05
 ### Bug Fixes
@@ -32,7 +52,7 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 - **Android:**  Certain emulator images fail to render lenses
 
 ### Features
-- **iOS**:  Added missing "Privacy - Location When In Use Usage Description" entry in Sample App Info.plist.
+- **iOS**:  Added missing "Privacy - Location When In Use Usage Description" entry in Sample App Info.plist
 - **Android:**  Expose new API to switch camera facing based on lens facing preference
 
 <a name="1.9.2"></a>
