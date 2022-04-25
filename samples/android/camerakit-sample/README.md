@@ -43,9 +43,16 @@ This project includes several sample apps that demonstrate different approaches 
 
 ### Configuration
 
-<!--partner-start-->
-The current version of CameraKit SDK is not yet available on public Maven repositories however this project includes an embedded [maven](./maven) repository of all CameraKit artifacts required to build.
-<!--partner-end-->
+The current version of the CameraKit SDK is available on the public Maven Central repository, make sure you have the following in your app's root `build.gradle` file:
+
+```groovy
+allprojects {
+     repositories {
+          mavenCentral()
+     }
+}
+```
+
 All CameraKit artifacts are published under a single version (see [CHANGELOG](../../../CHANGELOG.md) for a summary of changes in each release) and it is possible to pick and choose the dependencies necessary for your specific project:
 
 ```groovy
