@@ -18,14 +18,19 @@ readonly version_file="${script_dir}/../../VERSION"
 readonly version="$(sed -n 1p ${version_file})"
 
 usage() {
-    echo "usage: ${program_name} [-e --eject-to path]"
-    echo "  -e eject-to path [optional] specify filesystem path to eject publishable project sources to"
-    echo "                   Default: none, build only, no sources are ejected"
+    echo "usage: ${program_name} [-e --eject-to path] [-i --ipa-path path] [-f --flavor <partner/public>]"
+    echo "  -e eject-to path        [optional] specify filesystem path to eject publishable project sources to"
+    echo "                          Default: none, build only, no sources are ejected"
+    echo "  -i --ipa-path          [optional] specify filesystem path to publish ipa to"
+    echo "                          Default: none, build only, no ipa is generated"
+    echo "  -f flavor <flavor>      [optional] specify the flavor of the build to perform" 
+    echo "                          Default: partner. Other flavors available: public"
 }
 
 main() {
     local eject_to=$1
     local ipa_dir=$2
+    local flavor=$3
 
     $script_dir/setup.sh
 
@@ -33,7 +38,7 @@ main() {
 
     rm -rf xcarchive_path
 
-    ./focus --skip-xcode
+    ./focus --skip-xcode --flavor "${flavor}"
 
     local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
     local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
@@ -41,9 +46,9 @@ main() {
     plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
     plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
-    scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/CameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+    scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCSDKCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-    refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/CameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+    refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCSDKCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
     if [[ "$version" != "$framework_short_version" ]]; then
         echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
@@ -97,6 +102,7 @@ main() {
         rm -rf gem-out
         rm -f .build
         rm -f focus
+        rm -f Podfile.template
         popd
     fi
 
@@ -106,6 +112,7 @@ main() {
 
 eject_to_directory=""
 ipa_path=""
+flavor="partner"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -121,6 +128,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -f | --flavor)
+        flavor="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -128,4 +140,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${eject_to_directory}" "${ipa_path}"
+main "${eject_to_directory}" "${ipa_path}" "${flavor}"

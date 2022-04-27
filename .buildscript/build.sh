@@ -92,7 +92,7 @@ main() {
             pushd "${script_dir}/ios"
             if [ "$docs_only" = false ]
             then
-                ./build.sh -e "${platform_samples_eject_dir}"
+                ./build.sh -e "${platform_samples_eject_dir}" -f "${flavor}"
             fi
             ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd

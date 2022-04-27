@@ -21,24 +21,31 @@ In order to test sharing to Snapchat, make sure you also add your Snap Kit clien
 
 ### Dependency Management
 
-CameraKit currently supports CocoaPods and Swift Package Manager.
+CameraKit currently supports CocoaPods.
 
 #### CocoaPods
 
-The `Podfile` should already be setup correctly to reference the camera kit sdk podpsec directory, but if you choose to move the SDK podspec directory somewhere else just be sure to add/modify this line:
-`pod 'CameraKit', :path => 'CameraKit'`
-where `:path` points to the directory that contains the camera kit podspec.
+Add
+
+```
+pod 'SCSDKCameraKit'
+pod 'SCSDKCameraKitReferenceUI'
+```
+
+to your `Podfile`. If your application uses SwiftUI, you can use our SwiftUI SDK below
+
+```
+pod 'SCSDKCameraKit'
+pod 'SCSDKCameraKitReferenceSwiftUI'
+```
 
 Before opening the workspace make sure you run
-`pod install`
-and open `CameraKitSample.xcworkspace`
 
-#### Swift Package Manager
+```
+pod install
+```
 
-- Drag and drop the `CameraKit/Package.swift` file into your project or workspace.
-- Click the + button in the "Frameworks, Libraries, and Embedded Content" section, select `SCSDKCameraKit`, and add it as a dependency.
-
-More detail can be found in [Apple's documentation](https://developer.apple.com/documentation/swift_packages/organizing_your_code_with_local_packages).
+and open `CameraKitSample.xcworkspace`.
 
 #### Configure your AVCaptureSession Pipeline
 

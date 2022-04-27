@@ -8,59 +8,86 @@ set -o nounset
 set -o pipefail
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly repo_root="${script_dir}/../../.."
 readonly ck_info_plist="${script_dir}/CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist"
+readonly version_file="${repo_root}/VERSION"
+readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
 
 ck_fetch_latest() {
-	local gcs_packages="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/packages.zip"
-	local sources_dir="${script_dir}/CameraKit"
-	local packages_zip="${sources_dir}/packages.zip"
+    local gcs_packages="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/packages.zip"
+    local sources_dir="${script_dir}/CameraKit"
+    local packages_zip="${sources_dir}/packages.zip"
 
-	rm -rf "${sources_dir}/CameraKit"
-	rm -rf "${sources_dir}/CameraKitReferenceUI"
-	rm -rf "${sources_dir}/CameraKitReferenceSwiftUI"
+    rm -rf "${sources_dir}/CameraKit"
+    rm -rf "${sources_dir}/CameraKitReferenceUI"
+    rm -rf "${sources_dir}/CameraKitReferenceSwiftUI"
 
-	mkdir -p "${sources_dir}"
+    mkdir -p "${sources_dir}"
 
-	gsutil cp "${gcs_packages}" "${packages_zip}"
+    gsutil cp "${gcs_packages}" "${packages_zip}"
 
-	pushd "${sources_dir}"
+    pushd "${sources_dir}"
 
-	unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*"
+    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*"
 
-	rm -f "${packages_zip}"
+    rm -f "${packages_zip}"
 
-	popd
+    popd
 }
 
 ck_fetch_if_needed() {
-	if [[ -f "${ck_info_plist}" ]]; then
-		local ck_framework_version="$(plutil -extract CFBundleVersion xml1 -o - "${ck_info_plist}" | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
-		if [[ "${ck_framework_version}" != "${CAMERA_KIT_BUILD}" ]]; then
-			ck_fetch_latest
-		fi
-	else
-		ck_fetch_latest
-	fi
+    if [[ -f "${ck_info_plist}" ]]; then
+        local ck_framework_version="$(plutil -extract CFBundleVersion xml1 -o - "${ck_info_plist}" | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        if [[ "${ck_framework_version}" != "${CAMERA_KIT_BUILD}" ]]; then
+            ck_fetch_latest
+        fi
+    else
+        ck_fetch_latest
+    fi
+}
+
+generate_podfile() {
+    local flavor=$1
+    local podfile="Podfile"
+    local podfile_template="${podfile}.template"
+    rm -rf "${podfile}"
+    cp "${podfile_template}" "${podfile}"
+
+    if [[ "${flavor}" == "public" ]]; then
+        sed -i "" "s/@camkit_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@refui_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
+    else
+        sed -i "" "s^@camkit_path^:path => 'CameraKit/CameraKit'^g" "${podfile}"
+        sed -i "" "s^@refui_path^:path => 'CameraKit/CameraKitReferenceUI'^g" "${podfile}"
+        sed -i "" "s^@swiftui_path^:path => 'CameraKit/CameraKitReferenceSwiftUI'^g" "${podfile}"
+    fi
 }
 
 main() {
-	local skip_xcode=$1
-	pushd "${script_dir}"
-	source ".build"
+    local skip_xcode=$1
+    local flavor=$2
+    pushd "${script_dir}"
+    source ".build"
 
-	ck_fetch_if_needed
+    generate_podfile "${flavor}"
 
-	bundle install --path .gem-out
-	bundle exec pod install
+    if [[ "${flavor}" == "partner" ]]; then
+        ck_fetch_if_needed
+    fi
 
-	if [[ $skip_xcode == "0" ]]; then
-		open "CameraKitSample.xcworkspace"
-	fi
-	
-	popd
+    bundle install --path .gem-out
+    bundle exec pod install
+
+    if [[ $skip_xcode == "0" ]]; then
+        open "CameraKitSample.xcworkspace"
+    fi
+    
+    popd
 }
 
 skip_xcode_param="0"
+flavor="partner"
 
 # Parse arguments
 while [[ $# -gt 0 ]]; do
@@ -70,6 +97,11 @@ while [[ $# -gt 0 ]]; do
         skip_xcode_param="1"
         shift
         ;;
+    -f | --flavor)
+        flavor="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -77,4 +109,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main $skip_xcode_param
+main "${skip_xcode_param}" "${flavor}"

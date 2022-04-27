@@ -1,0 +1,10 @@
+target 'CameraKitSample' do
+	pod 'SCSDKCameraKit', @camkit_path
+	pod 'SCSDKCameraKitReferenceUI', @refui_path
+	pod 'SCSDKCameraKitReferenceSwiftUI', @swiftui_path
+	pod 'SnapSDK', '1.14.0', :subspecs => ['SCSDKCreativeKit']
+
+	target 'CameraKitSampleTests' do
+		inherit! :search_paths
+	end
+end
