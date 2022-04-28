@@ -40,29 +40,34 @@ main() {
 
     ./focus --skip-xcode --flavor "${flavor}"
 
-    local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
-    local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
     local sample_info_plist="CameraKitSample/Info.plist"
-    plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
-    plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
-    scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCSDKCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+    if [[ "${flavor}" == "partner" ]]; then
+        # if it's partner flavor we need to ensure local SDKs/podspecs/etc match the expected build
 
-    refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCSDKCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+        local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
+        plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
-    if [[ "$version" != "$framework_short_version" ]]; then
-        echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
-        exit 1
-    fi
+        scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCSDKCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-    if [[ "$version" != "$scsdk_podspec_version" ]]; then
-        echo "Distribution version ${version} and iOS SDK version ${scsdk_podspec_version} are not equal; exiting..."
-        exit 1
-    fi
+        refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCSDKCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-    if [[ "$version" != "$refui_podspec_version" ]]; then
-        echo "Distribution version ${version} and iOS SDK version ${refui_podspec_version} are not equal; exiting..."
-        exit 1
+        if [[ "$version" != "$framework_short_version" ]]; then
+            echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
+            exit 1
+        fi
+
+        if [[ "$version" != "$scsdk_podspec_version" ]]; then
+            echo "Distribution version ${version} and iOS SDK version ${scsdk_podspec_version} are not equal; exiting..."
+            exit 1
+        fi
+
+        if [[ "$version" != "$refui_podspec_version" ]]; then
+            echo "Distribution version ${version} and iOS SDK version ${refui_podspec_version} are not equal; exiting..."
+            exit 1
+        fi
     fi
 
     xcodebuild clean test \
@@ -92,7 +97,11 @@ main() {
 
 
     if [[ -n "$eject_to" ]]; then
+        local sample_gitignore="${eject_to}/CameraKitSample/.gitignore"
+        
         cp -R "${samples_ios_root}/." "${eject_to}"
+        sed -i "" "s/Podfile//" "${sample_gitignore}"
+
         pushd "${eject_to}/CameraKitSample"
         # cleanup CI artifacts
         rm -f Gemfile
