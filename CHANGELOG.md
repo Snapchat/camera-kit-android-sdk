@@ -7,6 +7,9 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android:**  Add support for ring flash mode for front-facing camera flash.
+- **Android:**  New tone-mapping and portrait camera adjustments.
 
 <a name="1.12.0"></a>
 ## [1.12.0] - 2022-04-22
