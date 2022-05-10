@@ -10,6 +10,7 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 ### Features
 - **Android:**  Add support for ring flash mode for front-facing camera flash.
 - **Android:**  New tone-mapping and portrait camera adjustments.
+- **Android:**  Add missing permission HIGH_SAMPLING_RATE_SENSORS for host-apk dynamic sample.
 
 <a name="1.12.0"></a>
 ## [1.12.0] - 2022-04-22
