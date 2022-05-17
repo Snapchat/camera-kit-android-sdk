@@ -151,6 +151,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 if (useCustomLensesCarouselView) {
                     attachWidgetsTo(findViewById(R.id.lenses_widgets_stub))
                 }
+                // Pass a factory which provides a demo service which handles remote API requests from lenses.
+                remoteApiServiceFactory(CatFactRemoteApiService.Factory)
             }
 
             configureLensesCarousel {

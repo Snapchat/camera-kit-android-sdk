@@ -8,9 +8,12 @@ and the CameraKit SDK adheres to [Semantic Versioning](https://semver.org/spec/v
 <a name="unreleased"></a>
 ## [Unreleased]
 ### Features
-- **Android:**  Add support for ring flash mode for front-facing camera flash.
-- **Android:**  New tone-mapping and portrait camera adjustments.
-- **Android:**  Add missing permission HIGH_SAMPLING_RATE_SENSORS for host-apk dynamic sample.
+- New API to support lenses which use the remote service [feature](https://docs.snap.com/lens-studio/references/guides/lens-features/remote-apis/remote-service-module)
+- **Android:**  Add support for ring flash mode for front-facing camera flash
+- **Android:**  New tone-mapping and portrait camera adjustments
+
+### Bug Fixes
+- **Android:**  Add missing permission HIGH_SAMPLING_RATE_SENSORS for host-apk dynamic sample
 
 <a name="1.12.0"></a>
 ## [1.12.0] - 2022-04-22
