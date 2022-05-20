@@ -69,9 +69,9 @@ android {
     defaultConfig {
         applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
-            // NOTE: replace the values with values obtained from the Snap dev portal
+            // NOTE: replace the values with values obtained from https://kit.snapchat.com/manage
             'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
-            'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM5NTMxMzQ2LCJzdWIiOiI2YzM4YjhlOC0xM2MzLTQ0YjUtYmU0ZC0yMzAwMDQ3Y2I3ODl-U1RBR0lOR35jODEzOTc1OS0yMzljLTQxMzItOGM2MS1hMTU2ZjhiZGYwOTYifQ.LTftVynow44q2ahCwv3pe8ngjeQZc65S6CNbV9VDx-A'
+            'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVwkWNXZGMHQ0s4tRJst9qfwE'
         ]
     }
 }

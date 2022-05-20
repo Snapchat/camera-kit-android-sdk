@@ -20,8 +20,9 @@ The full-featured `CameraActivity` is a great option for existing apps to integr
     }
     findViewById<Button>(R.id.some_button).setOnClickListener {
         captureLauncher.launch(CameraActivity.Configuration.WithLenses(
-            // NOTE: replace the value with ID of your app registered on https://kit.snapchat.com/manage
-            cameraKitApplicationId = "feba9432-74f4-4226-aa3e-21c1e3775f1a",
+            // NOTE: replace the values with values obtained from https://kit.snapchat.com/manage
+            cameraKitApplicationId = "b21cfb27-04e9-4b77-bd1a-1435522fb471",
+            cameraKitApiToken = "eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVwkWNXZGMHQ0s4tRJst9qfwE",
             // NOTE: replace the value with lenses group ID from https://camera-kit.snapchat.com
             lensGroupIds = "5685839489138688"
         ))

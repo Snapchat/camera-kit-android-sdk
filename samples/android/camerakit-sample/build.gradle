@@ -35,16 +35,12 @@ allprojects {
         //<dev
         cameraKitVersion = "$cameraKitDistributionVersion+6a7df475.412"
         // NOTE: replace the value with an ID specific to your application
-        cameraKitApplicationId = 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
+        cameraKitApplicationId = property('com.snap.camerakit.application.id')
         // NOTE: replace the value with a token specific to your application
-        cameraKitApiToken = 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSld' +
-                'UIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIj' +
-                'oxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR' +
-                '0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVw' +
-                'kWNXZGMHQ0s4tRJst9qfwE'
+        cameraKitApiToken = property('com.snap.camerakit.api.token')
         // NOTE: replace the value with a lenses group ID specific to your application
-        cameraKitLensesGroupId = '5685839489138688'
-        cameraKitLensesGroupIdArCore = '5755283204734976'
+        cameraKitLensesGroupId = property('com.snap.cakerakit.lenses.group.id')
+        cameraKitLensesGroupIdArCore = property('com.snap.cakerakit.lenses.group.id.arcore')
     }
 
     buildscript {

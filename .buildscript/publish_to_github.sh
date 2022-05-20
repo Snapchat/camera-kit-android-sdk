@@ -19,6 +19,13 @@ readonly camerakit_publish_repo_http_url="https://${GITHUB_USERNAME}:${GITHUB_AP
 readonly github_api_repos_url="https://api.github.com/repos"
 readonly random_id=$(openssl rand -hex 4)
 
+sensitive_strings=()
+while IFS= read -r line; do
+  sensitive_strings+=("$line")
+done < "${script_dir}/sensitive_strings.txt"
+
+readonly sensitive_string_replacement="REPLACE-THIS-WITH-YOUR-OWN-APP-SPECIFIC-VALUE"
+
 create_pr_draft() {
     local title=$1
     local head=$2
@@ -49,6 +56,12 @@ main() {
 
     "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" -f "public"
 
+    for sensitive_string in ${sensitive_strings[@]}
+    do
+        find . \( -type d -name .git -prune \) -o -type f -print0 | LC_ALL=C xargs -0 sed -i'.bak' "s/${sensitive_string}/${sensitive_string_replacement}/g"
+        find . -type f -name "*.bak" -exec rm -rf {} \;
+    done
+  
     git add --all
 
     local update_title="[All] Sync changes for the ${version_name} release"
