@@ -195,7 +195,7 @@ def static gitignoreToList(File file) {
 def static stripBlockWithin(String text, String start, String end) {
     def d1 = Pattern.quote(start)
     def d2 = Pattern.quote(end)
-    def r = Pattern.compile("""(?s)$d1.*?$d2""")
+    def r = Pattern.compile("""(?s)(?m)^\\s*$d1.*?$d2\\s*\n""")
     return text.replaceAll(r, "")
 }
 

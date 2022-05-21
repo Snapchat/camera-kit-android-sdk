@@ -104,7 +104,6 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
 //dev>
 apply from: 'eject.gradle'
 //<dev

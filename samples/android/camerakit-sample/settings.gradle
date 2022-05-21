@@ -1,4 +1,5 @@
 rootProject.name = 'camera-kit-sample-root'
+
 //dev>
 //See: https://discuss.gradle.org/t/how-to-remove-gitignore-from-defaultexcludes-for-whole-multi-module-project/35187/4
 org.apache.tools.ant.DirectoryScanner.removeDefaultExclude("**/.gitignore")
