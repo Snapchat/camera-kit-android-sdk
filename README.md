@@ -4,7 +4,7 @@
 
 </br>
 
-Resources for publishing CameraKit to 3rd-parties.
+Resources for publishing the Camera Kit SDK to 3rd-parties.
 
 ## Releasing
 
