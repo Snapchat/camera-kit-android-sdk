@@ -13,7 +13,8 @@ import java.net.URL
  * [Remote Service Module](https://docs.snap.com/lens-studio/references/guides/lens-features/remote-apis/remote-service-module)
  * feature. The remote API spec ID in [Factory.supportedApiSpecIds] is provided for demo and testing purposes -
  * CameraKit user applications are expected to define their own specs for any remote API that they are interested to
- * communicate with. Please reach out to CameraKit support team to find out more on how to define and use this feature.
+ * communicate with. Please reach out to CameraKit support team at https://docs.snap.com/snap-kit/support
+ * to find out more on how to define and use this feature.
  */
 internal object CatFactRemoteApiService : LensesComponent.RemoteApiService {
 

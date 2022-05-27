@@ -4,6 +4,12 @@
 import Foundation
 import SCSDKCameraKit
 
+// Example implementation of [LensRemoteApiService] which receives requests from lenses that use the
+// [Remote Service Module](https://docs.snap.com/lens-studio/references/guides/lens-features/remote-apis/remote-service-module)
+// feature. The remote API spec ID is provided for demo and testing purposes -
+// CameraKit user applications are expected to define their own specs for any remote API that they are interested to
+// communicate with. Please reach out to CameraKit support team at https://docs.snap.com/snap-kit/support
+// to find out more on how to define and use this feature.
 class CatFactRemoteApiServiceProvider: NSObject, LensRemoteApiServiceProvider {
 
     var supportedApiSpecIds: Set<String> = ["03d765c5-20bd-4495-9a27-30629649cf57"]
