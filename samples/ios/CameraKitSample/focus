@@ -77,7 +77,7 @@ main() {
     fi
 
     bundle install --path .gem-out
-    bundle exec pod install
+    bundle exec pod install --repo-update
 
     if [[ $skip_xcode == "0" ]]; then
         open "CameraKitSample.xcworkspace"
