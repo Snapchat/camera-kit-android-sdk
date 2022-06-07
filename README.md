@@ -9,3 +9,7 @@ Resources for publishing the Camera Kit SDK to 3rd-parties.
 ## Releasing
 
 The release process is [documented](https://docs.google.com/document/d/1JP1KB7_CylrwYWqCimXjALuobyM_X0SpKN9E4TllxTw) and formalized into a runbook [script](.buildscript/runbook.sh), please execute based on the current release cadance.
+
+## Builds / Automation
+
+The various build and automation processes related to this repository are documented [here](./.buildscript/README.md).
