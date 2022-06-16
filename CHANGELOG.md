@@ -7,6 +7,8 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android**  New API to obtain the current version of the Camera Kit SDK.
 
 <a name="1.13.0"></a>
 ## [1.13.0] - 2022-05-27
