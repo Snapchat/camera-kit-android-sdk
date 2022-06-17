@@ -141,6 +141,7 @@ main() {
         for commit in "${included_sdk_commits[@]}"
         do
            local commit_message=$(echo "$commit" | jq -r ".commit.message" | head -n 1)
+           commit_message=${commit_message//$'\"'/$'\\"'}
            local commit_http_url=$(echo "$commit" | jq -r ".html_url")
            update_body="${update_body}"$'\n'"- ${commit_message}: ${commit_http_url}"
         done
