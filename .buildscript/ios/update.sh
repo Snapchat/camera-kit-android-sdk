@@ -63,7 +63,6 @@ update_build_file() {
     echo "CAMERA_KIT_BUILD=\"${build_number}\"" >> $build_file_path
 
     git add $build_file_path
-    git commit -m "Update distribution branch ${base_branch} with phantom commit ${revision}."
 }
 
 fetch_commit() {
@@ -87,13 +86,79 @@ fetch_commit_list() {
         "${github_api_repos_url}/${phantom_repo_base_path}/commits?sha=${sha}&path=${path}&per_page=100&page=${page}&since=${since}"
 }
 
-create_pr() {
-    local -r base_branch=$1
+create_pr_draft() {
+    local -r title=$1
     local -r update_branch=$2
-    local -r revision=$3
-    local -r prev_revision=$4
+    local -r body=$3
+    local -r base_branch=$4
+    local -r revision=$5
 
-    local -r title="[Build] Update iOS SDK to ${revision}."
+    git push -u origin $update_branch
+
+    local -r params="{ \"title\":\"${title}\", \"head\":\"${update_branch}\", \"body\":\"${body}\", \"base\":\"${base_branch}\", \"draft\":true }"
+
+    local -r pr_url=$(curl \
+        -s \
+        -X POST \
+        -H "Authorization: token ${GITHUB_APIKEY}" \
+        "${github_api_repos_url}/${camerakit_distro_repo_base_path}/pulls" \
+        -d "${params}" | \
+        jq -r ".issue_url")
+
+    if [ -z ${pr_url} ]
+    then
+        echo "Failed to open a pull request."
+        exit 1
+    fi
+
+    assign_pr $pr_url $revision
+}
+
+assign_pr() {
+    local -r pr_url=$1
+    local -r revision=$2
+
+    local -r author=$(curl \
+        -s \
+        -H "Authorization: token ${GITHUB_APIKEY}" \
+        "${github_api_repos_url}/${phantom_repo_base_path}/commits/${revision}" | \
+        jq -r ".author.login")
+
+    local -r params="{ \"assignees\":[\"${author}\"] }"
+
+    curl \
+        -s \
+        -X POST \
+        -H "Authorization: token ${GITHUB_APIKEY}" \
+        $pr_url \
+        -d "${params}"
+}
+
+main() {
+    local -r revision=$1
+    local -r build_number=$2
+    local -r should_create_pr=$3
+    local -r no_branch=$4
+
+    local -r base_branch=$(git rev-parse --abbrev-ref HEAD)
+    local -r update_branch="ios-sdk-update/${revision}/${build_number}"
+
+    local -r artifacts_base_url="gs://snapengine-maven-publish/camera-kit-ios/releases/${revision}/${build_number}"
+
+    if [[ -f $build_file_path ]]
+    then
+        local prev_revision=$(head -n 1 $build_file_path)
+        prev_revision=${prev_revision#*=}
+        prev_revision=${prev_revision//$'\"'/}
+    else
+        echo ".build not found at expected path, aborting"
+        exit 1
+    fi
+
+    check_build_artifacts $artifacts_base_url
+    update_build_file  $base_branch $update_branch $revision $no_branch
+
+    local -r title="[Build][iOS] Update SDK to ${revision}."
 
     local included_sdk_commits=()
     local prev_revision_element=$( fetch_commit $prev_revision )
@@ -147,10 +212,10 @@ create_pr() {
         exit 1
     fi
 
-    local body=""
+    local commit_body=""
     if (( "${#included_sdk_commits[@]}" > 0 ))
     then
-        body="Updating iOS SDK with the following commits:"
+        commit_body="Updating iOS SDK with the following commits:"
     fi
 
     for commit in "${included_sdk_commits[@]}"
@@ -158,74 +223,21 @@ create_pr() {
        local commit_message=$(echo "$commit" | jq -r ".commit.message" | head -n 1)
        commit_message=${commit_message//$'\"'/$'\\"'}
        local commit_http_url=$(echo "$commit" | jq -r ".html_url")
-       body="${body}"$'\n'"- ${commit_message}: ${commit_http_url}"
+       commit_body="${commit_body}"$'\n'"- ${commit_message}: ${commit_http_url}"
     done
 
-    local template=$(<$pr_template_file_path)
-    body="${body}\n\n${template}"
-    body=${body//$'\n'/$'\\n'}
-
-    local -r params="{ \"title\":\"${title}\", \"head\":\"${update_branch}\", \"body\":\"${body}\", \"base\":\"${base_branch}\", \"draft\":true }"
-
-    git push -u origin $update_branch
-
-    local -r pr_url=$(curl \
-        -s \
-        -X POST \
-        -H "Authorization: token ${GITHUB_APIKEY}" \
-        "${github_api_repos_url}/${camerakit_distro_repo_base_path}/pulls" \
-        -d "${params}" | \
-        jq -r ".issue_url")
-
-    assign_pr $pr_url $revision
-}
-
-assign_pr() {
-    local -r pr_url=$1
-    local -r revision=$2
-
-    local -r author=$(curl \
-        -s \
-        -H "Authorization: token ${GITHUB_APIKEY}" \
-        "${github_api_repos_url}/${phantom_repo_base_path}/commits/${revision}" | \
-        jq -r ".author.login")
-
-    local -r params="{ \"assignees\":[\"${author}\"] }"
-
-    curl \
-        -s \
-        -X POST \
-        -H "Authorization: token ${GITHUB_APIKEY}" \
-        $pr_url \
-        -d "${params}"
-}
-
-main() {
-    local -r revision=$1
-    local -r build_number=$2
-    local -r should_create_pr=$3
-    local -r no_branch=$4
-
-    local -r base_branch=$(git rev-parse --abbrev-ref HEAD)
-    local -r update_branch="ios-sdk-update/${revision}/${build_number}"
-
-    local -r artifacts_base_url="gs://snapengine-maven-publish/camera-kit-ios/releases/${revision}/${build_number}"
-
-    if [[ -f $build_file_path ]]
-    then
-        local prev_revision=$(head -n 1 $build_file_path)
-        prev_revision=${prev_revision#*=}
-        prev_revision=${prev_revision//$'\"'/}
-    else
-        echo ".build not found at expected path, aborting"
-        exit 1
-    fi
-
-    check_build_artifacts $artifacts_base_url
-    update_build_file  $base_branch $update_branch $revision $no_branch
+    git commit -m "${title}
+    
+    ${commit_body}"
+    
     if [[ "$should_create_pr" = true ]] && [[ "$no_branch" = false ]]
     then
-        create_pr $base_branch $update_branch $revision $prev_revision
+        local -r template=$(<$pr_template_file_path)
+        local -r change_description="Updates commit to \`${revision}\` and build number to \`${build_number}\` in \`.build\`."
+        local pr_body=${template//$"**Background**"/$"**Background**\n${commit_body}"}
+        pr_body=${pr_body//$"**Change**"/$"**Change**\n${change_description}"}
+        pr_body=${pr_body//$'\n'/$'\\n'}
+        create_pr_draft "${title}" "${update_branch}" "${pr_body}" "${base_branch}" "${revision}"
     fi
 }
 
