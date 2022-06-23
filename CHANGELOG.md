@@ -142,6 +142,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - **iOS:**  Recording keeps going past duration but animation stops
 - **iOS:**  Memory leak when device is offline
 - **iOS:**  gRPC objective c runtime conflicts
+- **iOS:**  Rebuilt deliverable with latest toolset to prevent crashes
 
 ### Features
 - **Android:**  Legal agreement prompt pop-up dialog support
