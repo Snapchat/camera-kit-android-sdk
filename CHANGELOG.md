@@ -7,6 +7,10 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android** New method to apply a lens while resetting its state if the lens was applied already. Useful for cases where app resume from background or other screen should reset lens state matching Snapchat-like behavior. Usage example: 
+	`session.lenses.processor.apply(lens, reset = true)`
+
 
 <a name="1.14.0"></a>
 ## [1.14.0] - 2022-06-27
