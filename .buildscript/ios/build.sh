@@ -70,11 +70,13 @@ main() {
         fi
     fi
 
+    simulator_id=$(xcrun simctl list devices | grep "SnapSim" | grep -E -o -i "([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})")
     xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
         -sdk iphonesimulator \
-        -destination "platform=iOS Simulator,name=iPhone 11 Pro"
+        -destination "id=${simulator_id}"
+
 
     if [[ -n "$ipa_dir" ]]; then
         xcodebuild archive \
