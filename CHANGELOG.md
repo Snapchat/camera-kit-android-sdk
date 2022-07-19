@@ -7,12 +7,17 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.15.0"></a>
+## [1.15.0] - 2022-07-18
 ### Features
+- Lens Studio 4.25 support
 - **Android** New method to apply a lens while resetting its state if the lens was applied already. Useful for cases where app resume from background or other screen should reset lens state matching Snapchat-like behavior. Usage example: 
 	`session.lenses.processor.apply(lens, reset = true)`
 
 ### Bug Fixes
 - **Android:**  Improve ARCore performance
+- **Android:**  Fix possible crash when internal remote service is not available.
 
 <a name="1.14.0"></a>
 ## [1.14.0] - 2022-06-27
