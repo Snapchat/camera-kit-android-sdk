@@ -18,9 +18,7 @@ ck_fetch_latest() {
     local sources_dir="${script_dir}/CameraKit"
     local packages_zip="${sources_dir}/packages.zip"
 
-    rm -rf "${sources_dir}/CameraKit"
-    rm -rf "${sources_dir}/CameraKitReferenceUI"
-    rm -rf "${sources_dir}/CameraKitReferenceSwiftUI"
+    rm -rf "${sources_dir}"
 
     mkdir -p "${sources_dir}"
 
@@ -28,7 +26,8 @@ ck_fetch_latest() {
 
     pushd "${sources_dir}"
 
-    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*"
+    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*" "CameraKitBaseExtension/*" "CameraKitPushToDeviceExtension/*" "CameraKitLoginKitAuth/*"
+
 
     rm -f "${packages_zip}"
 
@@ -57,10 +56,17 @@ generate_podfile() {
         sed -i "" "s/@camkit_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@refui_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@pushtodevice_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
     else
         sed -i "" "s^@camkit_path^:path => 'CameraKit/CameraKit'^g" "${podfile}"
         sed -i "" "s^@refui_path^:path => 'CameraKit/CameraKitReferenceUI'^g" "${podfile}"
         sed -i "" "s^@swiftui_path^:path => 'CameraKit/CameraKitReferenceSwiftUI'^g" "${podfile}"
+        sed -i "" "s^@base_path^:path => 'CameraKit/CameraKitBaseExtension'^g" "${podfile}"
+        sed -i "" "s^@pushtodevice_path^:path => 'CameraKit/CameraKitPushToDeviceExtension'^g" "${podfile}"
+        sed -i "" "s^@auth_path^:path => 'CameraKit/CameraKitLoginKitAuth'^g" "${podfile}"
+
     fi
 }
 

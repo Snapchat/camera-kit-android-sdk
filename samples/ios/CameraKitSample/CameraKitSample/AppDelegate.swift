@@ -5,6 +5,8 @@ import UIKit
 import SCSDKCameraKit
 import SCSDKCameraKitReferenceUI
 import SCSDKCreativeKit
+import SCSDKLoginKit
+import SCSDKCameraKitLoginKitAuth
 // Reenable if using SwiftUI reference UI
 //import SCSDKCameraKitReferenceSwiftUI
 //import SwiftUI
@@ -15,13 +17,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     private enum Constants {
         static let partnerGroupId = "5685839489138688"
     }
-
+    
+    /// PushToDeviceCoordinator should really only be used during testing phase as it contains a developer only extension
+    #if ENABLE_PUSH_TO_DEVICE
+    var pushToDeviceCoordinator: PushToDeviceCoordinator?
+    #endif
+    
     var window: UIWindow?
-
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
 
     let snapAPI = SCSDKSnapAPI()
     let cameraController = SampleCameraController()
+    
     // This is how you configure properties for a CameraKit Session
     // Pass in applicationID and apiToken through a SessionConfig which will override the ones stored in the app's Info.plist
     // which is useful to dynamically update your apiToken in case it ever gets revoked.
@@ -29,9 +36,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     //    sessionConfig: SessionConfig(
     //        applicationID: "application_id_here", apiToken: "api_token_here"))
 
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        
         cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
         
         // If you want to support sharing to Snapchat (via CreativeKit) you can set this delegate below.
@@ -40,8 +47,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
         // approved in production and/or your Snapchat username is allowlisted in SnapKit dashboard.
         // See https://docs.snap.com/snap-kit/creative-kit/Tutorials/ios
         cameraController.snapchatDelegate = self
-        
         let cameraViewController = CameraViewController(cameraController: cameraController)
+        #if ENABLE_PUSH_TO_DEVICE
+        pushToDeviceCoordinator = PushToDeviceCoordinator(cameraController: cameraViewController)
+        #endif
         cameraViewController.appOrientationDelegate = self
         window?.rootViewController = cameraViewController
         
@@ -56,6 +65,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
         return true
     }
 
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool
+    {
+        #if ENABLE_PUSH_TO_DEVICE
+        if SCSDKLoginClient.application(app, open: url, options: options) {
+            return true
+        }
+        #endif
+        return false
+    }
+
+    
     func cameraKitViewController(_ viewController: UIViewController, openSnapchat screen: SnapchatScreen) {
         switch screen {
         case .profile, .lens(_):
@@ -113,3 +133,4 @@ class SampleCameraController: CameraController {
             mediaPicker: lensMediaProvider, remoteApiServiceProviders: [CatFactRemoteApiServiceProvider()])
     }
 }
+
