@@ -28,17 +28,7 @@ android {
 
         manifestPlaceholders = [
             'cameraKitApplicationId': cameraKitApplicationId,
-            'cameraKitApiToken': cameraKitApiToken,
-
-            // PushToDevice, we only allow 'staging' builds to open a connection.
-            // https://kit.snapchat.com/manage/apps/b21cfb27-04e9-4b77-bd1a-1435522fb471
-            clientId                : "522b9a5c-3366-4ef8-9c35-4efed7e4a0d0",
-            // Reuse the redirectUrl defined by auth-token-provider-loginkit-sample. We don't really need multiple
-            // redirects since all of the applicationIds are associated with the same account.
-            redirectUrl             : "camerakit-support://auth-token-provider-loginkit-sample/oauth2",
-            scheme                  : "camerakit-support",
-            host                    : "auth-token-provider-loginkit-sample",
-            path                    : "/oauth2",
+            'cameraKitApiToken': cameraKitApiToken
         ]
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
@@ -122,8 +112,6 @@ dependencies {
     // Optional dependency that provides customizable lenses carousel view.
     implementation "com.snap.camerakit:support-lenses-carousel:$cameraKitVersion"
     implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
-    implementation "com.snap.camerakit:camerakit-extension-lens-push-to-device-core:$cameraKitVersion"
-    implementation "com.snap.camerakit:camerakit-extension-auth-token-provider-loginkit:$cameraKitVersion"
     //dev>
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<dev

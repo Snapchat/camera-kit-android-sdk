@@ -7,7 +7,6 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
-- New Push-to-Device feature, which allows developers to send lenses from Lens Studio to their CameraKit application for testing.
 
 <a name="1.15.1"></a>
 ## [1.15.1] - 2022-07-20

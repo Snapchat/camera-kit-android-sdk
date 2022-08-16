@@ -46,16 +46,12 @@ import com.snap.camerakit.support.widget.arCoreSupportedAndInstalled
 import com.snap.camerakit.versionFrom
 import java.io.Closeable
 import java.util.Date
-import com.snap.camerakit.extension.lens.p2d.service.configurePushToDevice
-import com.snap.camerakit.extension.auth.loginkit.LoginKitAuthTokenProvider
-import com.snap.camerakit.extension.lens.p2d.service.LensPushToDeviceService
 
 private const val TAG = "MainActivity"
 private const val BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL = "use_custom_lenses_carousel"
 private const val BUNDLE_ARG_MUTE_AUDIO = "mute_audio"
 private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle artifact.
-    LensPushToDeviceService.LENS_GROUP_ID,
     *BuildConfig.LENS_GROUP_ID_TEST.split(',').toTypedArray() // temporary lens group for testing
 )
 private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
@@ -123,8 +119,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             userBirthDate = Date(136985835000L)
         )
 
-        val loginKitAuthTokenProvider = LoginKitAuthTokenProvider(applicationContext)
-
         // This sample uses the CameraLayout helper view that consolidates most common CameraKit use cases
         // into a single class that takes care of runtime permissions and managing CameraKit Session built
         // with default options that can be tweaked using the exposed configure* methods.
@@ -154,10 +148,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 }
                 // Pass a factory which provides a demo service which handles remote API requests from lenses.
                 remoteApiServiceFactory(CatFactRemoteApiService.Factory)
-
-                configurePushToDevice {
-                    authTokenProvider(loginKitAuthTokenProvider)
-                }
             }
 
             configureLensesCarousel {
