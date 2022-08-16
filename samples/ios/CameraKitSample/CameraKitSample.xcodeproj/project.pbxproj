@@ -18,7 +18,6 @@
 		0FF07F0223D7BFC100CFFA3F /* lenses in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07F0123D7BFC100CFFA3F /* lenses */; };
 		8E9270C37100DC880799AD50 /* libPods-CameraKitSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2936A4A58C121E055261F97 /* libPods-CameraKitSampleTests.a */; };
 		D2833CE1F34D4609C778B956 /* libPods-CameraKitSample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC6D0305DD89DAA0AF3CB771 /* libPods-CameraKitSample.a */; };
-		F7235DF828A5D69900B948EB /* PushToDeviceCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7235DF728A5D69900B948EB /* PushToDeviceCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,7 +64,6 @@
 		C4844B22C684FC739EE48139 /* Pods-CameraKitSample.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample.enterprise.xcconfig"; path = "Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample.enterprise.xcconfig"; sourceTree = "<group>"; };
 		CF62D770B57A393FA6DF9A21 /* Pods-CameraKitSampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSampleTests.debug.xcconfig"; path = "Target Support Files/Pods-CameraKitSampleTests/Pods-CameraKitSampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		D2936A4A58C121E055261F97 /* libPods-CameraKitSampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CameraKitSampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F7235DF728A5D69900B948EB /* PushToDeviceCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushToDeviceCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +98,6 @@
 			children = (
 				0F16357823F1E30900DA79A0 /* ApplicationInfo.swift */,
 				0F5219212832D18C00CFDC26 /* CatFactLensRemoteApi.swift */,
-				F7235DF728A5D69900B948EB /* PushToDeviceCoordinator.swift */,
 			);
 			path = Application;
 			sourceTree = "<group>";
@@ -404,7 +401,6 @@
 				0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */,
 				0F5219222832D18C00CFDC26 /* CatFactLensRemoteApi.swift in Sources */,
 				0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */,
-				F7235DF828A5D69900B948EB /* PushToDeviceCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,8 +5,6 @@ import UIKit
 import SCSDKCameraKit
 import SCSDKCameraKitReferenceUI
 import SCSDKCreativeKit
-import SCSDKLoginKit
-import SCSDKCameraKitLoginKitAuth
 // Reenable if using SwiftUI reference UI
 //import SCSDKCameraKitReferenceSwiftUI
 //import SwiftUI
@@ -17,11 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     private enum Constants {
         static let partnerGroupId = "5685839489138688"
     }
-    
-    /// PushToDeviceCoordinator should really only be used during testing phase as it contains a developer only extension
-    #if ENABLE_PUSH_TO_DEVICE
-    var pushToDeviceCoordinator: PushToDeviceCoordinator?
-    #endif
     
     var window: UIWindow?
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
@@ -48,9 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
         // See https://docs.snap.com/snap-kit/creative-kit/Tutorials/ios
         cameraController.snapchatDelegate = self
         let cameraViewController = CameraViewController(cameraController: cameraController)
-        #if ENABLE_PUSH_TO_DEVICE
-        pushToDeviceCoordinator = PushToDeviceCoordinator(cameraController: cameraViewController)
-        #endif
         cameraViewController.appOrientationDelegate = self
         window?.rootViewController = cameraViewController
         
