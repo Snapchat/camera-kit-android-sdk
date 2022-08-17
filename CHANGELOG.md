@@ -8,6 +8,11 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.16.0"></a>
+## [1.16.0] - 2022-08-16
+### Features
+- Add support for Connected Lenses
+
 <a name="1.15.1"></a>
 ## [1.15.1] - 2022-07-20
 ### Bug Fixes
