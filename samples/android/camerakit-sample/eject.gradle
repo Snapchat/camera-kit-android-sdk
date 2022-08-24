@@ -52,7 +52,9 @@ task copyCameraKitDependenciesToBundledRepo() {
 
             project.exec {
                 commandLine 'gsutil',
-                        '-m',
+                        // TODO(CAMKIT-2574): Remove once gcloud SDK fixed multithreading.
+                        // '-m',
+                        '-o "GSUtil:parallel_process_count=1"',
                         'cp',
                         '-r',
                         "$baseUri/$module/$gcsCameraKitVersion",
