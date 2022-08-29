@@ -8,3 +8,5 @@ camerakit-support://auth-token-provider-loginkit-sample/oauth2
 camerakit-support
 auth-token-provider-loginkit-sample
 /oauth2
+camerakitsandbox://snap-kit/oauth2
+camerakitsandbox
