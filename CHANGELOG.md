@@ -7,9 +7,15 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
-
 ### Features
 - **Android:** Expose new API to obtain WebP lens icon resources, switch the built-in lenses carousel to use it by default. Note that PNG lens icon resources are deprecated, to be removed in 1.19.0.
+
+<a name="1.16.0"></a>
+## [1.16.0] - 2022-09-09
+### Features
+- Lens Studio 4.28.x support
+- Add support for Connected Lenses (Closed Beta)
+- **iOS** Add support for arm64 simulators
 
 <a name="1.15.1"></a>
 ## [1.15.1] - 2022-07-20
