@@ -15,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     private enum Constants {
         static let partnerGroupId = "5685839489138688"
     }
-    
+
     var window: UIWindow?
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
 
@@ -29,7 +29,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     //    sessionConfig: SessionConfig(
     //        applicationID: "application_id_here", apiToken: "api_token_here"))
 
-    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
@@ -54,17 +53,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
         return true
     }
-
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool
-    {
-        #if ENABLE_PUSH_TO_DEVICE
-        if SCSDKLoginClient.application(app, open: url, options: options) {
-            return true
-        }
-        #endif
-        return false
-    }
-
     
     func cameraKitViewController(_ viewController: UIViewController, openSnapchat screen: SnapchatScreen) {
         switch screen {
@@ -123,4 +111,3 @@ class SampleCameraController: CameraController {
             mediaPicker: lensMediaProvider, remoteApiServiceProviders: [CatFactRemoteApiServiceProvider()])
     }
 }
-
