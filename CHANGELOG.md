@@ -10,6 +10,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ### Features
 - **Android:** Expose new API to obtain WebP lens icon resources, switch the built-in lenses carousel to use it by default. Note that PNG lens icon resources are deprecated, to be removed in 1.19.0.
 - New Push-to-Device (P2D) feature, which allows developers to send lenses from Lens Studio to their Camera Kit application for testing. Note that on Android, P2D is only supported if your application uses the built-in lenses carousel.
+- Custom and city landmarkers support.
 
 <a name="1.16.0"></a>
 ## [1.16.0] - 2022-09-09
