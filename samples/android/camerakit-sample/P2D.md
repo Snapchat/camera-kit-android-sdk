@@ -1,6 +1,6 @@
 # Push-to-Device (P2D)
 
-Applications can receive lenses from Lens Studio via the `camerakit-extension-lens-push-to-device-core` integration. This makes it easy for you to test lenses before publishing them.
+Applications can receive lenses from Lens Studio via the `camerakit-extension-lens-push-to-device` integration. This makes it easy for you to test lenses before publishing them.
 
 ## Integration
 
@@ -9,7 +9,7 @@ To integrate P2D:
 1. Add the P2D extension dependency to your build configuration. Note that this feature should not be shipped to end-users, as it is meant for lens development.
 
     ```groovy
-    debugImplementation "com.snap.camerakit:camerakit-extension-lens-push-to-device-core:$cameraKitVersion"
+    debugImplementation "com.snap.camerakit:camerakit-extension-lens-push-to-device:$cameraKitVersion"
     ```
 
 2. Follow [Login Kit Integration](#Login-Kit-Integration) section below. Login Kit is used for authentication so that Lens Studio and your device can be paired together.
