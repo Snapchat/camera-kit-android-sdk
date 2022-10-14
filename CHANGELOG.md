@@ -8,6 +8,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Features
+- **Android:**  Update sample app project to the latest Gradle/AGP 7+ and Kotlin 1.6.21 versions
+
 <a name="1.17.0"></a>
 ## [1.17.0] - 2022-10-12
 ### Features

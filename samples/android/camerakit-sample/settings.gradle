@@ -18,7 +18,7 @@ buildscript {
 
     dependencies {
         //noinspection GradleDynamicVersion
-        classpath 'com.snapchat.gradle:gradle-build-cache-gcs-plugin:0.5.0+2c71a7e.135'
+        classpath 'com.snapchat.gradle:gradle-build-cache-gcs-plugin:0.5.4+305cdf1.188'
     }
 
     configurations.classpath {
@@ -32,7 +32,7 @@ apply plugin: com.snapchat.gradle.caching.GcsBuildCachePlugin
 
 buildCache {
     remote(com.snapchat.gradle.caching.GcsBuildCache) {
-        url = 'gcs://snapchat-gradle-build-cache/Snapchat/camera-kit-distribution/6.9.1'
+        url = 'gcs://snapchat-gradle-build-cache/Snapchat/camera-kit-distribution/7.5.1'
         projectId = 'snapchat-build-artifacts'
         push = isCi
     }

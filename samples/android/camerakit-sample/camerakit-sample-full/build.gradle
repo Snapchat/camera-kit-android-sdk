@@ -2,7 +2,7 @@
 buildscript {
     dependencies {
         //noinspection GradleDynamicVersion
-        classpath('com.snap.karma:karma-gradle-plugin:0.22.3+5819484.472') {
+        classpath('com.snap.karma:karma-gradle-plugin:0.23.1+65ed0b5.532') {
             exclude group: "com.google.guava", module: "guava"
         }
     }

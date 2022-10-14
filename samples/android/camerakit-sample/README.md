@@ -24,8 +24,9 @@ Table of contents
 
 ### Requirements
 
-- Recent Android Studio (4.0+), download latest at: https://developer.android.com/studio.
+- Recent Android Studio (2021+), download latest at: https://developer.android.com/studio.
 - Android 5.0 device or emulator, with a minimum SDK API level of 21, is required.
+- Java 11 SDK, recommended installer: https://sdkman.io/.
 
 ### IDE
 
@@ -72,7 +73,7 @@ android {
         applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
             // NOTE: replace the values with values obtained from https://kit.snapchat.com/manage
-            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471'
+            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471',
             'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVwkWNXZGMHQ0s4tRJst9qfwE'
         ]
     }
