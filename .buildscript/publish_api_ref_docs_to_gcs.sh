@@ -18,7 +18,7 @@ main() {
 
     "${script_dir}/build.sh" -k false -z false -e "${eject_dir}" -f "public" --docs-only true
 
-    gsutil -m cp -R "${eject_dir}/docs/api/*" "${uri}"
+    gsutil -o GSUtil:parallel_process_count=1 -o GSUtil:parallel_thread_count=24 cp -R "${eject_dir}/docs/api/*" "${uri}"
 }
 
 
