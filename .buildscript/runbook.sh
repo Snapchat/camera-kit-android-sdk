@@ -27,6 +27,7 @@ readonly camerakit_distribution_appcenter_org_url="https://appcenter.ms/orgs/app
 readonly camerakit_distribution_appcenter_android_sample="${camerakit_distribution_appcenter_org_url}/apps/CameraKit-Sample-Partner"
 readonly camerakit_distribution_appcenter_ios_sample="${camerakit_distribution_appcenter_org_url}/apps/CameraKit-Sample-Partner-iOS"
 readonly camerakit_distribution_repo_ios_build_reference_file="${camerakit_distribution_repo_root}/samples/ios/CameraKitSample/.build"
+readonly camerakit_distribution_public_release_doc="https://docs.google.com/document/d/1SQf2HoTjUiMyuRre0SsJxN5wRLWYkV90FCLM1x2E2Jk"
 
 readonly version_file="${camerakit_distribution_repo_root}/VERSION"
 readonly changelog_file="${camerakit_distribution_repo_root}/CHANGELOG.md"
@@ -224,7 +225,7 @@ To find a commit hash, copy the value from a COMMIT_SHA environment variable tha
 
     prompt_run_next_step ".buildscript/android/update.sh -v ${next_version_name} -r ${android_sdk_commit} -b ${android_build_job_number} --create-pr"
 
-    prompt_next_step "Open the PR created by running the above command. Get approval, :cool: and then wait for the PR to get merged" ""
+    prompt_next_step "Open the PR created by running the above command. Get approval, :fire: and then wait for the PR to get merged" ""
 
     # Download final release build, tag and publish it
     prompt_next_step "Open:" "$( blue $camerakit_distribution_repo_main_build_url )
@@ -249,7 +250,10 @@ To find a commit hash, copy the value from a COMMIT_SHA environment variable tha
     [Description]: Copy exact items from the $next_version_name section in the CHANGELOG
     [Binaries]: Attach the ${release_artifact_file_name}"
 
-    prompt_next_step "Publish the $( bold $next_version_name ) release and notify CameraKit partner engineers in the #${camera_kit_eng_guest_chat_name} channel about it" ""
+     # TODO: replace with steps encoded in this script
+    prompt_next_step "Complete the $( bold $release_version_name ) release publishing steps outlined in $( blue "${camerakit_distribution_public_release_doc}" )" ""
+
+    prompt_next_step "Notify CameraKit partner engineers in the #${camera_kit_eng_guest_chat_name} channel about it" ""
 
     echo "Congratulations, patch release $( bold $next_version_name ) is done!"
 }
@@ -278,7 +282,10 @@ new_release_minor() {
     prompt_next_step "Create a release branch for $( bold $release_version_name ) in the Android repo ${android_repo_url}:" "$( bold "
     git checkout ${android_repo_main_branch} && git pull origin ${android_repo_main_branch} && git checkout -b ${sdk_release_branch_name} && git push" )"
 
-    prompt_next_step "Update Android SDK version to $( bold "${release_version_name}-rc1" ) for pre-release testing" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L33" )"
+    prompt_next_step "Create a PR to ${android_repo_url} to edit the version to $( bold "${release_version_name}-rc1" ) for pre-release testing" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L33" )
+    Example PR: $( blue "${android_repo_url}/pull/229236" )"
+
+    prompt_yes_or_no "Get approval to merge the above PR, merge/cool them and wait to complete. Completed? (y/n)" echo "Please wait for the build to complete and/or fix build issues, if any."
 
     prompt_next_step "Trigger Android SDK build:" "$( blue "${android_sdk_build_url}/build" )
     The [branch] and [commit] parameters should be set to [${sdk_release_branch_name}] and [maven_group_id] to [com.snap.camerakit]"
@@ -313,7 +320,7 @@ new_release_minor() {
 
     # Create a new minor release branch and integrate pre-release builds of Android/iOS SDKs
     echo "In [$( bold $camerakit_distribution_repo_name )] repository, create a new release branch:"
-    prompt_run_next_step "git checkout -b ${release_branch_name} && git push"
+    prompt_run_next_step "git checkout -b ${release_branch_name}"
 
     prompt_run_next_step ".buildscript/android/update.sh -v ${android_sdk_version_name} -r ${android_sdk_commit} -b ${android_build_job_number} --no-branch"
     prompt_run_next_step ".buildscript/ios/update.sh -r ${ios_sdk_commit} -b ${ios_build_job_number} --no-branch"
@@ -415,7 +422,7 @@ new_release_minor() {
     echo "In [$( bold $camerakit_distribution_repo_name )] repository,"
     prompt_run_next_step "git checkout ${release_branch_name} && git pull origin ${release_branch_name}"
     prompt_run_next_step ".buildscript/android/update.sh -v ${release_version_name} -r ${android_sdk_commit} -b ${android_build_job_number} --create-pr"
-    prompt_next_step "Open the PR created by running the above command. Get approval, :cool: and then wait for the PR to get merged" ""
+    prompt_next_step "Open the PR created by running the above command. Get approval, :fire: and then wait for the PR to get merged" ""
 
     # Prepare CHANGELOG for release
     prompt_run_next_step "git checkout ${release_branch_name} && git pull origin ${release_branch_name}"
@@ -449,7 +456,10 @@ new_release_minor() {
     [Description]: Copy exact items from the $release_version_name section in the CHANGELOG
     [Binaries]: Attach the ${release_artifact_file_name}"
 
-    prompt_next_step "Publish the $( bold $release_version_name ) release and notify CameraKit partner engineers in the #${camera_kit_eng_guest_chat_name} channel about it" ""
+    # TODO: replace with steps encoded in this script
+    prompt_next_step "Complete the $( bold $release_version_name ) release publishing steps outlined in $( blue "${camerakit_distribution_public_release_doc}" )" ""
+
+    prompt_next_step "Notify CameraKit partner engineers in the #${camera_kit_eng_guest_chat_name} channel about it" ""
 
     echo "Congratulations, release $( bold $release_version_name ) is done!"
 }
@@ -600,9 +610,9 @@ main() {
 Hey there, thanks for opening the runbook of CameraKit 📷 processes (some manual some automatic). 
 Make sure you open another terminal tab or window to run commands when prompted."
     echo "
-NOTE: Certain steps in this runbook require CLI access to Github. You can create a personal access token via https://github.sc-corp.net/settings/tokens and export it in your terminal environment as:
-$ export GITHUB_APIKEY=<your-generated-api-token-value>
-"
+Certain steps in this runbook require CLI access to Github. You can create a personal access token via https://github.sc-corp.net/settings/tokens and then"
+    prompt_run_next_step "export GITHUB_APIKEY=<your-generated-api-token-value>"
+
     present_entry_options
 }
 
