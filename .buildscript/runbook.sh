@@ -208,7 +208,7 @@ To find a commit hash, copy the value from a COMMIT_SHA environment variable tha
     "
 
     # Prepare and deliver Android SDK final release build
-    prompt_next_step "Update Android SDK version to $( bold "${next_version_name}" ) for the final release" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L33" ). Create a PR, get approval and :fire: it to merge."
+    prompt_next_step "Update Android SDK version to $( bold "${next_version_name}" ) for the final release" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L47" ). Create a PR, get approval and :fire: it to merge."
 
     prompt_next_step "Trigger Android SDK build:" "$( blue "${android_sdk_build_url}/build" )
     The [branch] and [commit] parameters should be set to [${sdk_release_branch_name}] and [maven_group_id] to [com.snap.camerakit]"
@@ -282,7 +282,7 @@ new_release_minor() {
     prompt_next_step "Create a release branch for $( bold $release_version_name ) in the Android repo ${android_repo_url}:" "$( bold "
     git checkout ${android_repo_main_branch} && git pull origin ${android_repo_main_branch} && git checkout -b ${sdk_release_branch_name} && git push" )"
 
-    prompt_next_step "Create a PR to ${android_repo_url} to edit the version to $( bold "${release_version_name}-rc1" ) for pre-release testing" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L33" )
+    prompt_next_step "Create a PR to ${android_repo_url} to edit the version to $( bold "${release_version_name}-rc1" ) for pre-release testing" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L47" )
     Example PR: $( blue "${android_repo_url}/pull/229236" )"
 
     prompt_yes_or_no "Get approval to merge the above PR, merge/cool them and wait to complete. Completed? (y/n)" echo "Please wait for the build to complete and/or fix build issues, if any."
@@ -355,7 +355,7 @@ new_release_minor() {
     echo ""
 
     # Bump Android/iOS SDK versions for the next development iteration and prepare SDK builds
-    prompt_next_step "Create a PR to ${android_repo_url} to bump version to $( bold $next_version_name )" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${android_repo_main_branch}/snapchat/sdks/camerakit/core/ext.gradle#L33" )
+    prompt_next_step "Create a PR to ${android_repo_url} to bump version to $( bold $next_version_name )" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${android_repo_main_branch}/snapchat/sdks/camerakit/core/ext.gradle#L47" )
     Example PR: $( blue "${android_repo_url}/pull/197699" )"
 
     prompt_next_step "Create a PR to ${ios_repo_url} to bump version to $( bold $next_version_name )" "Edit the [VERSION] file in $( blue "${ios_repo_url}/edit/${ios_repo_main_branch}/SDKs/CameraKit/CameraKit/VERSION" )
@@ -409,7 +409,7 @@ new_release_minor() {
     prompt_yes_or_no "Wait for the $( bold $release_version_name ) release candidate verification in ${release_verify_ticket} JIRA ticket. Verified? (y/n)" echo "
     If any issues are discovered through verification, please prepare Android/iOS SDK builds that contain fixes and then use the ./buildscript/android|ios/update.sh scripts to deliver them to the [${camerakit_distribution_repo_name}] repository's ${release_branch_name} branch.
     "
-    prompt_next_step "Update Android SDK version to $( bold "${release_version_name}" ) for the final release" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L33" ). Create a PR, get approval and :fire: it to merge."
+    prompt_next_step "Update Android SDK version to $( bold "${release_version_name}" ) for the final release" "Edit the [versionName] section in $( blue "${android_repo_url}/edit/${sdk_release_branch_name}/snapchat/sdks/camerakit/core/ext.gradle#L47" ). Create a PR, get approval and :fire: it to merge."
     prompt_next_step "Trigger Android SDK build:" "$( blue "${android_sdk_build_url}/build" )
     The [branch] and [commit] parameters should be set to [${sdk_release_branch_name}] and [maven_group_id] to [com.snap.camerakit]"
 
