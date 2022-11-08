@@ -11,15 +11,14 @@ end
 
 # https://github.com/CocoaPods/CocoaPods/issues/11402#issuecomment-1149585364
 # Developers seem to have encountered an issue with using CocoaPods from Xcode 14.
-# We can implement the work-around submitted by @linconz for now.
 # We might no longer require this work-around in a future version of CocoaPods.
 
 post_install do |installer|
   installer.generated_projects.each do |project|
     project.targets.each do |target|
-        target.build_configurations.each do |config|
-            config.build_settings["DEVELOPMENT_TEAM"] = "424M5254LK"
-         end
+      target.build_configurations.each do |config|
+        config.build_settings['CODE_SIGNING_ALLOWED'] = 'NO'
+      end
     end
   end
 end
