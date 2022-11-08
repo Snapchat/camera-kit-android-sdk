@@ -18,6 +18,7 @@ task copyCameraKitDependenciesToBundledRepo() {
             'support-gms-location',
             'support-permissions',
             'support-lenses-carousel',
+            'support-snap-attribution',
             'support-snap-focus',
             'support-snap-flash',
             'support-snap-ui-common',
