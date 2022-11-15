@@ -28,6 +28,8 @@ usage() {
 }
 
 main() {
+    source "${script_dir}/.envconfig"
+    
     local eject_to=$1
     local ipa_dir=$2
     local flavor=$3
@@ -70,7 +72,8 @@ main() {
         fi
     fi
 
-    simulator_id=$(xcrun simctl list devices | grep "SnapSim" | grep -E -o -i "([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12})")
+    simulator_id=$(xcrun simctl create "CamKitSim" ${CAMERA_KIT_XCODE_SIM_DEVICE_TYPE} ${CAMERA_KIT_XCODE_SIM_RUNTIME})
+    xcrun simctl boot $simulator_id
     xcodebuild clean test \
         -workspace CameraKitSample.xcworkspace \
         -scheme CameraKitSample \
