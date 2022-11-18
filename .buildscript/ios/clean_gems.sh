@@ -20,10 +20,16 @@ main() {
     # so this path is a static path to ruby's headers that will get added to search paths when executing ruby
     pushd "$(xcode-select -p)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0"
 
-    # Patch ruby env on old xcode installed on v12 nodes
-    if [ -f "universal-darwin20/ruby/config.h" ]; then
+    if [ -f "universal-darwin22/ruby/config.h" ]; then
+        # We migrated this build job to Xcode 14.1.
+        # Xcode 14.1 gives us artifacts in `universal-darwin22`.
+        # It seems that some gems (like `json`) are looking for `universal-darwin21`.
+        # This is leading to crashes.
+        # We can workaround this for now.
+        # We symlink `universal-darwin22` to `universal-darwin21`.
+        # We saw a similar situation when we migrated to Xcode 13.3.
         if [ ! -f "universal-darwin21/ruby/config.h" ]; then
-            sudo ln -s "universal-darwin20" "universal-darwin21"
+            sudo ln -s "universal-darwin22" "universal-darwin21"
         fi
     fi
 
