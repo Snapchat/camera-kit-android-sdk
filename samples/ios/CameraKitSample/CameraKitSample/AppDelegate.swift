@@ -39,7 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
         // approved in production and/or your Snapchat username is allowlisted in SnapKit dashboard.
         // See https://docs.snap.com/snap-kit/creative-kit/Tutorials/ios
         cameraController.snapchatDelegate = self
-        let cameraViewController = CameraViewController(cameraController: cameraController)
+        let cameraViewController = SampleCameraViewController(cameraController: cameraController)
         cameraViewController.appOrientationDelegate = self
         window?.rootViewController = cameraViewController
         
@@ -109,5 +109,44 @@ class SampleCameraController: CameraController {
         DataProviderComponent(
             deviceMotion: nil, userData: UserDataProvider(), lensHint: nil, location: nil,
             mediaPicker: lensMediaProvider, remoteApiServiceProviders: [CatFactRemoteApiServiceProvider()])
+    }
+}
+
+// MARK: Sample Debug Camera View Controller
+
+class SampleCameraViewController: CameraViewController {
+
+    public let bottomSheetButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = .black.withAlphaComponent(0.25)
+        button.layer.cornerRadius = 15
+        button.setImage(UIImage(named: "DebugActive"), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setUpBottomSheetButton()
+    }
+
+    func setUpBottomSheetButton() {
+        cameraView.addSubview(bottomSheetButton)
+
+        NSLayoutConstraint.activate([
+            bottomSheetButton.topAnchor.constraint(equalTo: cameraView.topAnchor, constant: 50),
+            bottomSheetButton.leadingAnchor.constraint(equalTo: cameraView.leadingAnchor, constant: 20),
+        ])
+
+        bottomSheetButton.addTarget(self, action: #selector(lensButtonAction), for: .touchUpInside)
+    }
+
+    @objc func lensButtonAction() {
+        let vc = DebugViewController(cameraController: cameraController)
+        let nav = UINavigationController(rootViewController: vc)
+        if #available(iOS 15.0, *) {
+            nav.sheetPresentationController?.detents = [.medium()]
+        }
+        present(nav, animated: true, completion: nil)
     }
 }
