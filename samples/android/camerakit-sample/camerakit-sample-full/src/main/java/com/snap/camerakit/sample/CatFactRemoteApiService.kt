@@ -32,7 +32,7 @@ internal object CatFactRemoteApiService : LensesComponent.RemoteApiService {
         request: LensesComponent.RemoteApiService.Request,
         onResponse: Consumer<LensesComponent.RemoteApiService.Response>
     ): LensesComponent.RemoteApiService.Call {
-        return when(val endpointId = request.endpointId) {
+        return when (val endpointId = request.endpointId) {
             "fact" -> {
                 var connection: HttpURLConnection? = null
                 try {

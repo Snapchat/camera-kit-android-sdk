@@ -202,16 +202,18 @@ internal class MediaCapture(
                         val bufferInfo = MediaCodec.BufferInfo()
 
                         while (!endOfStream && !Thread.currentThread().isInterrupted) {
-                            when (val outputBufferIdx =
-                                audioEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_AUDIO_OUTPUT)) {
+                            when (
+                                val outputBufferIdx =
+                                    audioEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_AUDIO_OUTPUT)
+                            ) {
                                 MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                                     synchronized(muxerLock) {
                                         audioTrackIndex.set(muxer.addTrack(audioEncoder.outputFormat))
                                         Log.d(TAG, "Added audio track to muxer. Track: ${audioTrackIndex.get()}")
                                     }
 
-                                    if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
-                                        || (!isAudioProvided && videoTrackIndex.get() >= 0)
+                                    if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0) ||
+                                        (!isAudioProvided && videoTrackIndex.get() >= 0)
                                     ) {
                                         Log.d(TAG, "Starting muxer - encodeAudio")
                                         muxerStarted.set(true)
@@ -233,9 +235,10 @@ internal class MediaCapture(
                                         lastTimestamp = bufferInfo.presentationTimeUs
                                     } else {
                                         Log.d(
-                                            TAG, "Dropping out of order frame. " +
-                                                    "Current frame timestamp: ${bufferInfo.presentationTimeUs}, " +
-                                                    "last frame timestamp: $lastTimestamp"
+                                            TAG,
+                                            "Dropping out of order frame. " +
+                                                "Current frame timestamp: ${bufferInfo.presentationTimeUs}, " +
+                                                "last frame timestamp: $lastTimestamp"
                                         )
                                         audioEncoder.releaseOutputBuffer(outputBufferIdx, false)
                                     }
@@ -271,11 +274,17 @@ internal class MediaCapture(
                             endOfVideoStreamSignal.set(false)
                         }
 
-                        when (val outputBufferIdx =
-                            videoEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_VIDEO)) {
+                        when (
+                            val outputBufferIdx =
+                                videoEncoder.dequeueOutputBuffer(bufferInfo, DEQUE_TIMEOUT_USEC_VIDEO)
+                        ) {
                             MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
                                 if (muxerStarted.get()) {
-                                    captureCallback.onError(IllegalStateException("Unexpected change in video encoding format"))
+                                    captureCallback.onError(
+                                        IllegalStateException(
+                                            "Unexpected change in video encoding format"
+                                        )
+                                    )
                                     errorOccurred = true
                                 }
 
@@ -284,8 +293,8 @@ internal class MediaCapture(
                                     Log.d(TAG, "Added video track to muxer. Track: $videoTrackIndex")
                                 }
 
-                                if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0)
-                                    || (!isAudioProvided && videoTrackIndex.get() >= 0)
+                                if ((isAudioProvided && audioTrackIndex.get() >= 0 && videoTrackIndex.get() >= 0) ||
+                                    (!isAudioProvided && videoTrackIndex.get() >= 0)
                                 ) {
                                     Log.d(TAG, "Starting muxer - encodeVideo")
                                     muxerStarted.set(true)
@@ -370,10 +379,10 @@ internal class MediaCapture(
         val outputBuffer = audioEncoder.getOutputBuffer(bufferIdx) ?: return false
         outputBuffer.position(bufferInfo.offset)
 
-        if (muxerStarted
-            && audioTrackIndex >= 0
-            && bufferInfo.size > 0
-            && bufferInfo.presentationTimeUs > 0
+        if (muxerStarted &&
+            audioTrackIndex >= 0 &&
+            bufferInfo.size > 0 &&
+            bufferInfo.presentationTimeUs > 0
         ) {
             synchronized(muxerLock) {
                 muxer.writeSampleData(audioTrackIndex, outputBuffer, bufferInfo)
@@ -397,9 +406,9 @@ internal class MediaCapture(
 
         val outputBuffer = videoEncoder.getOutputBuffer(bufferIdx) ?: return false
 
-        if (muxerStarted
-            && videoTrackIndex >= 0
-            && bufferInfo.size > 0
+        if (muxerStarted &&
+            videoTrackIndex >= 0 &&
+            bufferInfo.size > 0
         ) {
             outputBuffer.position(bufferInfo.offset)
             outputBuffer.limit(bufferInfo.offset + bufferInfo.size)

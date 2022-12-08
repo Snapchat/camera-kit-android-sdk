@@ -17,10 +17,12 @@ internal class MockUserProcessorSource(
     override fun attach(processor: UserProcessor): Closeable {
         return processor.connectInput(object : UserProcessor.Input {
             override fun subscribeTo(onUserAvailable: Consumer<UserProcessor.Input.User>): Closeable {
-                onUserAvailable.accept(UserProcessor.Input.User(
-                    displayName = userDisplayName,
-                    birthDate = userBirthDate
-                ))
+                onUserAvailable.accept(
+                    UserProcessor.Input.User(
+                        displayName = userDisplayName,
+                        birthDate = userBirthDate
+                    )
+                )
                 return Closeable {
                     // no-op
                 }

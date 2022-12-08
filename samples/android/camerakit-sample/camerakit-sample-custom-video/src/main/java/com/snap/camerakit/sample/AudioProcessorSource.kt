@@ -175,7 +175,5 @@ internal class AudioProcessorSource(
                 it.accept(inputFrameFrom(buffer, sampleCount))
             }
         }
-
     }
 }
-

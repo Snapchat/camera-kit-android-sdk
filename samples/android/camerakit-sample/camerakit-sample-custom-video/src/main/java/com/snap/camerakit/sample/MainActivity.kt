@@ -2,6 +2,8 @@ package com.snap.camerakit.sample
 
 import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -9,6 +11,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.LifecycleOwner
 import com.snap.camerakit.ImageProcessor
@@ -21,9 +24,6 @@ import java.io.File
 import java.util.UUID
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import android.content.pm.ResolveInfo
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 
 private const val TAG = "MainActivity"
 private val LENS_GROUPS = arrayOf(
@@ -63,7 +63,10 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     }
 
                     val resolveInfoList: List<ResolveInfo> =
-                        this@MainActivity.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
+                        this@MainActivity.packageManager.queryIntentActivities(
+                            intent,
+                            PackageManager.MATCH_DEFAULT_ONLY
+                        )
 
                     for (resolveInfo in resolveInfoList) {
                         val packageName = resolveInfo.activityInfo.packageName

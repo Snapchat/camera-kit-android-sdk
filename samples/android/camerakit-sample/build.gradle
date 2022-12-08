@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.3.0'
+    }
+}
+
+plugins {
+    alias libs.plugins.kotlin apply false
+    alias libs.plugins.ktlint apply false
+}
+
 allprojects {
     ext {
         //dev>
@@ -6,7 +20,7 @@ allprojects {
         //partner>
         bundledMavenRepo = rootProject.file('maven')
         //<partner
-        kotlinVersion = '1.6.21'
+        kotlinVersion = libs.versions.kotlin.get()
         ktxVersion = '1.7.0'
         exoPlayerVersion = '2.16.1'
         appCompatVersion = '1.4.0'
@@ -43,22 +57,15 @@ allprojects {
         cameraKitLensesGroupIdArCore = property('com.snap.camerakit.lenses.group.id.arcore')
     }
 
+    //dev>
     buildscript {
         repositories {
-            //dev>
             maven {
                 url snapMavenUri
             }
-            //<dev
-            mavenCentral()
-            google()
-
-        }
-        dependencies {
-            classpath 'com.android.tools.build:gradle:7.3.0'
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         }
     }
+    //<dev
 
     repositories {
         //partner>
@@ -74,7 +81,9 @@ allprojects {
         mavenCentral()
         google()
     }
+}
 
+subprojects {
     // AS has a bug where it incorrectly constructs a dependency version string for an artifact that
     // is published with .aar extension (Maven packaging) when executing a "download sources" task
     // that is built-in, see similar issue: https://youtrack.jetbrains.com/issue/IDEA-234036.
@@ -104,6 +113,8 @@ allprojects {
             }
         }
     }
+
+    apply plugin: libs.plugins.ktlint.get().pluginId
 }
 
 task clean(type: Delete) {

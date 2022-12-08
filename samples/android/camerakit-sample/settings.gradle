@@ -38,6 +38,20 @@ buildCache {
     }
 }
 //<dev
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    versionCatalogs {
+        libs {
+            def kotlin = version('kotlin', '1.6.21')
+            plugin('kotlin', 'org.jetbrains.kotlin.jvm').versionRef(kotlin)
+            plugin('ktlint', 'org.jlleitschuh.gradle.ktlint').version('11.0.0')
+        }
+    }
+}
+
 def include(String moduleName, String relativePath) {
     include(moduleName)
     project(moduleName).projectDir = new File(rootDir, relativePath)

@@ -171,7 +171,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
             // Attach listener for flash state changes. Returned is a closeable to detach the listener on close.
             flashBehavior.attachOnFlashChangedListener(OnFlashChangedListener(window))
-              .addTo(closeOnDestroy)
+                .addTo(closeOnDestroy)
         }
 
         cameraLayout.onSessionAvailable { session ->

@@ -115,18 +115,20 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
                 }
                 findViewById<View>(R.id.export_button).setOnClickListener { view ->
                     view.isEnabled = false
-                    mediaExportTask.getAndSet(singleThreadExecutor.submit {
-                        exportedMediaUri = if (exportedMediaUri != null) {
-                            exportedMediaUri
-                        } else {
-                            generateContentUri(mediaFile)
-                        }?.also { uri ->
-                            shareExternally(uri, mediaMimeType)
+                    mediaExportTask.getAndSet(
+                        singleThreadExecutor.submit {
+                            exportedMediaUri = if (exportedMediaUri != null) {
+                                exportedMediaUri
+                            } else {
+                                generateContentUri(mediaFile)
+                            }?.also { uri ->
+                                shareExternally(uri, mediaMimeType)
+                            }
+                            view.post {
+                                view.isEnabled = true
+                            }
                         }
-                        view.post {
-                            view.isEnabled = true
-                        }
-                    })?.cancel(true)
+                    )?.cancel(true)
                 }
             } ?: finish()
         } else {
@@ -145,30 +147,33 @@ class PreviewActivity : AppCompatActivity(), LifecycleOwner {
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(mediaUri)
             val mainHandler = Handler(Looper.getMainLooper())
-            mediaSource.addEventListener(mainHandler, object : MediaSourceEventListener {
+            mediaSource.addEventListener(
+                mainHandler,
+                object : MediaSourceEventListener {
 
-                override fun onLoadCompleted(
-                    windowIndex: Int,
-                    mediaPeriodId: MediaSource.MediaPeriodId?,
-                    loadEventInfo: LoadEventInfo,
-                    mediaLoadData: MediaLoadData
-                ) {
-                    mediaSource.removeEventListener(this)
-                    startPostponedEnterTransition()
-                }
+                    override fun onLoadCompleted(
+                        windowIndex: Int,
+                        mediaPeriodId: MediaSource.MediaPeriodId?,
+                        loadEventInfo: LoadEventInfo,
+                        mediaLoadData: MediaLoadData
+                    ) {
+                        mediaSource.removeEventListener(this)
+                        startPostponedEnterTransition()
+                    }
 
-                override fun onLoadError(
-                    windowIndex: Int,
-                    mediaPeriodId: MediaSource.MediaPeriodId?,
-                    loadEventInfo: LoadEventInfo,
-                    mediaLoadData: MediaLoadData,
-                    error: IOException,
-                    wasCanceled: Boolean
-                ) {
-                    mediaSource.removeEventListener(this)
-                    finish()
+                    override fun onLoadError(
+                        windowIndex: Int,
+                        mediaPeriodId: MediaSource.MediaPeriodId?,
+                        loadEventInfo: LoadEventInfo,
+                        mediaLoadData: MediaLoadData,
+                        error: IOException,
+                        wasCanceled: Boolean
+                    ) {
+                        mediaSource.removeEventListener(this)
+                        finish()
+                    }
                 }
-            })
+            )
 
             exoPlayer.addListener(object : Player.Listener {
                 override fun onRenderedFirstFrame() {
