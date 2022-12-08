@@ -1,7 +1,7 @@
 //  DebugViewController.swift
 //  CameraKitSample
 
-import Foundation
+import UIKit
 import SCSDKCameraKitReferenceUI
 
 class DebugViewController: UIViewController {

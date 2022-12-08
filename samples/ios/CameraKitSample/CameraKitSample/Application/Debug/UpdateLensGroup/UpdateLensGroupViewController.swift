@@ -1,7 +1,7 @@
 //  UpdateLensGroupViewController.swift
 //  CameraKitSample
 
-import Foundation
+import UIKit
 import SCSDKCameraKitReferenceUI
 
 class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {

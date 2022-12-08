@@ -1,7 +1,7 @@
 //  UpdateLensGroupTableViewCell.swift
 //  CameraKitSample
 
-import Foundation
+import UIKit
 import SCSDKCameraKitReferenceUI
 
 protocol UpdateLensGroupDelegate: AnyObject {
