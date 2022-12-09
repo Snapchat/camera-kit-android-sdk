@@ -28,7 +28,14 @@ android {
 
         manifestPlaceholders = [
             'cameraKitApplicationId': cameraKitApplicationId,
-            'cameraKitApiToken': cameraKitApiToken
+            'cameraKitApiToken': cameraKitApiToken,
+
+            // Snap Kit parameters for the Lens Push To Device authentication via Login Kit:
+            'snapKitClientId': '522b9a5c-3366-4ef8-9c35-4efed7e4a0d0',
+            'snapKitRedirectUrl': 'camerakit-support://auth-token-provider-loginkit-sample/oauth2',
+            'snapKitScheme': 'camerakit-support',
+            'snapKitHost': 'auth-token-provider-loginkit-sample',
+            'snapKitPath': '/oauth2',
         ]
 
         buildConfigField 'String', "LENS_GROUP_ID_TEST", "\"$cameraKitLensesGroupId\""
@@ -112,6 +119,10 @@ dependencies {
     // Optional dependency that provides customizable lenses carousel view.
     implementation "com.snap.camerakit:support-lenses-carousel:$cameraKitVersion"
     implementation "com.snap.camerakit:lenses-bundle:$cameraKitVersion"
+    // Optional dependency that provides Lens Push to Device functionality.
+    implementation "com.snap.camerakit:camerakit-extension-lens-push-to-device:$cameraKitVersion"
+    // Optional dependency that provides Login Kit based implementation of AuthTokenProvider.
+    implementation "com.snap.camerakit:camerakit-extension-auth-token-provider-loginkit:$cameraKitVersion"
     //dev>
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<dev

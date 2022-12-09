@@ -29,6 +29,9 @@ import androidx.lifecycle.LifecycleOwner
 import com.snap.camerakit.LegalProcessor
 import com.snap.camerakit.Session
 import com.snap.camerakit.connectOutput
+import com.snap.camerakit.extension.auth.loginkit.LoginKitAuthTokenProvider
+import com.snap.camerakit.extension.lens.p2d.service.LensPushToDeviceService
+import com.snap.camerakit.extension.lens.p2d.service.configurePushToDevice
 import com.snap.camerakit.lenses.LENS_GROUP_ID_BUNDLED
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.LensesComponent.Repository.QueryCriteria.Available
@@ -52,6 +55,7 @@ private const val BUNDLE_ARG_USE_CUSTOM_LENSES_CAROUSEL = "use_custom_lenses_car
 private const val BUNDLE_ARG_MUTE_AUDIO = "mute_audio"
 private val LENS_GROUPS = arrayOf(
     LENS_GROUP_ID_BUNDLED, // lens group for bundled lenses available in lenses-bundle artifact.
+    LensPushToDeviceService.LENS_GROUP_ID, // lens group for lenses obtained using Push to Device functionality.
     *BuildConfig.LENS_GROUP_ID_TEST.split(',').toTypedArray() // temporary lens group for testing
 )
 private val LENS_GROUPS_ARCORE_AVAILABLE = arrayOf(
@@ -148,6 +152,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 }
                 // Pass a factory which provides a demo service which handles remote API requests from lenses.
                 remoteApiServiceFactory(CatFactRemoteApiService.Factory)
+
+                // Configure Push to Device extension providing Login Kit based authentication token provider.
+                configurePushToDevice {
+                    authTokenProvider(
+                        LoginKitAuthTokenProvider(applicationContext)
+                    )
+                }
             }
 
             configureLensesCarousel {

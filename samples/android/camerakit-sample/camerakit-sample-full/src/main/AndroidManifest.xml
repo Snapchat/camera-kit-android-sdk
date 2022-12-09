@@ -17,6 +17,10 @@
 
         <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
         <meta-data android:name="com.snap.camerakit.api.token" android:value="${cameraKitApiToken}" />
+        <meta-data android:name="com.snap.kit.clientId" android:value="${snapKitClientId}" />
+        <meta-data android:name="com.snap.kit.redirectUrl" android:value="${snapKitRedirectUrl}" />
+        <meta-data android:name="com.snap.kit.scopes" android:resource="@array/snap_kit_scopes" />
+
         <provider
             android:authorities="${applicationId}.provider"
             android:name="androidx.core.content.FileProvider"
@@ -59,6 +63,26 @@
                 <action android:name="android.intent.action.VIEW"/>
                 <data android:mimeType="video/*"/>
                 <data android:mimeType="image/*"/>
+            </intent-filter>
+        </activity>
+        <!-- SnapKitActivity with intent filter is required to receive auth triggers via Login Kit -->
+        <activity
+            android:name="com.snap.corekit.SnapKitActivity"
+            android:launchMode="singleTask"
+            android:exported="true"
+            >
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="${snapKitScheme}"
+                    android:host="${snapKitHost}"
+                    android:path="${snapKitPath}"
+                    />
             </intent-filter>
         </activity>
     </application>
