@@ -1,4 +1,12 @@
-# Integrating Push To Device on iOS
+# Integrating Push to Device on iOS
+
+### Note on Shipping Push to Device
+
+Push to Device is intended only for lens development. You should not submit this feature with your production app. Many of the steps listed below describe steps you can use to ensure that Push to Device is only built in debug configurations.
+
+### Define a build configuration in your project
+
+In Xcode, add `-DCAMERAKIT_PUSHTODEVICE` to `Other Swift Flags`'s `Debug` configuration. 
 
 ### Add yourself to demo testers
 
@@ -15,12 +23,13 @@ Four frameworks are required for Push To Device. The frameworks are bundled in w
 ```swift
 target 'Your-App-Name' do
 ...
-  pod 'SnapSDK', '1.14.0', :subspecs => ['SCSDKLoginKit']
-  pod 'SCSDKCameraKitLoginKitAuth', :path => 'CameraKit/CameraKitLoginKitAuth'
-  pod 'SCSDKCameraKitBaseExtension', :path => 'CameraKit/CameraKitBaseExtension/'
-  pod 'SCSDKCameraKitPushToDeviceExtension', :path => 'CameraKit/CameraKitPushToDeviceExtension/'
+  pod 'SCSDKCameraKitLoginKitAuth', :path => 'CameraKit/CameraKitLoginKitAuth', :configurations => ['Debug']
+  pod 'SCSDKCameraKitBaseExtension', :path => 'CameraKit/CameraKitBaseExtension/', :configurations => ['Debug']
+  pod 'SCSDKCameraKitPushToDeviceExtension', :path => 'CameraKit/CameraKitPushToDeviceExtension/', :configurations => ['Debug']
 ...
 ```
+
+If you're using the CameraKit Reference UI, you need to configure your pods to include the `CAMERAKIT_PUSHTODEVICE` flag. You can see how to do this in the sample app's Podfile.
 
 Change the target name to the name of your app. In your project directory, run the following terminal command:
 
@@ -63,7 +72,9 @@ pod install
 ### Update the AppDelegate to handle the callback defined above like this
 
 ```swift
+#if CAMERAKIT_PUSHTODEVICE
 import SCSDKLoginKit
+#endif
 ...
     func application(
        _ app: UIApplication,
@@ -87,13 +98,18 @@ import SCSDKCameraKitLoginKitAuth
 ### Update your CameraController's groupIDs to include SCSDKCameraKitPushToDeviceExtension.SCCameraKitPushToDeviceGroupID
 
 ```swift
+
+#if CAMERAKIT_PUSHTODEVICE
 cameraController.groupIDs = [SCSDKCameraKitPushToDeviceExtension.SCCameraKitPushToDeviceGroupID]
+#endif
 
 ```
 
 ### Create an instance of a PushToDevice object and set its delegate and initiate pairing
 
 ```swift
+
+#if CAMERAKIT_PUSHTODEVICE
 import SCSDKCameraKitPushToDeviceExtension
 
 pushToDevice = PushToDevice(
@@ -102,7 +118,7 @@ pushToDevice = PushToDevice(
 )
 
 pushToDevice.delegate = self
-
+#endif
 ...
 // Consider having a debug only UIButton or UIGestureRecognizer which, upon press, calls the following
 pushToDevice.initiatePairing()
@@ -110,8 +126,6 @@ pushToDevice.initiatePairing()
 ```
 
 From a user perspective you will see a login flow. If Snapchat is installed this will be handled in app, if not, Safari will open and the user will be asked to log in there. Once logged in, the `PushToDeviceDelegate` methods will be called. This delegation is mostly for informational purposes but it is important to understand when certain events take place as there is some amount of user interaction that must take place. The following are a few of the methods that will be called throughout the Push To Device journey.
-
-Note: `PushToDevice` is available in iOS 12 and above.
 
 ### Upon successful authentication
 

@@ -15,6 +15,12 @@
 	<string>b21cfb27-04e9-4b77-bd1a-1435522fb471</string>
 	<key>SCSDKClientId</key>
 	<string>522b9a5c-3366-4ef8-9c35-4efed7e4a0d0</string>
+	<key>SCSDKRedirectUrl</key>
+	<string>camerakitsandbox://snap-kit/oauth2</string>
+	<key>SCSDKScopes</key>
+	<array>
+		<string>https://auth.snapchat.com/oauth2/api/camkit_lens_push_to_device</string>
+	</array>
 	<key>SCCameraKitAPIToken</key>
 	<string>eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVwkWNXZGMHQ0s4tRJst9qfwE</string>
 	<key>LSApplicationQueriesSchemes</key>

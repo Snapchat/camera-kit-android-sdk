@@ -58,7 +58,7 @@ generate_podfile() {
         sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@pushtodevice_path/'${version_name}'/g" "${podfile}"
-        sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@auth_path/'${version_name}'/g" "${podfile}"
     else
         sed -i "" "s^@camkit_path^:path => 'CameraKit/CameraKit'^g" "${podfile}"
         sed -i "" "s^@refui_path^:path => 'CameraKit/CameraKitReferenceUI'^g" "${podfile}"
