@@ -7,6 +7,10 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Updates
+- **Android:** Remove deprecated lens icon/preview accessors:
+	- `LensesComponent.Lens.iconUri` replaced by `icons.find { it is LensesComponent.Lens.Media.Image.Png }?.uri`
+	- `LensesComponent.Lens.preview` replaced by `previews.find { it is LensesComponent.Lens.Media.Image.Webp }?.uri`
 
 <a name="1.18.1"></a>
 ## [1.18.1] - 2022-11-30

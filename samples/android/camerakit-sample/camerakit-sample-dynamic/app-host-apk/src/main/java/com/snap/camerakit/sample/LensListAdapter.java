@@ -17,6 +17,7 @@ import com.snap.camerakit.lenses.LensesComponent;
 import com.snap.camerakit.sample.dynamic.app.R;
 
 import java.util.List;
+import java.util.Set;
 
 final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAdapter.ViewHolder> {
 
@@ -79,7 +80,10 @@ final class LensListAdapter extends ListAdapter<LensesComponent.Lens, LensListAd
         public void bind(LensesComponent.Lens lens) {
             lensIdView.setText(lens.getId());
             lensNameView.setText(lens.getName());
-            Glide.with(itemView).load(lens.getIconUri()).into(lensIconView);
+            Set<LensesComponent.Lens.Media.Image> icons = lens.getIcons();
+            if (!icons.isEmpty()) {
+                Glide.with(itemView).load(icons.iterator().next().getUri()).into(lensIconView);
+            }
         }
 
         @Override
