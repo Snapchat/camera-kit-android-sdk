@@ -7,6 +7,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android:**  Add a new sample app that demonstrates a custom implementation of lenses carousel and camera preview layout
+
 ### Updates
 - **Android:** Remove deprecated lens icon/preview accessors:
 	- `LensesComponent.Lens.iconUri` replaced by `icons.find { it is LensesComponent.Lens.Media.Image.Png }?.uri`
