@@ -6,6 +6,8 @@ import SCSDKCameraKitReferenceUI
 
 protocol UpdateLensGroupDelegate: AnyObject {
 
+    func tableViewCurrentCellEditing(cell: UpdateLensGroupCell?)
+
     /// Notifies the delegate that the content for a row in the tableview has been updated
     /// - Parameter cell: The cell contained in the updated row
     func updateRow(cell: UpdateLensGroupCell)
@@ -49,10 +51,19 @@ class UpdateLensGroupCell: UITableViewCell, UITextFieldDelegate {
 
     }
 
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        delegate?.tableViewCurrentCellEditing(cell: self)
+    }
+
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         delegate?.updateRow(cell: self)
         endEditing(true)
         return false
+    }
+
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        delegate?.updateRow(cell: self)
+        return true
     }
 
     func textFieldDidEndEditing(_ textField: UITextField) {

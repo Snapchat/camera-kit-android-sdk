@@ -31,7 +31,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
+        if let previousGroupIDs = UserDefaults.standard.object(forKey: UpdateLensGroupViewController.Constants.lensGroupIDsKey) as? [String] {
+            cameraController.groupIDs = previousGroupIDs
+        } else {
+            cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
+        }
         
         // If you want to support sharing to Snapchat (via CreativeKit) you can set this delegate below.
         // Note that you need to make sure CreativeKit is set up correctly in your app, which includes

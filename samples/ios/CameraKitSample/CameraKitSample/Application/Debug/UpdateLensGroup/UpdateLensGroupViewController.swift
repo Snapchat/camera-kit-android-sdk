@@ -6,6 +6,10 @@ import SCSDKCameraKitReferenceUI
 
 class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    enum Constants {
+        static let lensGroupIDsKey = "com.snap.camerakit.sample.lensGroupIDsKey"
+    }
+
     /// Tableview displays all lens group IDs
     public lazy var tableView: UITableView = {
         let view = UITableView()
@@ -25,10 +29,22 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
     /// Holds all group IDs currently used
     var allGroupIDs: [String]
     let cameraController: CameraController
+    let carouselView: CarouselView
 
-    init(cameraController: CameraController) {
+    /// Stores current cell being edited, if any, so that if user exits screen before finishing editing, the edits are saved
+    weak var currentCellEditing: UpdateLensGroupCell?
+
+    init(cameraController: CameraController, carouselView: CarouselView) {
         self.cameraController = cameraController
-        self.allGroupIDs = cameraController.groupIDs + ((cameraController.groupIDs.last?.isEmpty ?? false) ? [] : [""])
+        self.carouselView = carouselView
+
+        if let previousGroupIDs = UserDefaults.standard.object(forKey: Constants.lensGroupIDsKey) as? [String] {
+            self.allGroupIDs = previousGroupIDs
+        } else {
+            /// Since there will always be an empty row at the bottom of the tableview, we check if we need to manually add that empty row by seeing if the last item in the groupIDs is an empty string. If not, to manually add it, we append an empty string at the end of allGroupIDs
+            self.allGroupIDs = cameraController.groupIDs + ((cameraController.groupIDs.last?.isEmpty ?? false) ? [] : [""])
+        }
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -51,8 +67,15 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
     }
 
     override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+        if let cell = currentCellEditing {
+            updateRow(cell: cell)
+        }
         cameraController.groupIDs = allGroupIDs
+        UserDefaults.standard.set(allGroupIDs, forKey: Constants.lensGroupIDsKey)
+        carouselView.selectItem(EmptyItem())
+        cameraController.clearLens()
+        carouselView.reloadData()
+        super.viewWillDisappear(animated)
     }
 
     func setUp() {
@@ -101,12 +124,18 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
 
 extension UpdateLensGroupViewController: UpdateLensGroupDelegate {
 
+    /// Updates currentCellEditing to current cell being edited, so that if user exits screen before they finish editing, the edits are saved
+    func tableViewCurrentCellEditing(cell: UpdateLensGroupCell?) {
+        currentCellEditing = cell
+    }
+
     func updateRow(cell: UpdateLensGroupCell) {
         guard let index = tableView.indexPath(for: cell)?.item else { return }
         allGroupIDs[index] = cell.textField.text ?? ""
         if index == allGroupIDs.count-1 && !allGroupIDs[index].isEmpty {
             addRow()
         }
+        tableViewCurrentCellEditing(cell: nil)
     }
 
     func addRow() {

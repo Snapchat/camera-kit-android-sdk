@@ -65,7 +65,7 @@ class CustomizedCameraViewController: CameraViewController {
     /// The user has tapped the debug sheet button.
     /// - Parameter sender: the button that was tapped
     @objc func lensDebugSheetAction(_ sender: UIButton) {
-        let vc = DebugViewController(cameraController: cameraController)
+        let vc = DebugViewController(cameraController: cameraController, carouselView: cameraView.carouselView)
         let nav = UINavigationController(rootViewController: vc)
         if #available(iOS 15.0, *) {
             nav.sheetPresentationController?.detents = [.medium()]

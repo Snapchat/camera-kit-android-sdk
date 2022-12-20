@@ -23,12 +23,14 @@ class DebugViewController: UIViewController {
     }()
 
     /// View controller for updating lens groups
-    lazy var updateLensGroupViewController = UpdateLensGroupViewController(cameraController: cameraController)
+    lazy var updateLensGroupViewController = UpdateLensGroupViewController(cameraController: cameraController, carouselView: carouselView)
 
     let cameraController: CameraController
+    let carouselView: CarouselView
 
-    init(cameraController: CameraController) {
+    init(cameraController: CameraController, carouselView: CarouselView) {
         self.cameraController = cameraController
+        self.carouselView = carouselView
         super.init(nibName: nil, bundle: nil)
     }
 
