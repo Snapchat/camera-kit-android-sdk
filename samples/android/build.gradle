@@ -35,7 +35,7 @@ allprojects {
         androidCompileSdkVersion = 31
         androidTargetSdkVersion = androidCompileSdkVersion
 
-        cameraKitDistributionVersion = rootProject.file('../../../VERSION').text.trim()
+        cameraKitDistributionVersion = rootProject.file('../../VERSION').text.trim()
         cameraKitDistributionCode = 1
 
         //dev>

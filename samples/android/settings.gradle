@@ -1,4 +1,4 @@
-rootProject.name = 'camera-kit-sample-root'
+rootProject.name = 'camera-kit-samples-root'
 
 //dev>
 //See: https://discuss.gradle.org/t/how-to-remove-gitignore-from-defaultexcludes-for-whole-multi-module-project/35187/4

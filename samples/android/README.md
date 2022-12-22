@@ -30,7 +30,7 @@ Table of contents
 
 ### IDE
 
-Open the `camerakit-sample` project in Android Studio by opening the root [`build.gradle`](./build.gradle) file:
+Open the samples project in Android Studio by opening the root [`build.gradle`](./build.gradle) file:
 
 ![open-android-studio](.doc/open_android_studio.png)
 

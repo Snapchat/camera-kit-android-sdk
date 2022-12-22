@@ -80,7 +80,7 @@ main() {
             pushd "${script_dir}/android"
             if [ "$docs_only" = false ]
             then
-                ./build.sh -e "${platform_samples_eject_dir}/camerakit-sample" -k $karma_test -b release -f "${flavor}"
+                ./build.sh -e "${platform_samples_eject_dir}" -k $karma_test -b release -f "${flavor}"
             fi
             ./docs.sh -e "${platform_docs_eject_dir_versioned}"
             popd

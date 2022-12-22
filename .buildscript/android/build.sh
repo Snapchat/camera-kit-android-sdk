@@ -34,7 +34,7 @@ main() {
     source "${script_dir}/prepare_build_environment.sh"
     echo "Android SDK root: ${ANDROID_SDK_ROOT}"
 
-    pushd "${samples_android_root}/camerakit-sample"
+    pushd "${samples_android_root}"
 
     ./gradlew clean
     rm -rf maven/*

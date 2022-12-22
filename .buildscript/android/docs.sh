@@ -25,7 +25,7 @@ main() {
     source "${script_dir}/prepare_build_environment.sh"
     echo "Android SDK root: ${ANDROID_SDK_ROOT}"
 
-    pushd "${samples_android_root}/camerakit-sample"
+    pushd "${samples_android_root}"
 
     if [[ -z "$eject_to" ]]; then
         eject_to=$(mktemp -d -t "camerakit-android-docs-XXXXXXXXXX")
