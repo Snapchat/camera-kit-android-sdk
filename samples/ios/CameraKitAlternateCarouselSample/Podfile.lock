@@ -17,7 +17,7 @@ EXTERNAL SOURCES:
     :path: "../CameraKitSample/CameraKit/CameraKit"
 
 SPEC CHECKSUMS:
-  SCSDKCameraKit: 530ab76001278e2270aff53abd458cfeecb3962f
+  SCSDKCameraKit: 9127a45c95a58a95a113479d539f7bbc8d669c0e
   SnapSDK: e832716ff024b17b448f9bca5feeac5a3daed3ff
 
 PODFILE CHECKSUM: 30adeb93a64d8e5c3064a030fca1e54d4db04c54
