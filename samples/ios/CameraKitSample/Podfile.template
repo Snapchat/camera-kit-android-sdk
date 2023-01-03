@@ -1,3 +1,4 @@
+platform :ios, '12.0'
 target 'CameraKitSample' do
 	pod 'SCSDKCameraKit', @camkit_path
 	pod 'SCSDKCameraKitReferenceUI', @refui_path
