@@ -7,6 +7,8 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Updates
+- **Android:** Remove "Share with Snapchat" placeholder button
 
 <a name="1.19.0"></a>
 ## [1.19.0] - 2022-12-28
