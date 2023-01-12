@@ -6,7 +6,6 @@ import SCSDKCameraKitReferenceUI
 
 class DebugViewController: UIViewController {
 
-    /// Button to navigate to update lens group view controller
     var updateLensGroupButton: UIButton = {
         let button = UIButton()
         button.setTitle(NSLocalizedString("camera_kit_update_lens_group_button", comment: ""), for: .normal)
@@ -21,9 +20,40 @@ class DebugViewController: UIViewController {
         }
         return button
     }()
+    
+    var updateApiTokenButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(NSLocalizedString("camera_kit_update_apitoken_button", comment: ""), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        if #available(iOS 13.0, *) {
+            button.setTitleColor(.link, for: .normal)
+            button.backgroundColor = .tertiarySystemBackground
+        } else {
+            button.setTitleColor(.blue, for: .normal)
+            button.backgroundColor = .darkGray
+        }
+        return button
+    }()
+    
+    var resetValueButton: UIButton = {
+        let button = UIButton()
+        button.setTitle(NSLocalizedString("camera_kit_reset_button", comment: ""), for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        if #available(iOS 13.0, *) {
+            button.setTitleColor(.link, for: .normal)
+            button.backgroundColor = .tertiarySystemBackground
+        } else {
+            button.setTitleColor(.blue, for: .normal)
+            button.backgroundColor = .darkGray
+        }
+        return button
+    }()
 
     /// View controller for updating lens groups
     lazy var updateLensGroupViewController = UpdateLensGroupViewController(cameraController: cameraController, carouselView: carouselView)
+    lazy var updateApiTokenViewController = UpdateApiTokenViewController()
 
     let cameraController: CameraController
     let carouselView: CarouselView
@@ -61,20 +91,55 @@ class DebugViewController: UIViewController {
             view.backgroundColor = .lightGray
         }
         navigationController?.view.backgroundColor = view.backgroundColor
-        view.addSubview(updateLensGroupButton)
+        
+        let stackView = UIStackView(arrangedSubviews: [updateLensGroupButton,updateApiTokenButton, resetValueButton])
+        stackView.axis = .vertical
+        stackView.spacing = 20.0
+        stackView.alignment = .fill
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(stackView)
 
         NSLayoutConstraint.activate([
-            updateLensGroupButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            updateLensGroupButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            updateLensGroupButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            updateLensGroupButton.heightAnchor.constraint(equalToConstant: 60),
+          stackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+          stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+          stackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+          stackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
         ])
 
         updateLensGroupButton.addTarget(self, action: #selector(updateLensGroupButtonTapped), for: .touchUpInside)
+        
+        updateApiTokenButton.addTarget(self, action: #selector(updateApiTokenButtonTapped), for: .touchUpInside)
+        
+        resetValueButton.addTarget(self, action: #selector(resetValues), for: .touchUpInside)
+    }
+    
+    @objc private func resetValues() {
+        let dialogMessage = UIAlertController(title: NSLocalizedString("camera_kit_confirm_button", comment: ""), message: NSLocalizedString("camera_kit_reset_config_confirmation_dialog", comment: ""), preferredStyle: .alert)
+
+        // Create OK button with action handler
+        let ok = UIAlertAction(title: NSLocalizedString("camera_kit_ok_button", comment: ""), style: .default, handler: { (action) -> Void in
+            let appConfigStorage = AppConfigStorage()
+            appConfigStorage.resetAll()
+            // Force to quit this app so that the change will take effect.
+            exit(0)
+        })
+        // Create Cancel button with action handlder
+        let cancel = UIAlertAction(title: NSLocalizedString("camera_kit_cancel_button", comment: ""), style: .cancel) { (action) -> Void in
+        }
+        //Add OK and Cancel button to an Alert object
+        dialogMessage.addAction(ok)
+        dialogMessage.addAction(cancel)
+        // Present alert message to user
+        self.present(dialogMessage, animated: true, completion: nil)
     }
 
     @objc func updateLensGroupButtonTapped(_ sender: UIButton) {
         navigationController?.pushViewController(updateLensGroupViewController, animated: true)
+    }
+    
+    @objc func updateApiTokenButtonTapped(_ sender: UIButton) {
+        navigationController?.pushViewController(updateApiTokenViewController, animated: true)
     }
     
     @objc func dismissButton(_ sender: UIButton) {

@@ -1,8 +1,17 @@
 /* 
 
 */
-
+"camera_kit_cancel_button" = "Cancel";
+"camera_kit_clear_button" = "Clear";
+"camera_kit_confirm_button" = "Confirm";
 "camera_kit_debug_nav_title" = "Debug";
 "camera_kit_done_button" = "Done";
+"camera_kit_ok_button" = "OK";
+"camera_kit_reset_button" = "Reset";
+"camera_kit_save_button" = "Save";
+"camera_kit_api_token_label" = "If empty, the value from the app plist is used";
 "camera_kit_group_id_textfield_placeholder" = "Group ID";
+"camera_kit_update_apitoken_button" = "Update API Token";
 "camera_kit_update_lens_group_button" = "Update Lens Group";
+"camera_kit_reset_config_confirmation_dialog" = "Are you sure you want to reset the custom api token and group IDs?";
+"camera_kit_save_api_token_confirmation_dialog" = "Once api token is saved, please reopen this app.";
