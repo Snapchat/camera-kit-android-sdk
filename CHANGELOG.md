@@ -10,6 +10,16 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ### Updates
 - **Android:** Remove "Share with Snapchat" placeholder button
 
+<a name="1.19.2"></a>
+## [1.19.2] - 2023-01-12
+### Bug Fixes
+- **iOS:**  Fix the issue of staging watermark showing with production API token
+
+<a name="1.19.1"></a>
+## [1.19.1] - 2023-01-09
+### Bug Fixes
+- **Android:**  Fix a crash caused by `RejectedExecutionException` after `Session` is closed
+
 <a name="1.19.0"></a>
 ## [1.19.0] - 2022-12-28
 ### Features
