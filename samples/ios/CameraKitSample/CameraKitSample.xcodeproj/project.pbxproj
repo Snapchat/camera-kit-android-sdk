@@ -17,10 +17,8 @@
 		0FF07EF023D79DC500CFFA3F /* CameraKitSampleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF07EEF23D79DC500CFFA3F /* CameraKitSampleUITests.swift */; };
 		0FF07F0223D7BFC100CFFA3F /* lenses in Resources */ = {isa = PBXBuildFile; fileRef = 0FF07F0123D7BFC100CFFA3F /* lenses */; };
 		5093DB202943E2A40092D8F2 /* CustomizedCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5093DB1F2943E2A40092D8F2 /* CustomizedCameraViewController.swift */; };
-		7E7FF5DE296F53F200F5D47B /* AppConfigStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FF5DD296F53F200F5D47B /* AppConfigStorage.swift */; };
-		7E7FF5E5296FB7A200F5D47B /* UpdateApiTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FF5E4296FB7A200F5D47B /* UpdateApiTokenViewController.swift */; };
-		7E7FF5E7296FB98800F5D47B /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E7FF5E6296FB98800F5D47B /* DebugViewController.swift */; };
 		8E9270C37100DC880799AD50 /* libPods-CameraKitSampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2936A4A58C121E055261F97 /* libPods-CameraKitSampleTests.a */; };
+		A6786285293925A400F5AF06 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6786284293925A400F5AF06 /* DebugViewController.swift */; };
 		A6786289293F187800F5AF06 /* UpdateLensGroupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6786288293F187800F5AF06 /* UpdateLensGroupViewController.swift */; };
 		A678628B293F190200F5AF06 /* UpdateLensGroupTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A678628A293F190200F5AF06 /* UpdateLensGroupTableViewCell.swift */; };
 		A678629229419A8D00F5AF06 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = A678629429419A8D00F5AF06 /* Localizable.strings */; };
@@ -66,11 +64,9 @@
 		102E255BE3ECAD766E9F184B /* Pods-CameraKitSampleTests.enterprise.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSampleTests.enterprise.xcconfig"; path = "Target Support Files/Pods-CameraKitSampleTests/Pods-CameraKitSampleTests.enterprise.xcconfig"; sourceTree = "<group>"; };
 		5093DB1F2943E2A40092D8F2 /* CustomizedCameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomizedCameraViewController.swift; sourceTree = "<group>"; };
 		5BF194BD9CAB638B7CF8B766 /* Pods-CameraKitSampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSampleTests.release.xcconfig"; path = "Target Support Files/Pods-CameraKitSampleTests/Pods-CameraKitSampleTests.release.xcconfig"; sourceTree = "<group>"; };
-		7E7FF5DD296F53F200F5D47B /* AppConfigStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfigStorage.swift; sourceTree = "<group>"; };
-		7E7FF5E4296FB7A200F5D47B /* UpdateApiTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApiTokenViewController.swift; sourceTree = "<group>"; };
-		7E7FF5E6296FB98800F5D47B /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		9A27A7977E990FF3BA7D2F75 /* Pods-CameraKitSample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample.release.xcconfig"; path = "Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample.release.xcconfig"; sourceTree = "<group>"; };
 		9E2C4409553480641E55EB29 /* Pods-CameraKitSample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CameraKitSample.debug.xcconfig"; path = "Target Support Files/Pods-CameraKitSample/Pods-CameraKitSample.debug.xcconfig"; sourceTree = "<group>"; };
+		A6786284293925A400F5AF06 /* DebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
 		A6786288293F187800F5AF06 /* UpdateLensGroupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLensGroupViewController.swift; sourceTree = "<group>"; };
 		A678628A293F190200F5AF06 /* UpdateLensGroupTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateLensGroupTableViewCell.swift; sourceTree = "<group>"; };
 		A678629329419A8D00F5AF06 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -156,7 +152,6 @@
 			isa = PBXGroup;
 			children = (
 				0FF07ECD23D79DC400CFFA3F /* AppDelegate.swift */,
-				7E7FF5DD296F53F200F5D47B /* AppConfigStorage.swift */,
 				5093DB1F2943E2A40092D8F2 /* CustomizedCameraViewController.swift */,
 				0F16357723F1E30900DA79A0 /* Application */,
 				0FF07ED623D79DC500CFFA3F /* Assets.xcassets */,
@@ -186,19 +181,10 @@
 			path = CameraKitSampleUITests;
 			sourceTree = "<group>";
 		};
-		7E7FF5DF296F68F600F5D47B /* UpdateApiToken */ = {
-			isa = PBXGroup;
-			children = (
-				7E7FF5E4296FB7A200F5D47B /* UpdateApiTokenViewController.swift */,
-			);
-			path = UpdateApiToken;
-			sourceTree = "<group>";
-		};
 		A6786286293F183B00F5AF06 /* Debug */ = {
 			isa = PBXGroup;
 			children = (
-				7E7FF5E6296FB98800F5D47B /* DebugViewController.swift */,
-				7E7FF5DF296F68F600F5D47B /* UpdateApiToken */,
+				A6786284293925A400F5AF06 /* DebugViewController.swift */,
 				A6786287293F186A00F5AF06 /* UpdateLensGroup */,
 			);
 			path = Debug;
@@ -445,14 +431,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				A678628B293F190200F5AF06 /* UpdateLensGroupTableViewCell.swift in Sources */,
-				7E7FF5E7296FB98800F5D47B /* DebugViewController.swift in Sources */,
 				A6786289293F187800F5AF06 /* UpdateLensGroupViewController.swift in Sources */,
 				5093DB202943E2A40092D8F2 /* CustomizedCameraViewController.swift in Sources */,
 				0FF07ECE23D79DC400CFFA3F /* AppDelegate.swift in Sources */,
 				0F5219222832D18C00CFDC26 /* CatFactLensRemoteApi.swift in Sources */,
-				7E7FF5DE296F53F200F5D47B /* AppConfigStorage.swift in Sources */,
 				0F16357923F1E30900DA79A0 /* ApplicationInfo.swift in Sources */,
-				7E7FF5E5296FB7A200F5D47B /* UpdateApiTokenViewController.swift in Sources */,
+				A6786285293925A400F5AF06 /* DebugViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

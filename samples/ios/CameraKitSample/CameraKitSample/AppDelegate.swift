@@ -20,21 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
 
     let snapAPI = SCSDKSnapAPI()
-    let cameraController : CustomizedCameraController
-    var appConfigStorage = AppConfigStorage()
-    
-    override init() {
-        if let customApiToken = appConfigStorage.apiToken, !customApiToken.isEmpty {
-            // Use custom api token if exist. The api token can be updated by deeplink or debug UI.
-            cameraController = CustomizedCameraController(
-                sessionConfig: SessionConfig(
-                    applicationID: appConfigStorage.applicationID , apiToken: customApiToken ))
-        } else {
-            // Use the default init which loads from plist
-            cameraController = CustomizedCameraController()
-        }
-        super.init()
-    }
+    let cameraController = CustomizedCameraController()
     
     // This is how you configure properties for a CameraKit Session
     // Pass in applicationID and apiToken through a SessionConfig which will override the ones stored in the app's Info.plist
@@ -45,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        if let previousGroupIDs = appConfigStorage.groupIDs {
+        if let previousGroupIDs = UserDefaults.standard.object(forKey: UpdateLensGroupViewController.Constants.lensGroupIDsKey) as? [String] {
             cameraController.groupIDs = previousGroupIDs
         } else {
             cameraController.groupIDs = [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId]
@@ -68,42 +54,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
 //        window?.rootViewController = cameraViewController
         
         window?.makeKeyAndVisible()
-        
+
         return true
-    }
-    
-    // Our app accepts custom deeplink with args of api token and groupIds on the fly for debugging purposes.
-    // To test this feature, please open the safari browser and open with the following url:
-    // camerakitsandbox://?apiToken=<replace with api token>&groupIds=5740388929241088,95d5f62c-abc8-4a8b-926c-5e52dd406afd
-    func application(_ application: UIApplication,
-                     open url: URL,
-                     options: [UIApplication.OpenURLOptionsKey : Any] = [:] ) -> Bool {
-        
-        // Determine who sent the URL.
-        let sendingAppID = options[.sourceApplication]
-        print("source application = \(sendingAppID ?? "Unknown")")
-
-        // Process the URL.
-        guard let components = NSURLComponents(url: url, resolvingAgainstBaseURL: true),
-            let _ = components.path,
-            let params = components.queryItems else {
-            print("Invalid URL or path missing")
-            return false
-        }
-
-        if let apiToken = params.first(where: { $0.name == "apiToken" })?.value, !apiToken.isEmpty {
-            print("overwriting with the apiToken = \(apiToken)")
-            appConfigStorage.apiToken = apiToken
-        }
-        
-        if let groupIdsInString = params.first(where: { $0.name == "groupIds" })?.value, !groupIdsInString.isEmpty {
-            let groupIds = groupIdsInString.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespaces) }
-            print("groupIds = \(groupIds)")
-            appConfigStorage.groupIDs = groupIds
-        }
-        
-        // As updating value of cache keys are completed, the application needs to be forced eto restart in order to take effect.
-        exit(0)        
     }
     
     func cameraKitViewController(_ viewController: UIViewController, openSnapchat screen: SnapchatScreen) {

@@ -5,6 +5,11 @@ import UIKit
 import SCSDKCameraKitReferenceUI
 
 class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+
+    enum Constants {
+        static let lensGroupIDsKey = "com.snap.camerakit.sample.lensGroupIDsKey"
+    }
+
     /// Tableview displays all lens group IDs
     public lazy var tableView: UITableView = {
         let view = UITableView()
@@ -25,7 +30,6 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
     var allGroupIDs: [String]
     let cameraController: CameraController
     let carouselView: CarouselView
-    var appConfigStorage = AppConfigStorage()
 
     /// Stores current cell being edited, if any, so that if user exits screen before finishing editing, the edits are saved
     weak var currentCellEditing: UpdateLensGroupCell?
@@ -34,7 +38,7 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
         self.cameraController = cameraController
         self.carouselView = carouselView
 
-        if let previousGroupIDs = appConfigStorage.groupIDs {
+        if let previousGroupIDs = UserDefaults.standard.object(forKey: Constants.lensGroupIDsKey) as? [String] {
             self.allGroupIDs = previousGroupIDs
         } else {
             /// Since there will always be an empty row at the bottom of the tableview, we check if we need to manually add that empty row by seeing if the last item in the groupIDs is an empty string. If not, to manually add it, we append an empty string at the end of allGroupIDs
@@ -67,7 +71,7 @@ class UpdateLensGroupViewController: UIViewController, UITableViewDelegate, UITa
             updateRow(cell: cell)
         }
         cameraController.groupIDs = allGroupIDs
-        appConfigStorage.groupIDs = allGroupIDs
+        UserDefaults.standard.set(allGroupIDs, forKey: Constants.lensGroupIDsKey)
         carouselView.selectItem(EmptyItem())
         cameraController.clearLens()
         carouselView.reloadData()
