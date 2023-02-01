@@ -11,6 +11,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - **Android:** Remove "Share with Snapchat" placeholder button
 - **Android:** Add examples on how to remove the control strip from the `CameraActivity`
 
+### Features
+- **Android:** Add a way to collect Camera Kit diagnostics information on-demand. This feature can be enabled when an issue in Camera Kit is encountered, please reach out to the Camera Kit support for further instructions. 
+
 <a name="1.19.2"></a>
 ## [1.19.2] - 2023-01-12
 ### Bug Fixes
