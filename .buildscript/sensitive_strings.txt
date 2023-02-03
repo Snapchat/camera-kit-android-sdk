@@ -7,3 +7,4 @@ eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQi
 camerakit-support://auth-token-provider-loginkit-sample/oauth2
 camerakitsandbox://snap-kit/oauth2
 auth-token-provider-loginkit-sample
+MEUCIQCzXSKUlMwq2l9+wS6L4cnbEXP11jQPlCyXuAFMNsr9SgIgFYO+C44ddwekBcsBY5Ti6C9ZV5OwFdaWDEQ5AlqQx5A=
