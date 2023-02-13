@@ -2,5 +2,8 @@
 <resources>
     <array name="snap_kit_scopes">
         <item>https://auth.snapchat.com/oauth2/api/camkit_lens_push_to_device</item>
+        <!--dev-start-->
+        <item>https://auth.snapchat.com/oauth2/api/camkit_lens_cloud_multiuser_storage</item>
+        <!--dev-end-->
     </array>
 </resources>

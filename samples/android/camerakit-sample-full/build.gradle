@@ -124,6 +124,7 @@ dependencies {
     // Optional dependency that provides Login Kit based implementation of AuthTokenProvider.
     implementation "com.snap.camerakit:camerakit-extension-auth-token-provider-loginkit:$cameraKitVersion"
     //dev>
+    implementation "com.snap.camerakit:camerakit-extension-connected-lenses:$cameraKitVersion"
     implementation "com.snap.camerakit:camerakit-extension-debug:$cameraKitVersion"
     //<dev
 

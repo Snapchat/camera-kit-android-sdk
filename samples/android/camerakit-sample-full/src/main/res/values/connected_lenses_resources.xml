@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="connected_lens_group_id">Connected lens session group id</string>
+    <string name="connected_lenses_button_join">Join</string>
+    <string name="connected_lenses_button_start">Start</string>
+
+    <color name="connected_lenses_yellow">#FFFC00</color>
+    <color name="connected_lenses_black">#2C3137</color>
+
+    <dimen name="connected_lenses_start_button_corner_radius">50dp</dimen>
+</resources>

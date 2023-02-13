@@ -134,6 +134,15 @@ task eject(type: Copy) {
         dependsOn copyCameraKitDependenciesToBundledRepo
     }
 
+    // We don't want to share Connected Lenses logic with partners yet.
+    if (flavor != 'dev') {
+        exclude 'camerakit-sample-full/src/main/java/com/snap/camerakit/sample/ConnectedLenses.kt'
+        exclude 'camerakit-sample-full/src/main/res/values/connected_lenses_resources.xml'
+        exclude 'camerakit-sample-full/src/main/res/layout/start_button_view.xml'
+        exclude 'camerakit-sample-full/src/main/res/layout/dialog_launch_multiplayer_session.xml'
+        exclude 'camerakit-sample-full/src/main/res/drawable/start_button_background.xml'
+    }
+
     doFirst {
         delete outputDir
         logger.lifecycle("Ejecting selected flavor [$flavor] to: $outputDir")
@@ -146,7 +155,9 @@ task eject(type: Copy) {
                 new File(outputDir, 'settings.gradle'),
                 new File(outputDir, 'camerakit-sample-full/build.gradle'),
                 new File(outputDir, 'camerakit-sample-simple/build.gradle'),
+                new File(outputDir, 'camerakit-sample-full/src/main/java/com/snap/camerakit/sample/MainActivity.kt'),
                 new File(outputDir, 'README.md'),
+                new File(outputDir, 'camerakit-sample-full/src/main/res/values/arrays.xml')
         ]
 
         filesToStrip.each { file ->
@@ -214,7 +225,9 @@ def static stripAll(String text, String... tags) {
 def static stripTagsFor(String name, File file) {
     if (file.name.endsWith('.gradle')) {
         return new Tuple2("//$name>", "//<$name")
-    } else if (file.name.endsWith('.md')) {
+    } else if (file.name.endsWith('.kt')) {
+        return new Tuple2("// $name>", "// <$name")
+    } else if (file.name.endsWith('.md') || file.name.endsWith('.xml')) {
         return new Tuple2("<!--$name-start-->", "<!--$name-end-->")
     } else {
         throw IllegalArgumentException("Cannot determine strip tags for: $file")

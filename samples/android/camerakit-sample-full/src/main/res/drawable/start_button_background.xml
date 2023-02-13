@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/connected_lenses_black">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid
+                android:color="@color/connected_lenses_yellow">
+            </solid>
+            <corners
+                android:radius="@dimen/connected_lenses_start_button_corner_radius">
+            </corners>
+        </shape>
+    </item>
+</ripple>

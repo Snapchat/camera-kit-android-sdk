@@ -131,6 +131,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             userBirthDate = Date(136985835000L)
         )
 
+        // dev>
+        // Start button is attached above the lenses carousel once carousel is available. We need to keep this
+        // reference to attach Connected Lenses feature if enabled.
+        val startButton = java.util.concurrent.atomic.AtomicReference<View>()
+        // Determines if lens should be reapplied after an Activity resumed.
+        var shouldReapplyLensOnActivityResume = true
+        // <dev
+
         // This sample uses the CameraLayout helper view that consolidates most common CameraKit use cases
         // into a single class that takes care of runtime permissions and managing CameraKit Session built
         // with default options that can be tweaked using the exposed configure* methods.
@@ -166,12 +174,24 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                 // Pass a factory which provides a demo service which handles remote API requests from lenses.
                 remoteApiServiceFactory(CatFactRemoteApiService.Factory)
 
+                val loginKitAuthTokenProvider = LoginKitAuthTokenProvider(applicationContext)
                 // Configure Push to Device extension providing Login Kit based authentication token provider.
                 configurePushToDevice {
-                    authTokenProvider(
-                        LoginKitAuthTokenProvider(applicationContext)
-                    )
+                    authTokenProvider(loginKitAuthTokenProvider)
                 }
+                // dev>
+                configureConnectedLenses(
+                    this@MainActivity,
+                    startButton,
+                    loginKitAuthTokenProvider
+                ) { connectedLensesSessionActive ->
+                    // Only reapply lens on resume if it's not a connected lens.
+                    // Connected lens on start show a legal prompt pop up via a new activity so this current
+                    // activity will go through onPause/onResume events when interacting with the prompt.
+                    // We do not want to reapply the connected lens in this case.
+                    shouldReapplyLensOnActivityResume = !connectedLensesSessionActive
+                }
+                // <dev
             }
 
             configureLensesCarousel {
@@ -191,6 +211,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                         moveToRight()
                     }
                 }
+                // dev>
+                attachStartButton(startButton::set)
+                // <dev
             }
 
             // Attach listener for flash state changes. Returned is a closeable to detach the listener on close.
@@ -241,9 +264,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             // to true when app resumes to match the behavior of the Snapchat app.
             val lifecycleObserver = object : DefaultLifecycleObserver {
                 override fun onResume(owner: LifecycleOwner) {
-                    appliedLens?.let { lens ->
-                        session.lenses.processor.apply(lens, reset = true)
-                    }
+                    appliedLens
+                        // dev>
+                        ?.takeIf { shouldReapplyLensOnActivityResume }
+                        // <dev
+                        ?.let { lens ->
+                            session.lenses.processor.apply(lens, reset = true)
+                        }
                 }
             }
             lifecycle.addObserver(lifecycleObserver)
@@ -507,3 +534,15 @@ private fun Session.adjustLensesVolume(mute: Boolean) {
         Log.d(TAG, "Adjust volume to $adjustVolume success: $success")
     }
 }
+// dev>
+/**
+ * Attaches start button above the lenses carousel.
+ */
+internal fun LensesComponent.Carousel.Configuration.attachStartButton(onAttached: (View) -> Unit) {
+    attachViewTo(LensesComponent.Carousel.LayoutPlacement.Above) { viewStub ->
+        viewStub.layoutResource = R.layout.start_button_view
+        val startButton = viewStub.inflate()
+        onAttached(startButton)
+    }
+}
+// <dev
