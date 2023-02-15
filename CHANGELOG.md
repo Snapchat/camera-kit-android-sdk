@@ -14,6 +14,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ### Features
 - **Android:** Add a way to collect Camera Kit diagnostics information on-demand. This feature can be enabled when an issue in Camera Kit is encountered, please reach out to the Camera Kit support for further instructions. 
 
+### Bug Fixes
+- **iOS:** Fixed bug where login flow could fail during Push to Device configuration. 
+
 <a name="1.19.2"></a>
 ## [1.19.2] - 2023-01-12
 ### Bug Fixes
