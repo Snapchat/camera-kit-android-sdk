@@ -7,15 +7,20 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+
+<a name="1.20.0"></a>
+## [1.20.0] - 2023-02-21
 ### Updates
 - **Android:** Remove "Share with Snapchat" placeholder button
 - **Android:** Add examples on how to remove the control strip from the `CameraActivity`
 
 ### Features
+- Lens Studio 4.40 support
 - **Android:** Add a way to collect Camera Kit diagnostics information on-demand. This feature can be enabled when an issue in Camera Kit is encountered, please reach out to the Camera Kit support for further instructions. 
 
 ### Bug Fixes
-- **iOS:** Fixed bug where login flow could fail during Push to Device configuration. 
+- **iOS:** Fixed bug where login flow could fail during Push to Device configuration
+- Fix Snap attribution view is not shown outside of US
 
 <a name="1.19.2"></a>
 ## [1.19.2] - 2023-01-12
