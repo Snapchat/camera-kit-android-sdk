@@ -38,6 +38,8 @@ usage() {
     echo "usage: ${program_name} [-a, app-binary-path]"
     echo " -a, app-binary-path   [required] specify path app binary that should be published"
     echo "                       Default: none, no publishing will be performed"
+    echo " -o, output-dir        [optional] Specify output directory for publishing info to be written to."
+    echo "                       Default: current directory where this script is executed"
 }
 
 function upload_app {
@@ -156,6 +158,7 @@ function appcenter_upload_with_retries {
 main() {
     local app_binary_path=$1
     local release_notes_prefix=$2
+    local output_dir=$3
     
     if [[ -n "$app_binary_path" ]]; then
         local appcenter_release_id=$((appcenter_upload_with_retries "${app_binary_path}" "${release_notes_prefix}") || true)
@@ -165,7 +168,8 @@ main() {
         fi
 
         local download_link="https://install.appcenter.ms/orgs/${appcenter_owner_name}/apps/${appcenter_app_name}/releases/${appcenter_release_id}"
-        echo "$download_link"
+        echo "{ \"download_url\" : \"$download_link\" }" >> "${output_dir}/app_center_release_info.json"
+
     else
         echo "No app binary path provided, exiting"
         exit 1
@@ -176,6 +180,7 @@ main() {
 
 app_binary_path=""
 release_notes_prefix=""
+output_dir=$(dirname -- "$PWD")
 
 while [[ $# -gt 0 ]]; do
     key="$1"
@@ -190,6 +195,11 @@ while [[ $# -gt 0 ]]; do
         shift
         shift
         ;;
+    -o | --output-dir)
+        output_dir="$2"
+        shift
+        shift
+        ;;
     *)
         usage
         exit
@@ -197,4 +207,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${app_binary_path}" "${release_notes_prefix}"
+main "${app_binary_path}" "${release_notes_prefix}" "${output_dir}"
