@@ -118,6 +118,18 @@ main() {
         rm -f focus
         rm -f Podfile.template
         popd
+        pushd "${eject_to}/CameraKitAlternateCarouselSample"
+        # cleanup CI artifacts
+        rm -f Gemfile
+        rm -f Gemfile.lock
+        rm -rf .bundle
+        rm -rf .gem-out
+        rm -rf gem-out
+        rm -f .build
+        rm -f focus
+        rm -f Podfile.template
+        popd
+
     fi
 
     popd

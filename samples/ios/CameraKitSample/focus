@@ -54,6 +54,7 @@ generate_podfile() {
 
     if [[ "${flavor}" == "public" ]]; then
         sed -i "" "s/@camkit_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@camkit_rel_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@refui_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
@@ -61,6 +62,7 @@ generate_podfile() {
         sed -i "" "s/@auth_path/'${version_name}'/g" "${podfile}"
     else
         sed -i "" "s^@camkit_path^:path => 'CameraKit/CameraKit'^g" "${podfile}"
+        sed -i "" "s^@camkit_rel_path^:path => '../CameraKitSample/CameraKit/CameraKit'^g" "${podfile}"
         sed -i "" "s^@refui_path^:path => 'CameraKit/CameraKitReferenceUI'^g" "${podfile}"
         sed -i "" "s^@swiftui_path^:path => 'CameraKit/CameraKitReferenceSwiftUI'^g" "${podfile}"
         sed -i "" "s^@base_path^:path => 'CameraKit/CameraKitBaseExtension'^g" "${podfile}"
@@ -76,7 +78,13 @@ main() {
     pushd "${script_dir}"
     source ".build"
 
+    
+    # Generate main sample app podfile
     generate_podfile "${flavor}"
+    # Generate alt sample apps podfile
+    pushd "../CameraKitAlternateCarouselSample"
+    generate_podfile "${flavor}"
+    popd
 
     if [[ "${flavor}" == "partner" ]]; then
         ck_fetch_if_needed
@@ -84,6 +92,9 @@ main() {
 
     bundle install --path .gem-out
     bundle exec pod install --repo-update
+
+    # Run pod install for alt sample apps
+    bundle exec pod install --repo-update --project-directory="../CameraKitAlternateCarouselSample"
 
     if [[ $skip_xcode == "0" ]]; then
         open "CameraKitSample.xcworkspace"
