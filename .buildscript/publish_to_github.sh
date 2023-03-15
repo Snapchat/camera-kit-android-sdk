@@ -31,11 +31,13 @@ create_pr_draft() {
     local head=$2
     local base=$3
     local body=$4
+    local output_dir=$5
     local params="{ \"title\":\"${title}\", \"head\":\"${head}\", \"base\":\"${base}\", \"body\":$( jq -aRs . <<<  "${body}" ), \"draft\":true }"
-    curl -s -X "POST" -H "Authorization: token ${GITHUB_APIKEY}" "${github_api_repos_url}/${camerakit_publish_repo_base_path}/pulls" -d "${params}"
+    curl -H "Authorization: token ${GITHUB_APIKEY}" -H "Content-Type: application/json" "${github_api_repos_url}/${camerakit_publish_repo_base_path}/pulls" -d "${params}" -o "${output_dir}/pr_request_response.json"
 }
 
 main() {
+    local output_dir=$(pwd)
     local repository_dir=$(mktemp -d -t "camerakit-publish-repository-XXXXXXXXXX")
     git clone --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
 
@@ -69,11 +71,9 @@ main() {
 
     git commit -m "$update_title"
     git push --set-upstream origin "${branch}" -f
-    
-    local pr=$(create_pr_draft "${update_title}" "${branch}" "${base_branch}" "${update_body}")
-    local pr_html_url=$(echo "${pr}" | jq -r .html_url)
 
-    echo "Created new PR at: ${pr_html_url}"
+    create_pr_draft "${update_title}" "${branch}" "${base_branch}" "${update_body}" "${output_dir}"
+
     popd
 }
 
