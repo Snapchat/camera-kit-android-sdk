@@ -6,12 +6,8 @@ set -o errexit
 set -o nounset
 # don't hide errors within pipes
 set -o pipefail
-
-if [ ! -z ${JOB_NAME+x} ]
-then
-    # trace what gets executed if running on a CI builder
-    set -o xtrace
-fi
+# trace what gets executed
+# set -o xtrace
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 readonly program_name=$0

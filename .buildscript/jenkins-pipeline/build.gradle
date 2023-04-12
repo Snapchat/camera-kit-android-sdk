@@ -1,0 +1,23 @@
+plugins {
+    id 'groovy'
+    id 'java-library'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.jenkins-ci.org/releases/' }
+    maven { url 'https://repo.jenkins-ci.org/public/' }
+}
+
+dependencies {
+    implementation 'org.jenkins-ci.plugins:git:4.14.0@jar'
+    implementation 'org.jenkins-ci.plugins.workflow:workflow-step-api:2.24@jar'
+    implementation 'org.jenkins-ci.plugins:structs:1.24@jar'
+    implementation 'org.jenkins-ci.main:jenkins-core:2.395'
+
+    implementation 'org.codehaus.groovy:groovy-all:2.4.15'
+    implementation 'com.cloudbees:groovy-cps:1.31'
+
+    testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.9'
+    testImplementation 'junit:junit:4.13.2'
+}

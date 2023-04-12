@@ -61,6 +61,11 @@ main() {
     local docs_eject_dir="${eject_dir}/docs"
     mkdir -p "${docs_eject_dir}"
 
+    pushd "${script_dir}/jenkins-pipeline"
+    # This runs a build of the Camera Kit pipeline project which includes quick sanity tests on the release pipeline script.
+    ./gradlew build
+    popd
+
     for platform in ${platforms//,/ }
     do
         local platform_samples_eject_dir="${samples_eject_dir}/$platform"

@@ -1,0 +1,179 @@
+{
+  "stage0": {
+  },
+  "stage1": {
+    "releaseVersion": {
+      "minor": 22,
+      "major": 1,
+      "patch": 0,
+      "qualifier": null
+    },
+    "releaseCoordinationSlackChannel": "#camkit-4267-release-1-22-0",
+    "releaseScope": "MINOR",
+    "releaseVerificationIssueKey": "CAMKIT-4267"
+  },
+  "stage2": {
+    "developmentVersion": {
+      "minor": 23,
+      "major": 1,
+      "patch": 0,
+      "qualifier": null
+    }
+  },
+  "stage3": {
+    "developmentAndroidSdkBuild": {
+      "buildNumber": 897,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 23,
+        "major": 1,
+        "patch": 0,
+        "qualifier": "+19bb964d.897"
+      },
+      "buildJob": "snap-sdk-android-publish",
+      "branch": "camkit-pipeline-test/master",
+      "commit": "19bb964deea7dd3b92efe73e10631cfa137e19cc"
+    },
+    "developmentIosSdkBuild": {
+      "buildNumber": 72273,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 23,
+        "major": 1,
+        "patch": 0,
+        "qualifier": null
+      },
+      "buildJob": "camera-kit-ios-sdk",
+      "branch": "camkit-pipeline-test/master",
+      "commit": "2e85aacf06075c93606d0d746998b21a2a21f992"
+    },
+    "releaseCandidateIosSdkBuild": {
+      "buildNumber": 72272,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 22,
+        "major": 1,
+        "patch": 0,
+        "qualifier": null
+      },
+      "buildJob": "camera-kit-ios-sdk",
+      "branch": "camkit-pipeline-test/camerakit/release/1.22.x",
+      "commit": "14a806f0e2f661ad2d4967a5804db3d1b2edce9d"
+    },
+    "releaseCandidateAndroidSdkBuild": {
+      "buildNumber": 896,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 22,
+        "major": 1,
+        "patch": 0,
+        "qualifier": "-rc1+ee784d1b.camkit.pipeline.test.camerakit.release.1.22.x.896"
+      },
+      "buildJob": "snap-sdk-android-publish",
+      "branch": "camkit-pipeline-test/camerakit/release/1.22.x",
+      "commit": "ee784d1b610772b189d9ae8a5a0e1479a7154573"
+    }
+  },
+  "stage4": {
+    "releaseCandidateBinaryBuildsCommitSha": null,
+    "releaseCandidateBinaryBuilds": {
+    }
+  },
+  "stage5": {
+    "releaseCandidateBinaryBuilds": {
+    },
+    "releaseVerificationComplete": true,
+    "releaseCandidateIosSdkBuild": null,
+    "releaseCandidateAndroidSdkBuild": null
+  },
+  "stage6": {
+    "releaseAndroidSdkBuild": {
+      "buildNumber": 856,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 22,
+        "patch": 0,
+        "major": 1,
+        "qualifier": "+cbee3733.jd.camkit.pipeline.test.camerakit.release.1.22.x.856"
+      },
+      "buildJob": "snap-sdk-android-publish",
+      "branch": "jd/camkit-pipeline-test/camerakit/release/1.21.x",
+      "commit": "cbee373344e1d81a8dcc48b65d1b271c12773c6e"
+    },
+    "releaseIosSdkBuild": {
+      "buildNumber": 72244,
+      "buildHost": "snapengine-builder.sc-corp.net",
+      "version": {
+        "minor": 22,
+        "patch": 0,
+        "major": 1,
+        "qualifier": null
+      },
+      "buildJob": "camera-kit-ios-sdk",
+      "branch": "jd/camkit-pipeline-test/camerakit/release/1.21.x",
+      "commit": "b78695c6f2aa93c4a94f5a4beedd2cc50caacbd4"
+    }
+  },
+  "stage7": {
+  },
+  "stage8": {
+    "releaseBinaryBuilds": {
+      "SDK distribution Android sample app build": {
+        "buildNumber": 3339,
+        "buildHost": "snapengine-builder.sc-corp.net",
+        "version": {
+          "minor": 22,
+          "patch": 0,
+          "major": 1,
+          "qualifier": null
+        },
+        "buildJob": "camerakit-distribution-android-publish",
+        "branch": "jd/camkit-pipeline-test/release/1.22.x",
+        "downloadUri": null,
+        "commit": "0afa4460f326178f415e375e36a8e755c439b976",
+        "htmlUrl": "https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner/releases/1015"
+      },
+      "SDK distribution build": {
+        "buildNumber": 4134,
+        "buildHost": "snapengine-builder.sc-corp.net",
+        "version": {
+          "minor": 22,
+          "patch": 0,
+          "major": 1,
+          "qualifier": null
+        },
+        "buildJob": "camerakit-distribution-build",
+        "branch": "jd/camkit-pipeline-test/release/1.22.x",
+        "downloadUri": "gs://snapengine-builder-artifacts/camerakit-distribution-build/4134/camerakit-distribution.zip",
+        "commit": "0afa4460f326178f415e375e36a8e755c439b976",
+        "htmlUrl": "https://console.cloud.google.com/storage/browser/_details/snapengine-builder-artifacts/camerakit-distribution-build/4134/camerakit-distribution.zip"
+      },
+      "SDK distribution iOS sample app build": {
+        "buildNumber": 3337,
+        "buildHost": "snapengine-builder.sc-corp.net",
+        "version": {
+          "minor": 22,
+          "patch": 0,
+          "major": 1,
+          "qualifier": null
+        },
+        "buildJob": "camerakit-distribution-ios-publish",
+        "branch": "jd/camkit-pipeline-test/release/1.22.x",
+        "downloadUri": null,
+        "commit": "0afa4460f326178f415e375e36a8e755c439b976",
+        "htmlUrl": "https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS/releases/927"
+      }
+    },
+    "releaseGithubUrl": "https://github.sc-corp.net/Snapchat/camera-kit-distribution/releases/tag/untagged-87e08cd11e1b3ab87dd2"
+  },
+  "stage9": {
+    "androidSdkPublishedToMavenCentral": true,
+    "iosSdkPublishedToCocoapods": true
+  },
+  "stage10": {
+    "sdkReferenceSyncedToPublicGithub": true,
+    "sdkApiReferenceSyncedToSnapDocs": true
+  },
+  "stage11": {
+  }
+}
