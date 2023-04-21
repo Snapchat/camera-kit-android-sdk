@@ -102,7 +102,7 @@ function appcenter_upload {
     local app_binary_path=$1
     local release_notes_prefix=$2
 
-    local upload_info=$(curl -X POST "${appcenter_api_path_apps_release_uploads}" -H "X-API-Token: ${appcenter_token}" -H "Content-Type: application/json")
+    local upload_info=$(curl -X POST "${appcenter_api_path_apps_release_uploads}" -H "X-API-Token: ${appcenter_token}" -H "Content-Type: application/json" -d "{}")
     local upload_domain=$(echo $upload_info | jq -r .upload_domain)
     local asset_id=$(echo $upload_info | jq -r .package_asset_id)
     local token=$(echo $upload_info | jq -r .url_encoded_token)
