@@ -7,6 +7,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Updates
+- **Android:** Add a debug dialog to swap API token for testing
+- **Android:** Deprecate application ID, remove its use across sample apps
 
 <a name="1.21.1"></a>
 ## [1.21.1] - 2023-03-29

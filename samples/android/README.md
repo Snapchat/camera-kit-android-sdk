@@ -74,7 +74,6 @@ android {
         applicationId 'com.snap.camerakit.sample.full'
         manifestPlaceholders = [
             // NOTE: replace the values with values obtained from https://kit.snapchat.com/manage
-            'cameraKitApplicationId': 'b21cfb27-04e9-4b77-bd1a-1435522fb471',
             'cameraKitApiToken': 'eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQiOiJjYW52YXMtY2FudmFzYXBpIiwiaXNzIjoiY2FudmFzLXMyc3Rva2VuIiwibmJmIjoxNjM4NDc0OTE0LCJzdWIiOiJiMjFjZmIyNy0wNGU5LTRiNzctYmQxYS0xNDM1NTIyZmI0NzF-U1RBR0lOR34zMzQxMmZkZC0zMDA3LTRiMTgtOGE5OC1hNjAzZTY4MzJhMmEifQ.BBVRgyVT4I_Z_qevzAqVwkWNXZGMHQ0s4tRJst9qfwE'
         ]
     }
@@ -90,8 +89,7 @@ Then, the placeholder can be used within the app's  [AndroidManifest.xml](./came
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <meta-data android:name="com.snap.camerakit.app.id" android:value="${cameraKitApplicationId}" />
+     
         <meta-data android:name="com.snap.camerakit.api.token" android:value="${cameraKitApiToken}" />
 
 </application>
