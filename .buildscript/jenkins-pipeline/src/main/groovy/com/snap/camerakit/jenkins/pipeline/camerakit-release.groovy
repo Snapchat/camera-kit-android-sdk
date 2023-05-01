@@ -81,7 +81,7 @@ import java.util.regex.Pattern
 
 @Field final long STATUS_CHECK_SLEEP_SECONDS = 60L
 @Field final long STATUS_CHECK_INTERVAL_MILLIS = 15_000L // max is 15s, can only be lower
-@Field final int COMMAND_RETRY_MAX_COUNT = 5
+@Field final int COMMAND_RETRY_MAX_COUNT = 10
 //endregion
 
 //region pipeline
@@ -1143,7 +1143,9 @@ def updateCameraKitSdkVersionIfNeeded(
 
         println("Created PR: $prHtmlUrl")
 
-        sh "gh pr ready $prNumber --repo ${repo}"
+        retry(COMMAND_RETRY_MAX_COUNT) {
+            sh "gh pr ready $prNumber --repo ${repo}"
+        }
 
         notifyOnSlack(slackChannel, "$prTitle: $prHtmlUrl")
         commentOnPrWhenApprovedAndWaitToClose(prNumber, repo, prComment)
@@ -1416,18 +1418,22 @@ Map updateCameraKitSdkDistributionWithNewSdkBuilds(
 
     def repo = "$HOST_SNAP_GHE/$PATH_CAMERAKIT_DISTRIBUTION_REPO"
     def prTitle = "[Build] Update SDKs for the ${newVersion.toString()} version"
-    def prResult = sh(
-            returnStdout: true,
-            script: "gh pr create " +
-                    "--title \"$prTitle\" " +
-                    "--body \"This PR updates the SDKs to the latest builds targeting the " +
-                    "version: ${newVersion.toString()}. " +
-                    "\n\nPlease refer to the individual commit messages to see a list of included " +
-                    "changes in each SDK.\" " +
-                    "--base ${newBranch ?: baseBranch} " +
-                    "--head $updateBranch " +
-                    "--repo $repo"
-    ).trim()
+
+    String prResult = null
+    retry(COMMAND_RETRY_MAX_COUNT) {
+        prResult = sh(
+                returnStdout: true,
+                script: "gh pr create " +
+                        "--title \"$prTitle\" " +
+                        "--body \"This PR updates the SDKs to the latest builds targeting the " +
+                        "version: ${newVersion.toString()}. " +
+                        "\n\nPlease refer to the individual commit messages to see a list of included " +
+                        "changes in each SDK.\" " +
+                        "--base ${newBranch ?: baseBranch} " +
+                        "--head $updateBranch " +
+                        "--repo $repo"
+        ).trim()
+    }
     def prNumber = prResult.tokenize('/').last()
     def prHtmlUrl = "https://$repo/pull/$prNumber"
 
@@ -1989,19 +1995,25 @@ def waitForPrToBeApprovedOrClosed(prNumber, repo) {
 
 def commentOnPrWhenApprovedAndWaitToClose(prNumber, repo, comment) {
     if (waitForPrToBeApprovedOrClosed(prNumber, repo)) {
-        sh "gh pr comment ${prNumber} --body '${comment}' --repo ${repo}"
+        retry(COMMAND_RETRY_MAX_COUNT) {
+            sh "gh pr comment ${prNumber} --body '${comment}' --repo ${repo}"
+        }
         waitForPrToClose(prNumber, repo)
     }
 }
 
 String getHeadCommitSha(String repo, String branch) {
-    def result = sh(
-            returnStdout: true,
-            script: "GH_REPO=$repo gh api /repos/{owner}/{repo}/commits/$branch"
-    )
+    Map jsonResult = null
 
-    def commit = parseJsonTextAsMap(result)
-    return commit['sha']
+    retry(COMMAND_RETRY_MAX_COUNT) {
+        def result = sh(
+                returnStdout: true,
+                script: "GH_REPO=$repo gh api /repos/{owner}/{repo}/commits/$branch"
+        )
+        jsonResult = parseJsonTextAsMap(result)
+    }
+
+    return jsonResult['sha']
 }
 
 def createOrResetTestBranchesIfNeeded(ReleaseScope releaseScope, Version releaseVersion) {
