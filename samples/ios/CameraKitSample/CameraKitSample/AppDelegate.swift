@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     let cameraController = CustomizedCameraController()
     private let debugStore: (any DebugStoreProtocol)? = {
         if #available(iOS 13, *) {
-            return DebugStore(defaultGroupIDs: [Constants.partnerGroupId])
+            return DebugStore(defaultGroupIDs: [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId])
         } else {
             return nil
         }

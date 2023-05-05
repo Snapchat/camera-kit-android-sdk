@@ -52,6 +52,7 @@ class DebugStore: ObservableObject, DebugStoreProtocol {
             if !groups.contains(SCCameraKitLensRepositoryBundledGroup) {
                 groups.insert(SCCameraKitLensRepositoryBundledGroup, at: 0)
             }
+            groupIDs = groups
         default:
             return
         }
