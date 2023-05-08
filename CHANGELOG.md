@@ -8,10 +8,21 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 ### Updates
-- **Android:** Add a debug dialog to swap API token for testing
-- **Android:** Deprecate application ID, remove its use across sample apps
 - **iOS:** Add a debug dialog to swap API token for testing
 - **iOS:** Add suppport for configuring debug dialogs via deep links/qr codes.
+
+<a name="1.22.0"></a>
+## [1.22.0] - 2023-05-08
+### Updates
+- Deprecate application ID, remove its use across sample apps
+- **Android:** Add a debug dialog to swap API token for testing
+
+### Features
+- Lens Studio 4.46 support
+
+### Bug Fixes
+- **Android:** Fix a bug introduced in the `1.18.0` version where lenses exported from the Lens Studio version `4.31` and prior can lead to a crash on Adreno GPU based devices
+- **iOS:** Fix a bug in the reference UI where tapping share button leads to a crash on iPad
 
 <a name="1.21.1"></a>
 ## [1.21.1] - 2023-03-29
