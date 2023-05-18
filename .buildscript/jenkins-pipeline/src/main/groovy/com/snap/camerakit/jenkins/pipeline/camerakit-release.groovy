@@ -195,6 +195,8 @@ pipeline {
                             }
                         }
 
+                        updateBuildNameFor(state.stage1.releaseScope, state.stage1.releaseVersion)
+
                         // To speed up testing process we automatically create or reset test branches after determining
                         // the release scope and version. Note that this will mess up any currently running pipeline
                         // that relies on those branches so make sure to execute this only a single job at a time!
@@ -2016,6 +2018,11 @@ String getHeadCommitSha(String repo, String branch) {
     return jsonResult['sha']
 }
 
+def updateBuildNameFor(ReleaseScope releaseScope, Version version) {
+    currentBuild.displayName = "${env.BUILD_NUMBER}${params.TEST_MODE ? "_test" : ""}" +
+            "_${releaseScope.toString().toLowerCase()}_${version.toString()}"
+}
+
 def createOrResetTestBranchesIfNeeded(ReleaseScope releaseScope, Version releaseVersion) {
     createOrResetTestBranchIfNeeded(
             PATH_CAMERAKIT_DISTRIBUTION_REPO,
@@ -2162,7 +2169,7 @@ def updateState(Closure stateConsumer) {
 
 def withState(boolean persist, Closure stateConsumer) {
     def result = null
-    lock("stateResource") {
+    lock("stateResource_${env.BUILD_NUMBER}") {
         try {
             unstash(KEY_STASH_STATE)
         } catch (ignored) {
