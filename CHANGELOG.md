@@ -7,6 +7,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Features
+- **Android:** Add a Profiling Extension to monitor the Camera Kit performance. See [Profiling](./samples/android/Profiling.md).
+
 ### Updates
 - **iOS:** Add a debug dialog to swap API token for testing
 - **iOS:** Add suppport for configuring debug dialogs via deep links/qr codes.
