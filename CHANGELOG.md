@@ -13,6 +13,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ### Updates
 - **iOS:** Add a debug dialog to swap API token for testing
 - **iOS:** Add suppport for configuring debug dialogs via deep links/qr codes.
+- **Android:** Added `android.Manifest.permission.READ_MEDIA_VIDEO` and `android.Manifest.permission.READ_MEDIA_IMAGES` permissions for the 
+`camerakit-sample-full` and `camerakit-sample-simple` apps. Those are the permissions required to access media files on devices when using the 
+Media Picker lenses feature.
 
 <a name="1.23.0"></a>
 ## [1.23.0] - 2023-05-17
