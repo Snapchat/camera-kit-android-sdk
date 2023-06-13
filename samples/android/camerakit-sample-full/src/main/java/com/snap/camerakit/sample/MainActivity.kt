@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     private var useCustomLensesCarouselView = false
     private var muteAudio = false
     private var enableDiagnostics = false
+    private var shouldReapplyLensOnActivityResume = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,8 +139,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         // Start button is attached above the lenses carousel once carousel is available. We need to keep this
         // reference to attach Connected Lenses feature if enabled.
         val startButton = java.util.concurrent.atomic.AtomicReference<View>()
-        // Determines if lens should be reapplied after an Activity resumed.
-        var shouldReapplyLensOnActivityResume = true
         // <dev
 
         // This sample uses the CameraLayout helper view that consolidates most common CameraKit use cases
@@ -565,6 +564,15 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         } else {
             super.dispatchKeyEvent(event)
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // If a lens requests a permission and it triggers a system dialog that makes this activity to pause,
+        // we don't want to re-apply that lens when activity is resumed as it might cause a re-apply loop -
+        // a lens asks for a permission which gets denied, activity is resumed, lens is re-applied asking for it again
+        // and again.
+        shouldReapplyLensOnActivityResume = false
     }
 }
 
