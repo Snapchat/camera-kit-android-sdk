@@ -6,7 +6,7 @@ Applications can monitor the Camera Kit performance using the `camerakit-extensi
 
 To integrate Profiling extension:
 
-1. Add the Profiling extension extension dependency to your build configuration. Note that profiling may degrade the performance of the Camera Kit, so we do not recommend enabling it in production.
+1. Add the Profiling extension dependency to your build configuration. Note that profiling may degrade the performance of the Camera Kit, so we do not recommend enabling it in production.
 
     ```groovy
     implementation "com.snap.camerakit:camerakit-extension-profiling:$cameraKitVersion"
