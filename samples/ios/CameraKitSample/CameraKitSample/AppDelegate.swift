@@ -23,7 +23,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, SnapchatDelegate {
     fileprivate var supportedOrientations: UIInterfaceOrientationMask = .allButUpsideDown
 
     let snapAPI = SCSDKSnapAPI()
-    let cameraController = CustomizedCameraController()
+    lazy var cameraController = {
+        if let token = debugStore?.apiToken {
+            return CustomizedCameraController(sessionConfig: SessionConfig(apiToken: token))
+        } else {
+            return CustomizedCameraController()
+        }
+    }()
     private let debugStore: (any DebugStoreProtocol)? = {
         if #available(iOS 13, *) {
             return DebugStore(defaultGroupIDs: [SCCameraKitLensRepositoryBundledGroup, Constants.partnerGroupId])

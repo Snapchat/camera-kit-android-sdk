@@ -41,9 +41,9 @@ class DebugStore: ObservableObject, DebugStoreProtocol {
     
     func processDeepLink(_ url: URL) {
         guard url.host?.lowercased() == "debug" else { return }
-        let path = Array(url.pathComponents.map(\.localizedLowercase).dropFirst())
-        guard path[1] == "set" else { return }
-        switch path.first {
+        let path = Array(url.pathComponents.dropFirst())
+        guard path[1].localizedLowercase == "set" else { return }
+        switch path.first?.localizedLowercase {
         case "apitoken":
             apiToken = path[2]
             exit(0)
