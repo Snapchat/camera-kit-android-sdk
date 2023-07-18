@@ -1616,7 +1616,7 @@ def appSizeInfoContentFor(String platform, SdkBuild sdkBuild) {
     if (sizeInfo != null) {
         def installSizeBytes = sizeInfo['install_size'] as long ?: 0L
         def downloadSizeBytes = sizeInfo['download_size'] as long ?: 0L
-        def appSizeReportUrl = "https://lk.sc-corp.net/dashboards-next/6013" +
+        def appSizeReportUrl = "https://looker.sc-corp.net/dashboards/3515" +
                 "?App+Name=camerakit" +
                 "&App+Platform=${platform.toLowerCase()}" +
                 "&Variant=release" +
