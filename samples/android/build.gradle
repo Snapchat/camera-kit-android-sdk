@@ -47,7 +47,7 @@ allprojects {
         cameraKitRemoteServiceAuthority = System.getenv('CAMERAKIT_REMOTE_SERVICE_AUTHORITY') ?: ''
         cameraKitRemoteAccessToken = System.getenv('CAMERAKIT_REMOTE_ACCESS_TOKEN') ?: ''
         //<dev
-        cameraKitVersion = "$cameraKitDistributionVersion+6a067243.991"
+        cameraKitVersion = "$cameraKitDistributionVersion+0a305e4d.1069"
         // NOTE: replace the value with a token specific to your application
         cameraKitApiToken = property('com.snap.camerakit.api.token')
         // NOTE: replace the value with a lenses group ID specific to your application
