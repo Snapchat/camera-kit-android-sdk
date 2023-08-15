@@ -10,6 +10,15 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ### Updates
 - **Android:** Helper method to record `ImageProcessor` output into a video file, `connectOutput(file: File, width: Int, height: Int, captureAudio: Boolean)`, has been moved into a separate Maven artifact,  `com.snap.camerakit:support-media-recording`. This artifact can now be excluded from an app's dependencies if the provided video recording functionality is not needed. Note that the `com.snap.camerakit:support-camerax`  and  `com.snap.camerakit:support-arcore` now depend on this new artifact transitively in order to implement the `com.snap.camerakit.support.camera.AllowsVideoCapture` interface.
 
+<a name="1.25.0"></a>
+## [1.25.0] - 2023-08-15
+### Features
+- Lens Studio 4.53 support
+
+### Bug Fixes
+- **Android:** Fix a bug in the ARCore field of view, which was causing poor performance and incorrect object positioning for world tracking lenses
+- **Android:** Fix a bug when the first lens in the carousel hasn't been applied if `LensesComponent.Carousel.Configuration#disableIdle` set to `true`
+
 <a name="1.24.0"></a>
 ## [1.24.0] - 2023-06-27
 ### Features
