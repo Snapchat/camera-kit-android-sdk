@@ -7,6 +7,8 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Updates
+- **Android:** Helper method to record `ImageProcessor` output into a video file, `connectOutput(file: File, width: Int, height: Int, captureAudio: Boolean)`, has been moved into a separate Maven artifact,  `com.snap.camerakit:support-media-recording`. This artifact can now be excluded from an app's dependencies if the provided video recording functionality is not needed. Note that the `com.snap.camerakit:support-camerax`  and  `com.snap.camerakit:support-arcore` now depend on this new artifact transitively in order to implement the `com.snap.camerakit.support.camera.AllowsVideoCapture` interface.
 
 <a name="1.24.0"></a>
 ## [1.24.0] - 2023-06-27
