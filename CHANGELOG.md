@@ -17,7 +17,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 ### Bug Fixes
 - **Android:** Fix a bug in the ARCore field of view, which was causing poor performance and incorrect object positioning for world tracking lenses
-- **Android:** Fix a bug when the first lens in the carousel hasn't been applied if `LensesComponent.Carousel.Configuration#disableIdle` set to `true`
+- **Android:** Fix a bug when the first lens in the carousel has not been applied if `LensesComponent.Carousel.Configuration#disableIdle` set to `true`
 
 <a name="1.24.0"></a>
 ## [1.24.0] - 2023-06-27
