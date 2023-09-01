@@ -23,8 +23,6 @@ task copyCameraKitDependenciesToBundledRepo() {
             'support-snap-flash',
             'support-snap-ui-common',
             'support-media-recording',
-            'support-media-picker-source',
-            'support-media-picker-ui',
             'camerakit-plugin-api',
             'camerakit-extension-auth-token-provider',
             'camerakit-extension-auth-token-provider-loginkit',
