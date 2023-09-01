@@ -21,3 +21,9 @@ dependencies {
     testImplementation 'com.lesfurets:jenkins-pipeline-unit:1.9'
     testImplementation 'junit:junit:4.13.2'
 }
+
+test {
+    // We need to increase the stack size to avoid a stack overflow in the Pattern regex that recursively parses
+    // CHANGELOG.md text which is rather big.
+    jvmArgs '-Xss2m'
+}

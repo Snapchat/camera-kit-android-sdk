@@ -1576,7 +1576,7 @@ def createCameraKitSdkDistributionRelease(
                         script: "gh release create $releaseTagName " +
                                 "--target ${releaseTargetBranch} " +
                                 "--title ${releaseTitle} " +
-                                "--notes '${releaseNotes}' " +
+                                "--notes '${releaseNotes.replaceAll("'", "\\\\'")}' " +
                                 "--repo $repo " +
                                 (params.TEST_MODE ? "--draft " : " ") +
                                 "./$sdkDistributionZipFileName"

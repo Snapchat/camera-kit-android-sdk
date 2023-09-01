@@ -63,7 +63,7 @@ main() {
 
     pushd "${script_dir}/jenkins-pipeline"
     # This runs a build of the Camera Kit pipeline project which includes quick sanity tests on the release pipeline script.
-    ./gradlew build
+    ./gradlew build --info
     popd
 
     for platform in ${platforms//,/ }
