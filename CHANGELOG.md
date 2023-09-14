@@ -14,8 +14,8 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - Lens Studio 4.55 support
 
 ### Updates
-- **Android:** Helper method to record `ImageProcessor` output into a video file, `connectOutput(file: File, width: Int, height: Int, captureAudio: Boolean)`, has been moved into a separate Maven artifact,  `com.snap.camerakit:support-media-recording`. This artifact can now be excluded from an app's dependencies if the provided video recording functionality is not needed. Note that the `com.snap.camerakit:support-camerax`  and  `com.snap.camerakit:support-arcore` now depend on this new artifact transitively in order to implement the `com.snap.camerakit.support.camera.AllowsVideoCapture` interface.
-- **Android:** Helper method to create an instance of `Source<MediaProcessor>` based on `android.provider.MediaStore`, `mediaStoreSourceFor(context: Context, executorService: ExecutorService): Source<MediaProcessor>`, has been moved into a separate Maven artifact, `com.snap.camerakit:support-media-picker-source`. This artifact can now be excluded from an app's dependencies if the provided media source functionality is not needed. Note that the `com.snap.camerakit:support-camera-layout` now depends on this new artifact transitively in order to obtain media for media picker lenses.
+- **Android:** Helper method to record `ImageProcessor` output into a video file, `connectOutput(file: File, width: Int, height: Int, captureAudio: Boolean)`, has been moved into a separate Maven artifact,  `com.snap.camerakit:support-media-recording`. This artifact can now be excluded from an app&#39;s dependencies if the provided video recording functionality is not needed. Note that the `com.snap.camerakit:support-camerax`  and  `com.snap.camerakit:support-arcore` now depend on this new artifact transitively in order to implement the `com.snap.camerakit.support.camera.AllowsVideoCapture` interface.
+- **Android:** Helper method to create an instance of `Source<MediaProcessor>` based on `android.provider.MediaStore`, `mediaStoreSourceFor(context: Context, executorService: ExecutorService): Source<MediaProcessor>`, has been moved into a separate Maven artifact, `com.snap.camerakit:support-media-picker-source`. This artifact can now be excluded from an app&#39;s dependencies if the provided media source functionality is not needed. Note that the `com.snap.camerakit:support-camera-layout` now depends on this new artifact transitively in order to obtain media for media picker lenses.
 - **Android:** Default lenses carousel UI has been removed from the core `com.snap.camerakit:camerakit` artifact. Instead, `com.snap.camerakit:support-lenses-carousel` artifact should be added to app dependencies to use default lenses carousel UI. Note that the `com.snap.camerakit:support-camera-layout` now depends on this artifact transitively in order to show lenses carousel UI.
 - **Android:** Default media picker UI has been moved from the core `com.snap.camerakit:camerakit` artifact, and moved into a separate Maven artifact, `com.snap.camerakit:support-media-picker-ui`. This new artifact should be added to app dependencies to use default media picker UI. Note that the `com.snap.camerakit:support-camera-layout` now depends on this new artifact transitively in order to show media picker UI.
 
@@ -241,7 +241,7 @@ Media Picker lenses feature.
 ## [1.12.0] - 2022-04-22
 ### Notes
 - Starting with this release, an API token **must** be provided as part of the Camera Kit configuration, failure to do so will result in a runtime exception. See [Android](https://docs.snap.com/snap-kit/camera-kit/configuration/android#service-authorization) and [iOS](https://docs.snap.com/snap-kit/camera-kit/configuration/ios/#service-authorization) documentation for examples on how to obtain and provide an API token.
-- The legal agreement prompt has been updated to use a more user friendly text copy. Updating to this release will result in users needing to accept the updated prompt which includes a new link to the Camera Kit's "learn more" [page](https://support.snapchat.com/en-US/article/camera-information-use).
+- The legal agreement prompt has been updated to use a more user friendly text copy. Updating to this release will result in users needing to accept the updated prompt which includes a new link to the Camera Kit&#39;s "learn more" [page](https://support.snapchat.com/en-US/article/camera-information-use).
 
 ### Features
 - Lens Studio 4.19 support
@@ -554,7 +554,7 @@ Media Picker lenses feature.
 <a name="1.6.1"></a>
 ## [1.6.1] - 2021-05-10
 ### Bug Fixes
-- **Android:**  Lens is not applied when carousel's disableIdle = true
+- **Android:**  Lens is not applied when carousel&#39;s disableIdle = true
 - **iOS:**  Deadlock on stopping session
 
 
