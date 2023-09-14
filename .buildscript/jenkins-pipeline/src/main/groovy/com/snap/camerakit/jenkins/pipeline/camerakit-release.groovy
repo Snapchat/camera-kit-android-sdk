@@ -1543,11 +1543,17 @@ def createCameraKitSdkDistributionRelease(
                         url: "git@${HOST_SNAP_GHE}:${PATH_CAMERAKIT_DISTRIBUTION_REPO}.git"
 
                 String changelogContent = readFile(FILE_NAME_CAMERAKIT_DISTRIBUTION_CHANGELOG)
-                String changelogReleaseContent = findWithin(
-                        changelogContent,
-                        "<a name=\"${releaseTitle}\"></a>", "<a"
-                )
-
+                String releaseTitleLink = "<a name=\"${releaseTitle}\"></a>"
+                String changelogReleaseContent = null
+                int releaseTitleLinkIndex = changelogContent.indexOf(releaseTitleLink)
+                if (releaseTitleLinkIndex != -1) {
+                    changelogReleaseContent = changelogContent
+                            .substring(releaseTitleLinkIndex)
+                            .replace(releaseTitleLink, "")
+                            .stripLeading()
+                            .split("<a") // up until previous release title link
+                            .first()
+                }
                 if (changelogReleaseContent != null) {
                     List<String> releaseContentLines = changelogReleaseContent.readLines()
                     changelogReleaseContent = releaseContentLines
@@ -2140,18 +2146,6 @@ def promptOrThrowIfInterrupted(String promptMessage, Throwable error, String sla
                     "see: ${env.BUILD_URL}"
     )
     input promptMessage
-}
-
-static String findWithin(String text, String start, String end) {
-    def startPattern = Pattern.quote(start)
-    def endPattern = Pattern.quote(end)
-    def pattern = Pattern.compile("""$startPattern((.|\n)+?)$endPattern""")
-    def matcher = pattern.matcher(text)
-    if (matcher.find() && matcher.groupCount() > 1) {
-        return matcher.group(1)
-    } else {
-        null
-    }
 }
 
 //region global state persistence
