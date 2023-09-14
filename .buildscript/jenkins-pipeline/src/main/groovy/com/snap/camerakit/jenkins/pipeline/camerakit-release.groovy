@@ -2145,7 +2145,7 @@ def promptOrThrowIfInterrupted(String promptMessage, Throwable error, String sla
 static String findWithin(String text, String start, String end) {
     def startPattern = Pattern.quote(start)
     def endPattern = Pattern.quote(end)
-    def pattern = Pattern.compile("""$startPattern((.|\n)*?)$endPattern""")
+    def pattern = Pattern.compile("""$startPattern((.|\n)+?)$endPattern""")
     def matcher = pattern.matcher(text)
     if (matcher.find() && matcher.groupCount() > 1) {
         return matcher.group(1)
