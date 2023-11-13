@@ -8,6 +8,10 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.26.2"></a>
+## [1.26.2] - 2023-11-13
+- **IOS:** Fix face detection for 3+ faces on IOS front camera.
+
 <a name="1.26.1"></a>
 ## [1.26.1] - 2023-10-12
 ### Bug Fixes
