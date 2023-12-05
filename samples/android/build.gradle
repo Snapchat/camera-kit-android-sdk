@@ -21,7 +21,7 @@ allprojects {
         bundledMavenRepo = rootProject.file('maven')
         //<partner
         kotlinVersion = libs.versions.kotlin.get()
-        ktxVersion = '1.7.0'
+        ktxVersion = '1.8.0'
         exoPlayerVersion = '2.16.1'
         appCompatVersion = '1.4.0'
         constraintLayoutVersion = '2.1.2'
