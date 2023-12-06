@@ -29,7 +29,10 @@ task copyCameraKitDependenciesToBundledRepo() {
             'camerakit-extension-auth-token-provider',
             'camerakit-extension-auth-token-provider-loginkit',
             'camerakit-extension-lens-push-to-device',
-            'camerakit-extension-internal'
+            'camerakit-extension-internal',
+            'camerakit-extension-api-kotlin',
+            'camerakit-extension-private',
+            'camerakit-extension-profiling',
     ]
     def baseUri = "${snapMavenUri.replace('gcs', 'gs')}/com/snap/camerakit"
     def baseOutputDir = new File(bundledMavenRepo, '/com/snap/camerakit')
