@@ -32,7 +32,7 @@ allprojects {
         gmsVisionVersion = '16.2.0'
 
         androidMinSdkVersion = 21
-        androidCompileSdkVersion = 33
+        androidCompileSdkVersion = 34
         androidTargetSdkVersion = androidCompileSdkVersion
 
         cameraKitDistributionVersion = rootProject.file('../../VERSION').text.trim()
