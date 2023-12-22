@@ -968,6 +968,7 @@ pipeline {
                             State state = readState()
                             publishCameraKitIosSdkToCocoapods(
                                     state.stage6.releaseIosSdkBuild,
+                                    cameraKitSdkDistributionReleaseBranchFor(state.stage1.releaseVersion),
                                     false,
                                     state.stage1.releaseCoordinationSlackChannel
                             )
@@ -1229,7 +1230,7 @@ def buildCameraKitIosSdk(Version version, String branch, String commit, String s
     callback(sdkBuild)
 }
 
-def publishCameraKitIosSdkToCocoapods(SdkBuild sdkBuild, boolean dryRun, String slackChannel) {
+def publishCameraKitIosSdkToCocoapods(SdkBuild sdkBuild, String distributionBranch, boolean dryRun, String slackChannel) {
     def job = JOB_CAMERAKIT_SDK_IOS_COCOAPODS_PUBLISH_JOB
     def jobResult = null
     def jobPath = null
@@ -1243,6 +1244,7 @@ def publishCameraKitIosSdkToCocoapods(SdkBuild sdkBuild, boolean dryRun, String 
                             string(name: 'camkit_build', value: sdkBuild.buildNumber.toString()),
                             string(name: 'camkit_commit', value: sdkBuild.commit),
                             string(name: 'camkit_version', value: sdkBuild.version.toString()),
+                            string(name: 'distribution_branch', value: distributionBranch),
                             booleanParam(name: 'dryrun', value: dryRun)
                     ],
                     wait: true
@@ -2114,7 +2116,7 @@ String cameraKitAndroidSdkMavenCentralUrlFor(Version version) {
 }
 
 String camerakitIosSdkCocoapodsSpecsUrlFor(Version version) {
-    return "https://$PATH_COCOAPODS_SPECS_REPO/5/c/e/SCSDKCameraKit/${version.toString()}/SCCameraKit.podspec.json"
+    return "https://$PATH_COCOAPODS_SPECS_REPO/d/c/6/SCCameraKit/${version.toString()}/SCCameraKit.podspec.json"
 }
 
 static String escapeNewLines(String value) {
