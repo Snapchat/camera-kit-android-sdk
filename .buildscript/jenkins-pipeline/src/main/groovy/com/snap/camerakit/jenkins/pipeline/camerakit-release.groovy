@@ -2114,7 +2114,7 @@ String cameraKitAndroidSdkMavenCentralUrlFor(Version version) {
 }
 
 String camerakitIosSdkCocoapodsSpecsUrlFor(Version version) {
-    return "https://$PATH_COCOAPODS_SPECS_REPO/5/c/e/SCSDKCameraKit/${version.toString()}/SCSDKCameraKit.podspec.json"
+    return "https://$PATH_COCOAPODS_SPECS_REPO/5/c/e/SCSDKCameraKit/${version.toString()}/SCCameraKit.podspec.json"
 }
 
 static String escapeNewLines(String value) {

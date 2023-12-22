@@ -18,9 +18,16 @@ main() {
     # Xcode bundles ruby along with other frameworks in the subdir
     # Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks
     # so this path is a static path to ruby's headers that will get added to search paths when executing ruby
-    pushd "$(xcode-select -p)/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0"
-
-    if [ -f "universal-darwin22/ruby/config.h" ]; then
+    pushd "$(xcrun --sdk macosx --show-sdk-path)/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0"
+    
+    if [ -f "universal-darwin23/ruby/config.h" ]; then
+        # see description below, some scripts are looking for `universal-darwin22`
+        # but in MacOS Sonoma / Xcode 15 there is only `universal-darwin23`
+        # fixing it by creating symlink to `universal-darwin22`
+        if [ ! -f "universal-darwin22/ruby/config.h" ]; then
+            sudo ln -s "universal-darwin23" "universal-darwin22"
+        fi
+    elif [ -f "universal-darwin22/ruby/config.h" ]; then
         # We migrated this build job to Xcode 14.1.
         # Xcode 14.1 gives us artifacts in `universal-darwin22`.
         # It seems that some gems (like `json`) are looking for `universal-darwin21`.

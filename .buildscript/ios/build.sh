@@ -52,9 +52,9 @@ main() {
         plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
         plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
-        scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCSDKCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+        scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-        refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCSDKCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+        refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
         if [[ "$version" != "$framework_short_version" ]]; then
             echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
