@@ -4,6 +4,10 @@ import java.util.regex.Pattern
 // which gets packaged within the "ejected" project so that external users don't need to
 // worry about downloading artifacts from some protected repository.
 task copyCameraKitDependenciesToBundledRepo() {
+    def moduleLegacy = [
+            'support-media-recording',
+            'support-media-picker-source',
+    ]
     def modules = [
             'camerakit-api',
             'camerakit',
@@ -22,8 +26,6 @@ task copyCameraKitDependenciesToBundledRepo() {
             'support-snap-focus',
             'support-snap-flash',
             'support-snap-ui-common',
-            'support-media-recording',
-            'support-media-picker-source',
             'support-media-picker-ui',
             'camerakit-plugin-api',
             'camerakit-extension-auth-token-provider',
@@ -33,7 +35,7 @@ task copyCameraKitDependenciesToBundledRepo() {
             'camerakit-extension-api-kotlin',
             'camerakit-extension-private',
             'camerakit-extension-profiling',
-    ]
+    ] + moduleLegacy
     def baseUri = "${snapMavenUri.replace('gcs', 'gs')}/com/snap/camerakit"
     def baseOutputDir = new File(bundledMavenRepo, '/com/snap/camerakit')
 
@@ -49,8 +51,8 @@ task copyCameraKitDependenciesToBundledRepo() {
     doLast {
         modules.each { module ->
             // Google Cloud Storage treats + as space :/ therefore we need to convert it back to +
-            // upon downloading the files and directories.
-            def gcsCameraKitVersion = cameraKitVersion.replace('+', ' ')
+            // upon downloading the files and directories. For legacy modules 1.27.0 is the last available version.
+            def gcsCameraKitVersion = moduleLegacy.contains(module) ? '1.27.0' : cameraKitVersion.replace('+', ' ')
 
             def moduleDir = new File(baseOutputDir, module)
             if (moduleDir.exists()) {
