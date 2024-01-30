@@ -7,7 +7,7 @@
 	<key>compileBitcode</key>
 	<false/>
 	<key>signingStyle</key>
-	<string>manaual</string>
+	<string>manual</string>
 	<key>provisioningProfiles</key>
 	<dict>
 		<key>com.snapchat.secret.camerakit.sample</key>
