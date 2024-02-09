@@ -8,6 +8,12 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.28.0"></a>
+## [1.28.0] - 2024-02-08
+### Bug Fixes
+- **Android:** Fix an issue when `LensesComponent.Processor#clear()` doesn't remove a lens while using custom UI.
+- **Android:** Fix a crash when using Push-To-Device.
+
 <a name="1.27.0"></a>
 ## [1.27.0] - 2023-12-13
 ### Features
