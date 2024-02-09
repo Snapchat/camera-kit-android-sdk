@@ -276,7 +276,7 @@ pipeline {
                                 JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
                                 releaseUpdateBranchAndroid,
                                 'HEAD',
-                                addTestBranchPrefixIfNeeded("").replace("/", ""),
+                                addTestBranchPrefixIfNeeded("N/A"),
                                 state.stage1.releaseScope == ReleaseScope.PATCH ?
                                         state.stage2.developmentVersion.withQualifier('-rc1') :
                                         state.stage2.developmentVersion,
@@ -597,7 +597,7 @@ pipeline {
                                                                     JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
                                                                     sdkReleaseBranchAndroid,
                                                                     'HEAD',
-                                                                    addTestBranchPrefixIfNeeded("").replace("/", ""),
+                                                                    addTestBranchPrefixIfNeeded("N/A"),
                                                                     newReleaseCandidateVersion,
                                                                     COMMENT_PR_FIRE,
                                                                     state.stage1.releaseCoordinationSlackChannel
@@ -785,7 +785,7 @@ pipeline {
                                 JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
                                 sdkReleaseBranch,
                                 'HEAD',
-                                addTestBranchPrefixIfNeeded("").replace("/", ""),
+                                addTestBranchPrefixIfNeeded("N/A"),
                                 state.stage1.releaseVersion,
                                 COMMENT_PR_FIRE,
                                 state.stage1.releaseCoordinationSlackChannel
@@ -2091,7 +2091,7 @@ boolean isAvailable(String url) {
 }
 
 String addTestBranchPrefixIfNeeded(String branch) {
-    return params.TEST_MODE ? "${TEST_BRANCH_PREFIX}$branch" : branch
+    return params.TEST_MODE && branch != "N/A" ? "${TEST_BRANCH_PREFIX}$branch" : branch
 }
 
 String cameraKitReleaseBranchFor(Version version) {
