@@ -45,12 +45,11 @@ import org.jenkinsci.plugins.workflow.steps.FlowInterruptedException
 @Field final String PATH_CAMERAKIT_REFERENCE_REPO_TEST = "Snap-Kit/camera-kit-reference-test"
 @Field final String PATH_CAMERAKIT_DISTRIBUTION_REPO = 'Snapchat/camera-kit-distribution'
 @Field final String PATH_MAVEN_CENTRAL_REPO = "repo1.maven.org/maven2"
-@Field final String PATH_PHANTOM_REPO = 'Snapchat/phantom'
+@Field final String PATH_IOS_REPO = 'Snapchat/camera-kit-ios-sdk'
 @Field final String PATH_SNAP_DOCS_REPO = 'Snapchat/snap-docs'
 
-@Field final String BRANCH_ANDROID_REPO_MAIN = "main"
+@Field final String BRANCH_SDK_REPO_MAIN = "main"
 @Field final String BRANCH_CAMERAKIT_DISTRIBUTION_REPO_MAIN = "master"
-@Field final String BRANCH_PHANTOM_REPO_MAIN = "master"
 @Field final String BRANCH_SNAP_DOCS_REPO_MAIN = 'main'
 
 @Field final String KEY_CAMERAKIT_DISTRIBUTION_BUILD = 'SDK distribution build'
@@ -258,14 +257,12 @@ pipeline {
                     updateState { State state ->
                         state.stage2.developmentVersion = state.stage1.releaseVersion.bumpMinor()
 
-                        def releaseUpdateBranchAndroid = addTestBranchPrefixIfNeeded(BRANCH_ANDROID_REPO_MAIN)
-                        def releaseUpdateBranchIos = addTestBranchPrefixIfNeeded(BRANCH_PHANTOM_REPO_MAIN)
+                        def releaseUpdateBranch = addTestBranchPrefixIfNeeded(BRANCH_SDK_REPO_MAIN)
                         def prComment = COMMENT_PR_COOL
 
                         if (state.stage1.releaseScope == ReleaseScope.PATCH) {
                             state.stage2.developmentVersion = state.stage1.releaseVersion
-                            releaseUpdateBranchAndroid = cameraKitReleaseBranchFor(state.stage1.releaseVersion)
-                            releaseUpdateBranchIos = cameraKitPhantomReleaseBranchFor(state.stage1.releaseVersion)
+                            releaseUpdateBranch = cameraKitReleaseBranchFor(state.stage1.releaseVersion)
                             prComment = COMMENT_PR_FIRE
                         }
 
@@ -274,9 +271,9 @@ pipeline {
                         updateCameraKitSdkVersionIfNeeded(
                                 PATH_ANDROID_REPO,
                                 JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
-                                releaseUpdateBranchAndroid,
+                                releaseUpdateBranch,
                                 'HEAD',
-                                addTestBranchPrefixIfNeeded("N/A"),
+                                releaseBranchPrefix(),
                                 state.stage1.releaseScope == ReleaseScope.PATCH ?
                                         state.stage2.developmentVersion.withQualifier('-rc1') :
                                         state.stage2.developmentVersion,
@@ -285,11 +282,11 @@ pipeline {
                         )
 
                         updateCameraKitSdkVersionIfNeeded(
-                                PATH_PHANTOM_REPO,
+                                PATH_IOS_REPO,
                                 JOB_CAMERAKIT_SDK_IOS_VERSION_UPDATE,
-                                releaseUpdateBranchIos,
+                                releaseUpdateBranch,
                                 'HEAD',
-                                addTestBranchPrefixIfNeeded("camerakit"),
+                                releaseBranchPrefix(),
                                 state.stage2.developmentVersion,
                                 prComment,
                                 state.stage1.releaseCoordinationSlackChannel
@@ -340,7 +337,7 @@ pipeline {
                     steps {
                         script {
                             publishCameraKitAndroidSdk(
-                                    addTestBranchPrefixIfNeeded(BRANCH_ANDROID_REPO_MAIN),
+                                    addTestBranchPrefixIfNeeded(BRANCH_SDK_REPO_MAIN),
                                     'HEAD',
                                     true,
                                     readState().stage1.releaseCoordinationSlackChannel
@@ -365,7 +362,7 @@ pipeline {
                             def state = readState()
                             buildCameraKitIosSdk(
                                     state.stage1.releaseVersion,
-                                    cameraKitPhantomReleaseBranchFor(state.stage1.releaseVersion),
+                                    cameraKitReleaseBranchFor(state.stage1.releaseVersion),
                                     'HEAD',
                                     state.stage1.releaseCoordinationSlackChannel
                             ) { SdkBuild sdkBuild ->
@@ -392,7 +389,7 @@ pipeline {
                             def state = readState()
                             buildCameraKitIosSdk(
                                     state.stage2.developmentVersion,
-                                    addTestBranchPrefixIfNeeded(BRANCH_PHANTOM_REPO_MAIN),
+                                    addTestBranchPrefixIfNeeded(BRANCH_SDK_REPO_MAIN),
                                     'HEAD',
                                     state.stage1.releaseCoordinationSlackChannel
                             ) { SdkBuild sdkBuild ->
@@ -561,8 +558,7 @@ pipeline {
                                 if (state.stage5.releaseVerificationComplete) {
                                     true
                                 } else {
-                                    String sdkReleaseBranchAndroid = cameraKitReleaseBranchFor(state.stage1.releaseVersion)
-                                    String sdkReleaseBranchIos = cameraKitPhantomReleaseBranchFor(state.stage1.releaseVersion)
+                                    String sdkReleaseBranch = cameraKitReleaseBranchFor(state.stage1.releaseVersion)
                                     SdkBuild updatedReleaseCandidateAndroidSdkBuild = null
                                     SdkBuild updatedReleaseCandidateIosSdkBuild = null
                                     parallel(
@@ -570,7 +566,7 @@ pipeline {
                                                 stage('On-demand Android SDK RC Build') {
                                                     script {
                                                         def headCommitSha =
-                                                                getHeadCommitSha(PATH_ANDROID_REPO, sdkReleaseBranchAndroid)
+                                                                getHeadCommitSha(PATH_ANDROID_REPO, sdkReleaseBranch)
                                                         def releaseCandidateAndroidSdkBuild =
                                                                 state.stage5.releaseCandidateAndroidSdkBuild
                                                                         ?: state.stage3.releaseCandidateAndroidSdkBuild
@@ -582,7 +578,7 @@ pipeline {
 
                                                         if (headCommitSha != buildCommitSha) {
                                                             println "It appears that $PATH_ANDROID_REPO repository " +
-                                                                    "$sdkReleaseBranchAndroid branch has new commits, " +
+                                                                    "$sdkReleaseBranch branch has new commits, " +
                                                                     "preparing new build for release verification"
 
                                                             Version newReleaseCandidateVersion =
@@ -595,16 +591,16 @@ pipeline {
                                                             updateCameraKitSdkVersionIfNeeded(
                                                                     PATH_ANDROID_REPO,
                                                                     JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
-                                                                    sdkReleaseBranchAndroid,
+                                                                    sdkReleaseBranch,
                                                                     'HEAD',
-                                                                    addTestBranchPrefixIfNeeded("N/A"),
+                                                                    releaseBranchPrefix(),
                                                                     newReleaseCandidateVersion,
                                                                     COMMENT_PR_FIRE,
                                                                     state.stage1.releaseCoordinationSlackChannel
                                                             )
 
                                                             publishCameraKitAndroidSdk(
-                                                                    sdkReleaseBranchAndroid,
+                                                                    sdkReleaseBranch,
                                                                     'HEAD',
                                                                     true,
                                                                     state.stage1.releaseCoordinationSlackChannel
@@ -623,7 +619,7 @@ pipeline {
                                                 stage('On-demand iOS SDK RC Build') {
                                                     script {
                                                         def headCommitSha =
-                                                                getHeadCommitSha(PATH_PHANTOM_REPO, sdkReleaseBranchIos)
+                                                                getHeadCommitSha(PATH_IOS_REPO, sdkReleaseBranch)
                                                         def releaseCandidateIosSdkBuild =
                                                                 state.stage5.releaseCandidateIosSdkBuild
                                                                         ?: state.stage3.releaseCandidateIosSdkBuild
@@ -633,13 +629,13 @@ pipeline {
                                                                 "build commit: $buildCommitSha"
 
                                                         if (headCommitSha != buildCommitSha) {
-                                                            println "It appears that $PATH_PHANTOM_REPO repository " +
-                                                                    "$sdkReleaseBranchIos branch has new commits, " +
+                                                            println "It appears that $PATH_IOS_REPO repository " +
+                                                                    "$sdkReleaseBranch branch has new commits, " +
                                                                     "preparing new build for release verification"
 
                                                             buildCameraKitIosSdk(
                                                                     state.stage1.releaseVersion,
-                                                                    sdkReleaseBranchIos,
+                                                                    sdkReleaseBranch,
                                                                     'HEAD',
                                                                     state.stage1.releaseCoordinationSlackChannel
                                                             ) { SdkBuild sdkBuild ->
@@ -785,7 +781,7 @@ pipeline {
                                 JOB_CAMERAKIT_SDK_ANDROID_VERSION_UPDATE,
                                 sdkReleaseBranch,
                                 'HEAD',
-                                addTestBranchPrefixIfNeeded("N/A"),
+                                releaseBranchPrefix(),
                                 state.stage1.releaseVersion,
                                 COMMENT_PR_FIRE,
                                 state.stage1.releaseCoordinationSlackChannel
@@ -2033,13 +2029,13 @@ def createOrResetTestBranchesIfNeeded(ReleaseScope releaseScope, Version release
             PATH_ANDROID_REPO,
             releaseScope == ReleaseScope.PATCH ?
                     cameraKitReleaseBranchFor(releaseVersion) :
-                    addTestBranchPrefixIfNeeded(BRANCH_ANDROID_REPO_MAIN)
+                    addTestBranchPrefixIfNeeded(BRANCH_SDK_REPO_MAIN)
     )
     createOrResetTestBranchIfNeeded(
-            PATH_PHANTOM_REPO,
+            PATH_IOS_REPO,
             releaseScope == ReleaseScope.PATCH ?
-                    cameraKitPhantomReleaseBranchFor(releaseVersion) :
-                    addTestBranchPrefixIfNeeded(BRANCH_PHANTOM_REPO_MAIN)
+                    cameraKitReleaseBranchFor(releaseVersion) :
+                    addTestBranchPrefixIfNeeded(BRANCH_SDK_REPO_MAIN)
     )
 
 }
@@ -2090,16 +2086,16 @@ boolean isAvailable(String url) {
     }
 }
 
+String releaseBranchPrefix() {
+    return params.TEST_MODE ? TEST_BRANCH_PREFIX : "N/A"
+}
+
 String addTestBranchPrefixIfNeeded(String branch) {
-    return params.TEST_MODE && branch != "N/A" ? "${TEST_BRANCH_PREFIX}$branch" : branch
+    return params.TEST_MODE ? "${TEST_BRANCH_PREFIX}$branch" : branch
 }
 
 String cameraKitReleaseBranchFor(Version version) {
     return addTestBranchPrefixIfNeeded("release/${version.major}.${version.minor}.x")
-}
-
-String cameraKitPhantomReleaseBranchFor(Version version) {
-    return addTestBranchPrefixIfNeeded("camerakit/release/${version.major}.${version.minor}.x")
 }
 
 String cameraKitAndroidSdkMavenCentralUrlFor(Version version) {

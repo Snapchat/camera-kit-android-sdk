@@ -14,14 +14,14 @@ readonly program_name=$0
 readonly github_base_url="https://github.sc-corp.net"
 readonly github_api_repos_url="${github_base_url}/api/v3/repos"
 readonly camerakit_distro_repo_base_path="Snapchat/camera-kit-distribution"
-readonly phantom_repo_camerakit_sdk_path="SDKs/CameraKit"
-readonly phantom_repo_base_path="Snapchat/phantom"
+readonly ios_repo_camerakit_sdk_path="SDKs/CameraKit"
+readonly ios_repo_base_path="Snapchat/camera-kit-ios-sdk"
 readonly build_file_path="${script_dir}/../../samples/ios/CameraKitSample/.build"
 readonly pr_template_file_path="${script_dir}/../../.github/PULL_REQUEST_TEMPLATE.md"
 
 usage() {
     echo "usage: ${program_name} [-r, --revision] [-b, --build] [-p, --create-pr] [-n, --no-branch]"
-    echo "  -r, --revision  [required] specify the phantom revision (commit) of SDK to update to"
+    echo "  -r, --revision  [required] specify the ios sdk repo revision (commit) of SDK to update to"
     echo "  -b, --build         [required] specify the build number of SDK to update to"
     echo "  -p, --create-pr [optional] indicate if PR should be opened"
     echo "                   Default: false"
@@ -67,7 +67,7 @@ fetch_commit() {
         -s \
         -X "GET" \
         -H "Authorization: token ${GITHUB_APIKEY}" \
-        "${github_api_repos_url}/${phantom_repo_base_path}/commits/${sha}"
+        "${github_api_repos_url}/${ios_repo_base_path}/commits/${sha}"
 }
 
 fetch_commit_list() {
@@ -79,7 +79,7 @@ fetch_commit_list() {
         -s \
         -X GET \
         -H "Authorization: token ${GITHUB_APIKEY}" \
-        "${github_api_repos_url}/${phantom_repo_base_path}/commits?sha=${sha}&path=${path}&per_page=100&page=${page}&since=${since}"
+        "${github_api_repos_url}/${ios_repo_base_path}/commits?sha=${sha}&path=${path}&per_page=100&page=${page}&since=${since}"
 }
 
 create_pr_draft() {
@@ -117,7 +117,7 @@ assign_pr() {
     local -r author=$(curl \
         -s \
         -H "Authorization: token ${GITHUB_APIKEY}" \
-        "${github_api_repos_url}/${phantom_repo_base_path}/commits/${revision}" | \
+        "${github_api_repos_url}/${ios_repo_base_path}/commits/${revision}" | \
         jq -r ".author.login")
 
     local -r params="{ \"assignees\":[\"${author}\"] }"
@@ -169,7 +169,7 @@ main() {
         do
             local included_commits_count_per_page=${#included_sdk_commits[@]}
 
-            local commit_list=$(fetch_commit_list $revision $current_page $phantom_repo_camerakit_sdk_path $prev_revision_date)
+            local commit_list=$(fetch_commit_list $revision $current_page $ios_repo_camerakit_sdk_path $prev_revision_date)
 
             for row in $(echo "${commit_list}" | jq -r '.[] | @base64'); do
                 decode_row() {
