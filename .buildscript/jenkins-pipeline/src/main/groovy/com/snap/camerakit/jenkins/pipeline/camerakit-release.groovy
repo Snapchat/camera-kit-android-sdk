@@ -1666,7 +1666,7 @@ def syncCameraKitSdkApiReferenceToSnapDocs(Version version, String gcsBucketUri,
             sh "git checkout -B $updateBranch"
 
             def cameraKitApiReferencePath = "reference/CameraKit"
-            ['api-sidebar.js', 'docs/api/home.mdx'].each { fileToUpdate ->
+            ['sidebars/api-sidebar.js', 'docs/api/home.mdx'].each { fileToUpdate ->
                 ['android', 'ios'].each { platform ->
                     sh "sed -i'.bak' " +
                             "\"s#$cameraKitApiReferencePath/$platform/" +
