@@ -30,7 +30,7 @@ android {
             'cameraKitApiToken': cameraKitApiToken,
 
             // Snap Kit parameters for the Lens Push To Device authentication via Login Kit:
-            'snapKitClientId': '522b9a5c-3366-4ef8-9c35-4efed7e4a0d0',
+            'snapKitClientId': 'fb236e80-8974-46f1-b0e9-153ee3e08063',
             'snapKitRedirectUrl': 'camerakit-support://auth-token-provider-loginkit-sample/oauth2',
             'snapKitScheme': 'camerakit-support',
             'snapKitHost': 'auth-token-provider-loginkit-sample',
