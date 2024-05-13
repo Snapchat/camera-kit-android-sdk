@@ -7,6 +7,8 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+### Updates
+- **Android** New 'camerakit-sample-basic' sample app demonstrates a simplistic way to integrate Camera Kit into your application.
 
 <a name="1.30.0"></a>
 ## [1.30.0] - 2024-04-24
