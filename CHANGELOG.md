@@ -14,7 +14,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - Lens Studio 5.0.14 support
 
 ### Updates
-- **Android** New 'camerakit-sample-basic' sample app demonstrates a simplistic way to integrate Camera Kit into your application.
+- **Android** New `camerakit-sample-basic` sample app demonstrates a simplistic way to integrate Camera Kit into your application.
 - **iOS:** Updated [Privacy manifest file](https://developer.apple.com/documentation/bundleresources/privacy_manifest_files) describing data the SDK collects and reasons required APIs it uses.
 
 <a name="1.30.0"></a>
