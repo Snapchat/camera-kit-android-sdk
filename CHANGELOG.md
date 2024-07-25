@@ -8,6 +8,14 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.32.0"></a>
+## [1.32.0] - 2024-07-24
+### Features
+- Lens Studio 5.0.17 support
+
+### Updates
+- **iOS:** Improvement for microphone permission handling that could cause video freeze
+
 <a name="1.31.0"></a>
 ## [1.31.0] - 2024-06-12
 ### Features
