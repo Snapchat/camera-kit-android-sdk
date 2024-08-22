@@ -1,3 +1,3 @@
 CAMERA_KIT_XCODE_VERSION="15.0_15A240d"
 CAMERA_KIT_XCODE_SIM_DEVICE_TYPE="com.apple.CoreSimulator.SimDeviceType.iPhone-14-Pro"
-CAMERA_KIT_XCODE_SIM_RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-16-1"
+CAMERA_KIT_XCODE_SIM_RUNTIME="com.apple.CoreSimulator.SimRuntime.iOS-17-0"
