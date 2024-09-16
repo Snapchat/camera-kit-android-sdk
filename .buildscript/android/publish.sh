@@ -48,7 +48,7 @@ main() {
         echo "Could not find apk built in: ${apk_path}"
         exit 1
     fi
-  
+
     :
 }
 

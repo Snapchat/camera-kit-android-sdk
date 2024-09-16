@@ -31,7 +31,10 @@ main() {
     local build_flavor=$3
     local run_karma=$4
 
-    source "${script_dir}/prepare_build_environment.sh"
+    if [ "$USER" != "snapci" ]; then
+        source "${script_dir}/prepare_build_environment.sh"
+    fi
+
     echo "Android SDK root: ${ANDROID_SDK_ROOT}"
 
     pushd "${samples_android_root}"

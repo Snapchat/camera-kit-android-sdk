@@ -121,7 +121,12 @@ function appcenter_upload {
     
     local appcenter_release_id=$(commit_release $appcenter_api_path_apps_release_uploads $upload_id)
     local distribution_url="${appcenter_api_path_apps_releases}/${appcenter_release_id}"
-    local release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off ${branch} branch authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
+    local release_notes=""
+    if [ "$USER" == "snapci" ]; then
+        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off ${branch} branch authored by ${committer_name}, BUILD LOGS: https://ci-portal.mesh.sc-corp.net/cp/pipelines/p/${CI_PIPELINE_ID}"
+    else
+        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off ${branch} branch authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
+    fi
 
     if [[ "${appcenter_enable_download}" -ne 0 ]];then
         IFS=' '  read -a groups <<< "${appcenter_distribution_group}"
