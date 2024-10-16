@@ -5,6 +5,7 @@ eyJhbGciOiJIUzI1NiIsImtpZCI6IkNhbnZhc1MyU0hNQUNQcm9kIiwidHlwIjoiSldUIn0.eyJhdWQi
 006b6736-9434-4178-a352-1456bceb2a58
 172e89fb-5d74-46af-9fea-f0ac458443f9
 fb236e80-8974-46f1-b0e9-153ee3e08063
+2af3fc8e-d952-4089-84fa-905f5a2758e3
 camerakit-support://auth-token-provider-loginkit-sample/oauth2
 camerakitsandbox://snap-kit/oauth2
 auth-token-provider-loginkit-sample

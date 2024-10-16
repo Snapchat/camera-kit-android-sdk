@@ -7,6 +7,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 <a name="unreleased"></a>
 ## [Unreleased]
+- **Android** Updated Basic sample to apply single specified lens
 
 <a name="1.34.0"></a>
 ## [1.34.0] - 2024-09-17
