@@ -9,6 +9,10 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 ## [Unreleased]
 - **Android** Updated Basic sample to apply single specified lens
 
+<a name="1.35.0"></a>
+## [1.35.0] - 2024-10-16
+- Lens Studio 5.2 support
+
 <a name="1.34.0"></a>
 ## [1.34.0] - 2024-09-17
 - Lens Studio 5.1 support
