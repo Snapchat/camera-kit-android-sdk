@@ -11,6 +11,7 @@ set -o xtrace
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 readonly samples_ios_root="${script_dir}/../../samples/ios"
+readonly public_ios_root="${script_dir}/../../public/ios"
 readonly program_name=$0
 readonly export_options_plist="${script_dir}/exportOptions.plist"
 readonly archive_path="${script_dir}/archive/CameraKitSample.xcarchive"
@@ -36,25 +37,27 @@ main() {
 
     $script_dir/setup.sh
 
+    pushd "${samples_ios_root}"
+    ./focus --skip-xcode --flavor "${flavor}"
+    popd
+
     pushd "${samples_ios_root}/CameraKitSample"
 
-    rm -rf xcarchive_path
-
-    ./focus --skip-xcode --flavor "${flavor}"
+    rm -rf ${archive_path}
 
     local sample_info_plist="CameraKitSample/Info.plist"
 
     if [[ "${flavor}" == "partner" ]]; then
         # if it's partner flavor we need to ensure local SDKs/podspecs/etc match the expected build
 
-        local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
-        local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        local framework_full_version="$(plutil -extract CFBundleVersion xml1 -o - ../__CameraKitSupport/CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        local framework_short_version="$(plutil -extract CFBundleShortVersionString xml1 -o - ../__CameraKitSupport/CameraKit/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
         plutil -replace CFBundleShortVersionString -string "${version}" "${sample_info_plist}"
         plutil -replace CFBundleVersion -string "${framework_full_version}" "${sample_info_plist}"
 
-        scsdk_podspec_version="$(grep 'spec.version' CameraKit/CameraKit/SCCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+        scsdk_podspec_version="$(grep 'spec.version' ../__CameraKitSupport/CameraKit/CameraKit/SCCameraKit.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
-        refui_podspec_version="$(grep 'spec.version' CameraKit/CameraKitReferenceUI/SCCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
+        refui_podspec_version="$(grep 'spec.version' ../__CameraKitSupport/CameraKit/CameraKitReferenceUI/SCCameraKitReferenceUI.podspec | head -1 | grep -o '".*"' | sed 's/"//g')"
 
         if [[ "$version" != "$framework_short_version" ]]; then
             echo "Distribution version ${version} and iOS SDK version ${framework_short_version} are not equal; exiting..."
@@ -98,42 +101,39 @@ main() {
             -exportOptionsPlist ${export_options_plist}
     fi
 
-    plutil -replace SCSDKClientId -string "[Enter the OAuth2 client ID you get from the Snap Kit developer portal]" "${sample_info_plist}"
-
+    popd
 
     if [[ -n "$eject_to" ]]; then
-        local sample_gitignore="${eject_to}/CameraKitSample/.gitignore"
-        
         cp -R "${samples_ios_root}/." "${eject_to}"
-        sed -i "" "s/Podfile//" "${sample_gitignore}"
-
-        pushd "${eject_to}/CameraKitSample"
+        cp -R "${public_ios_root}/.gitignore" "${eject_to}/.gitignore"
+        
         # cleanup CI artifacts
-        rm -f Gemfile
-        rm -f Gemfile.lock
+
+        pushd "${eject_to}"
+        
+        rm -rf __CameraKitSupport
         rm -rf .bundle
         rm -rf .gem-out
-        rm -rf gem-out
-        rm -f .build
         rm -f focus
-        rm -f Podfile.template
-        popd
-        pushd "${eject_to}/CameraKitAlternateCarouselSample"
-        # cleanup CI artifacts
+        rm -f ck_fetch
         rm -f Gemfile
         rm -f Gemfile.lock
-        rm -rf .bundle
-        rm -rf .gem-out
-        rm -rf gem-out
-        rm -f .build
-        rm -f focus
-        rm -f Podfile.template
+        
         popd
 
+        local sample_names=("CameraKitSample" "CameraKitBasicSample" "CameraKitAlternateCarouselSample")
+        for sample_name in "${sample_names[@]}"; do
+            pushd "${eject_to}/${sample_name}"
+            plutil -replace SCSDKClientId -string "[Enter the OAuth2 client ID you get from the Snap Kit developer portal]" "${sample_name}/Info.plist"
+            rm -f .gitignore
+            rm -f Podfile.template
+            rm -f Podfile.lock            
+            rm -rf Pods
+            rm -rf ${sample_name}.xcworkspace
+            rm -rf ${sample_name}-SPM.xcodeproj
+            popd
+        done
     fi
-
-    popd
-    :
 }
 
 eject_to_directory=""

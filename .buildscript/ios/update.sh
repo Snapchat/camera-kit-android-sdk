@@ -16,7 +16,7 @@ readonly github_api_repos_url="${github_base_url}/api/v3/repos"
 readonly camerakit_distro_repo_base_path="Snapchat/camera-kit-distribution"
 readonly ios_repo_camerakit_sdk_path="SDKs/CameraKit"
 readonly ios_repo_base_path="Snapchat/camera-kit-ios-sdk"
-readonly build_file_path="${script_dir}/../../samples/ios/CameraKitSample/.build"
+readonly build_file_path="${script_dir}/../../samples/ios/__CameraKitSupport/.build"
 readonly pr_template_file_path="${script_dir}/../../.github/PULL_REQUEST_TEMPLATE.md"
 
 usage() {

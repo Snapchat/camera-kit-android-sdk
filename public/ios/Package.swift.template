@@ -1,0 +1,73 @@
+// swift-tools-version:5.4
+
+import PackageDescription
+
+let package = Package(
+    name: "CameraKit",
+    defaultLocalization: "en",
+    platforms: [.iOS(.v13)],
+    products: [
+        .library(name: "SCSDKCameraKit", targets: ["SCSDKCameraKit"]),
+        .library(name: "SCSDKCameraKitBaseExtension", targets: ["SCSDKCameraKitBaseExtension_Wrapper"]),
+        .library(name: "SCSDKCameraKitLoginKitAuth", targets: ["SCSDKCameraKitLoginKitAuth_Wrapper"]),
+        .library(name: "SCSDKCameraKitPushToDeviceExtension", targets: ["SCSDKCameraKitPushToDeviceExtension_Wrapper"]),
+        .library(name: "SCSDKCameraKitReferenceUI", targets: ["SCSDKCameraKitReferenceUI"]),
+        .library(name: "SCSDKCameraKitReferenceSwiftUI", targets: ["SCSDKCameraKitReferenceSwiftUI"]),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/Snapchat/snap-kit-spm", .upToNextMajor(from: "2.5.0"))
+    ],
+    targets: [
+        .binaryTarget(
+            name: "SCSDKCameraKit",
+            url: "@SCSDKCameraKit_url",
+            checksum: "@SCSDKCameraKit_checksum"
+        ),
+        
+        .binaryTarget(
+            name: "SCSDKCameraKitBaseExtension",
+            url: "@SCSDKCameraKitBaseExtension_url",
+            checksum: "@SCSDKCameraKitBaseExtension_checksum"
+        ),
+        .target(
+            name: "SCSDKCameraKitBaseExtension_Wrapper",
+            dependencies: [
+                .target(name: "SCSDKCameraKitBaseExtension"),
+                .target(name: "SCSDKCameraKit")
+            ],
+            path: "Sources/CameraKitBaseExtension_Wrapper"
+        ),
+
+        .binaryTarget(
+            name: "SCSDKCameraKitLoginKitAuth",
+            url: "@SCSDKCameraKitLoginKitAuth_url",
+            checksum: "@SCSDKCameraKitLoginKitAuth_checksum"
+        ),
+        .target(
+            name: "SCSDKCameraKitLoginKitAuth_Wrapper",
+            dependencies: [
+                .target(name: "SCSDKCameraKitLoginKitAuth"),
+                .target(name: "SCSDKCameraKit"),
+                .product(name: "SnapSDK", package: "snap-kit-spm")
+            ],
+            path: "Sources/CameraKitLoginKitAuth_Wrapper"
+        ),
+
+        .binaryTarget(
+            name: "SCSDKCameraKitPushToDeviceExtension",
+            url: "@SCSDKCameraKitPushToDeviceExtension_url",
+            checksum: "@SCSDKCameraKitPushToDeviceExtension_checksum"
+        ),
+        .target(
+            name: "SCSDKCameraKitPushToDeviceExtension_Wrapper",
+            dependencies: [
+                .target(name: "SCSDKCameraKitPushToDeviceExtension"),
+                .target(name: "SCSDKCameraKitBaseExtension_Wrapper"),
+            ],
+            path: "Sources/CameraKitPushToDeviceExtension_Wrapper"
+        ),
+                
+        .target(name: "SCSDKCameraKitReferenceUI", dependencies: ["SCSDKCameraKit"], path: "Sources/SCSDKCameraKitReferenceUI"),
+        .target(name: "SCSDKCameraKitReferenceSwiftUI", dependencies: ["SCSDKCameraKitReferenceUI"], path: "Sources/SCSDKCameraKitReferenceSwiftUI")
+    ]
+)

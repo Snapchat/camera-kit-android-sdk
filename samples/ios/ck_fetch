@@ -1,0 +1,62 @@
+#! /usr/bin/env bash
+
+# abort on nonzero exitstatus
+set -o errexit
+# abort on unbound variable
+set -o nounset
+# don't hide errors within pipes
+set -o pipefail
+# trace what gets executed
+set -o xtrace
+
+readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly camera_kit_support_dir_name="__CameraKitSupport"
+readonly camera_kit_support_dir="${script_dir}/${camera_kit_support_dir_name}"
+
+ck_fetch_latest() {
+    local camera_kit_artifacts_dir=$1
+    local gcs_packages="gs://snapengine-maven-publish/camera-kit-ios/releases/${CAMERA_KIT_COMMIT}/${CAMERA_KIT_BUILD}/packages.zip"    
+    local packages_zip="${script_dir}/packages.zip"
+
+    rm -rf "${camera_kit_artifacts_dir}"
+
+    mkdir -p "${camera_kit_artifacts_dir}"
+
+    gsutil cp "${gcs_packages}" "${packages_zip}"
+
+    pushd "${camera_kit_artifacts_dir}"
+
+    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*" "CameraKitBaseExtension/*" "CameraKitPushToDeviceExtension/*" "CameraKitLoginKitAuth/*"
+
+    find . -name "Package.swift" -type f -delete
+
+    rm -f "${packages_zip}"
+
+    popd
+}
+
+ck_fetch_if_needed() {
+    local camera_kit_artifacts_dir=$1
+
+    readonly ck_info_plist="${camera_kit_artifacts_dir}/CameraKit/Sources/SCSDKCameraKit.xcframework/ios-arm64/SCSDKCameraKit.framework/Info.plist"
+
+    source "${camera_kit_support_dir}/.build"
+
+    if [[ -f "${ck_info_plist}" ]]; then
+        local ck_framework_version="$(plutil -extract CFBundleVersion xml1 -o - "${ck_info_plist}" | sed -n "s/.*<string>\(.*\)<\/string>.*/\1/p")"
+        if [[ "${ck_framework_version}" != "${CAMERA_KIT_BUILD}" ]]; then
+            ck_fetch_latest "${camera_kit_artifacts_dir}"
+        else 
+            echo "Camera Kit is already fetched at ${camera_kit_artifacts_dir}"
+        fi
+    else
+        ck_fetch_latest "${camera_kit_artifacts_dir}"
+    fi
+}
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage: $0 <camera_kit_artifacts_dir>"
+    exit 1
+fi
+
+ck_fetch_if_needed "$1"

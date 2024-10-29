@@ -10,7 +10,7 @@ set -o pipefail
 set -o xtrace
 
 readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-readonly gem_path="${script_dir}/../../samples/ios/CameraKitSample/.gem-out"
+readonly gem_path="${script_dir}/../../samples/ios/.gem-out"
 
 main() {
     rm -rf "${gem_path}"

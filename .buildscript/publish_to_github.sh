@@ -58,11 +58,15 @@ main() {
 
     "${script_dir}/build.sh" -k false -z false -e "${repository_dir}" -f "public"
 
+    pushd "${repository_dir}/samples"
+
     for sensitive_string in ${sensitive_strings[@]}
     do
         find . \( -type d -name .git -prune \) -o -type f -print0 | LC_ALL=C xargs -0 -P 16 sed -i'.bak' "s/${sensitive_string//\//\\/}/${sensitive_string_replacement}/g"
     done
     find . -type f -name "*.bak" -exec rm -rf {} \;
+
+    popd
   
     git add --all
 

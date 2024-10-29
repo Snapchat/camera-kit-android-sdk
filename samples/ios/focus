@@ -1,0 +1,109 @@
+#! /usr/bin/env bash
+
+# abort on nonzero exitstatus
+set -o errexit
+# abort on unbound variable
+set -o nounset
+# don't hide errors within pipes
+set -o pipefail
+# trace what gets executed
+set -o xtrace
+
+readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+readonly camera_kit_artifacts_dir="__CameraKitSupport/CameraKit"
+readonly repo_root="${script_dir}/../.."
+readonly version_file="${repo_root}/VERSION"
+readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
+
+generate_podfile() {
+    local flavor=$1
+    local podfile="Podfile"
+    local podfile_template="${podfile}.template"
+    rm -rf "${podfile}"
+    cp "${podfile_template}" "${podfile}"
+
+    if [[ "${flavor}" == "public" ]]; then
+        sed -i "" "s/@camkit_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@refui_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@pushtodevice_path/'${version_name}'/g" "${podfile}"
+        sed -i "" "s/@auth_path/'${version_name}'/g" "${podfile}"
+    else
+        sed -i "" "s^@camkit_path^:path => '../${camera_kit_artifacts_dir}/CameraKit'^g" "${podfile}"
+        sed -i "" "s^@refui_path^:path => '../${camera_kit_artifacts_dir}/CameraKitReferenceUI'^g" "${podfile}"
+        sed -i "" "s^@swiftui_path^:path => '../${camera_kit_artifacts_dir}/CameraKitReferenceSwiftUI'^g" "${podfile}"
+        sed -i "" "s^@base_path^:path => '../${camera_kit_artifacts_dir}/CameraKitBaseExtension'^g" "${podfile}"
+        sed -i "" "s^@pushtodevice_path^:path => '../${camera_kit_artifacts_dir}/CameraKitPushToDeviceExtension'^g" "${podfile}"
+        sed -i "" "s^@auth_path^:path => '../${camera_kit_artifacts_dir}/CameraKitLoginKitAuth'^g" "${podfile}"
+
+    fi
+}
+
+main() {
+    local skip_xcode=$1
+    local flavor=$2
+    pushd "${script_dir}"
+
+    if [[ "${flavor}" == "partner" ]]; then
+        ./ck_fetch "${camera_kit_artifacts_dir}"
+    fi
+
+    bundle install --path .gem-out
+
+    local sample_names=("CameraKitBasicSample" "CameraKitSample" "CameraKitAlternateCarouselSample")
+    for sample_name in "${sample_names[@]}"; do
+        local sample_dir="${script_dir}/${sample_name}"
+
+        pushd "${sample_dir}"
+        generate_podfile "${flavor}"
+        bundle exec --gemfile=../Gemfile pod install
+        popd                     
+    done
+
+    if [[ $skip_xcode == "0" ]]; then
+        if [[ $use_spm == "0" ]]; then
+            open "${open_sample_name}/${open_sample_name}.xcworkspace"
+        else 
+            open "${open_sample_name}/${open_sample_name}-SPM.xcodeproj"
+        fi
+    fi
+    
+    popd
+}
+
+skip_xcode_param="0"
+flavor="partner"
+open_sample_name="CameraKitSample"
+use_spm="0"
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    --skip-xcode)
+        skip_xcode_param="1"
+        shift
+        ;;
+    -f | --flavor)
+        flavor="$2"
+        shift
+        shift
+        ;;
+    -s | --sample)
+        open_sample_name="$2"
+        shift
+        shift
+        ;;
+    --use-spm)
+        use_spm="1"
+        shift
+        ;;        
+    *)
+        usage
+        exit
+        ;;
+    esac
+done
+
+main "${skip_xcode_param}" "${flavor}"
