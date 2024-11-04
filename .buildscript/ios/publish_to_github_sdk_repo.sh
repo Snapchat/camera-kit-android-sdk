@@ -159,6 +159,8 @@ main() {
     # copy other repo files
 
     cp "${repo_root}/public/ios/README.md" "${repository_dir}"
+    sed -i "" "s/@camera_kit_sdk_version/${version_name}/g" "${repository_dir}/README.md"
+
     cp "${repo_root}/public/ios/.gitignore" "${repository_dir}"
     cp "${repo_root}/LICENSE" "${repository_dir}"
     cp "${repo_root}/NOTICE" "${repository_dir}"

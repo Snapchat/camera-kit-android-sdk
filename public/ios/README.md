@@ -4,7 +4,7 @@
 
 # Camera Kit for iOS
 
-[Home Page](https://developers.snap.com/camera-kit/home) | [Documentation & Guides](https://developers.snap.com/camera-kit/getting-started/what-is-camera-kit) | [Showcase](https://ar.snap.com/camera-kit) | [API Reference](https://kit.snapchat.com/reference/CameraKit/ios/1.34.0/index.html) | [Developer Portal](https://kit.snapchat.com/manage/) | [My Lenses](https://my-lenses.snapchat.com/) | [Discord](https://discord.gg/snapar)
+[Home Page](https://developers.snap.com/camera-kit/home) | [Documentation & Guides](https://developers.snap.com/camera-kit/getting-started/what-is-camera-kit) | [Showcase](https://ar.snap.com/camera-kit) | [API Reference](https://kit.snapchat.com/reference/CameraKit/ios/@camera_kit_sdk_version/index.html) | [Developer Portal](https://kit.snapchat.com/manage/) | [My Lenses](https://my-lenses.snapchat.com/) | [Discord](https://discord.gg/snapar)
 </div>
 
 Camera Kit brings the power of Snap's AR platform to your websites and mobile apps on iOS and Android. It has never been easier to create and deliver scalable, multi-platform AR experiences to meet your customers, wherever they are.
@@ -59,7 +59,7 @@ Modules required for testing your in-development lenses (see [Push-to-Device](ht
 
 ## Installation
 ### [Swift Package Manager](https://github.com/apple/swift-package-manager)
-1. In Xcode, select "File" → "Swift Packages" → "Add Package Dependency"
+1. In Xcode, select "File" → "Add Package Dependencies…"
 2. Enter the repository URL: `https://github.com/Snapchat/camera-kit-ios-sdk.git`
 3. Select the version and modules you want to use in your project
 
