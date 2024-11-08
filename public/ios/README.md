@@ -129,7 +129,7 @@ extension MyViewController: LensRepositorySpecificObserver {
             // Apply a lens, which makes it visible on previewView
             self.cameraKit.lenses.processor?.apply(lens: lens, launchData: nil) { success in
                 if success {
-                    print("\\(lens.name ?? "Unnamed") (\\(lens.id)) Applied")
+                    print("\(lens.name ?? "Unnamed") (\(lens.id)) Applied")
                 } else {
                     print("Lens failed to apply")
                 }
