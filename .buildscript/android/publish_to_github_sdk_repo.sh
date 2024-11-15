@@ -90,6 +90,7 @@ main() {
     cp "${repo_root}/LICENSE" "${repository_dir}"
     cp "${repo_root}/NOTICE" "${repository_dir}"
     cp "${repo_root}/public/android/README.md" "${repository_dir}"
+    sed -i "" "s/@camera_kit_sdk_version/${version_name}/g" "${repository_dir}/README.md"
 
     ${script_dir}/../filter_changelog.swift "${repo_root}/CHANGELOG.md" "Android" > "${repository_dir}"/CHANGELOG.md
 

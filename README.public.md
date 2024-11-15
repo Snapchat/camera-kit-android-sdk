@@ -1,5 +1,7 @@
 > [!IMPORTANT]  
-> Camera Kit for iOS now supports Swift Package Manager and has a new home: https://github.com/Snapchat/camera-kit-ios-sdk
+> Camera Kit iOS and Android have new homes:   
+> **iOS** (now supports Swift Package Manger): https://github.com/Snapchat/camera-kit-ios-sdk  
+> **Android**: https://github.com/Snapchat/camera-kit-android-sdk
 
 <img align="left" width="64" height="64" src="docs/camerakit_icon.svg">
 

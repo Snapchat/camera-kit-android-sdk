@@ -4,7 +4,7 @@
 
 # Camera Kit for Android
 
-[Home Page](https://developers.snap.com/camera-kit/home) | [Documentation & Guides](https://developers.snap.com/camera-kit/getting-started/what-is-camera-kit) | [Showcase](https://ar.snap.com/camera-kit) | [API Reference](https://kit.snapchat.com/reference/CameraKit/android/1.34.0/index.html) | [Developer Portal](https://kit.snapchat.com/manage/) | [My Lenses](https://my-lenses.snapchat.com/) | [Discord](https://discord.gg/snapar)
+[Home Page](https://developers.snap.com/camera-kit/home) | [Documentation & Guides](https://developers.snap.com/camera-kit/getting-started/what-is-camera-kit) | [Showcase](https://ar.snap.com/camera-kit) | [API Reference](https://kit.snapchat.com/reference/CameraKit/android/@camera_kit_sdk_version/index.html) | [Developer Portal](https://kit.snapchat.com/manage/) | [My Lenses](https://my-lenses.snapchat.com/) | [Discord](https://discord.gg/snapar)
 </div>
 
 Camera Kit brings the power of Snap's AR platform to your websites and mobile apps on iOS and Android. It has never been easier to create and deliver scalable, multi-platform AR experiences to meet your customers, wherever they are.
@@ -43,7 +43,6 @@ Camera Kit brings the power of Snap's AR platform to your websites and mobile ap
 1. [Setup](https://developers.snap.com/camera-kit/getting-started/setting-up-accounts) your Camera Kit application using [Developer Portal](https://kit.snapchat.com/manage)
 2. [Integrate](https://developers.snap.com/camera-kit/integrate-sdk/mobile/android) Camera Kit SDK into your Android application
 3. [Create](https://developers.snap.com/camera-kit/ar-content/build-lenses) AR experiences using [Lens Studio](https://ar.snap.com/lens-studio) and manage them using [My Lenses](https://my-lenses.snapchat.com/) site
-
 
 ### Configuration
 
@@ -135,14 +134,14 @@ You can find lens group IDs and specific lens IDs on [My Lenses](https://my-lens
 
 This project includes several sample apps that demonstrate different approaches to integrating the Camera Kit SDK:
 
+- [`camerakit-sample-basic`](./Samples/camerakit-sample-basic) demonstrates simplest and bare minimum 
+    way to integrate Camera Kit.
 - [`camerakit-sample-full`](./Samples/camerakit-sample-full) contains a fully functioning camera capture with lenses and preview flow.
 - [`camerakit-sample-custom-video`](./Samples/camerakit-sample-custom-video) demonstrates how to set up a custom video/audio encoding and audio source implementation.
 - [`camerakit-sample-custom-input`](./Samples/camerakit-sample-custom-input) demonstrates how to setup a custom input to the Camera Kit's processing pipeline.
 - [`camerakit-sample-simple`](./Samples/camerakit-sample-simple) demonstrates how to setup a simple, Camera Kit powered, camera capture flow via the standalone, batteries-included `CameraActivity`.
 - [`camerakit-sample-dynamic`](./Samples/camerakit-sample-dynamic) demonstrates how to dynamically load Camera Kit SDK as a dynamic feature module (DFM) as well as a standalone apk.
 - [`camerakit-sample-custom-carousel`](./Samples/camerakit-sample-custom-carousel) demonstrates how to provide your own carousel and preview screen to Camera Kit.
-- [`camerakit-sample-basic`](./Samples/camerakit-sample-basic) demonstrates simplest and bare minimum 
-    way to integrate Camera Kit.
 
 ## Development
 
