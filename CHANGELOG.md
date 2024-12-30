@@ -8,6 +8,9 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+### Updates
+- **Android:** Addition of Jetpack compose basic sample app
+
 <a name="1.37.0"></a>
 ## [1.37.0] - 2024-12-18
 ### Features

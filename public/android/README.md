@@ -136,6 +136,8 @@ This project includes several sample apps that demonstrate different approaches 
 
 - [`camerakit-sample-basic`](./Samples/camerakit-sample-basic) demonstrates simplest and bare minimum 
     way to integrate Camera Kit.
+- [`camerakit-sample-compose-basic`](./Samples/camerakit-sample-compose-basic) demonstrates simplest and bare minimum 
+    way to integrate Camera Kit via Jetpack Compose.
 - [`camerakit-sample-full`](./Samples/camerakit-sample-full) contains a fully functioning camera capture with lenses and preview flow.
 - [`camerakit-sample-custom-video`](./Samples/camerakit-sample-custom-video) demonstrates how to set up a custom video/audio encoding and audio source implementation.
 - [`camerakit-sample-custom-input`](./Samples/camerakit-sample-custom-input) demonstrates how to setup a custom input to the Camera Kit's processing pipeline.
