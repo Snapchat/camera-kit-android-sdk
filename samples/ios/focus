@@ -49,6 +49,7 @@ main() {
         ./ck_fetch "${camera_kit_artifacts_dir}"
     fi
 
+    bundle add concurrent-ruby -v 1.3.4
     bundle install --path .gem-out
 
     local sample_names=("CameraKitBasicSample" "CameraKitSample" "CameraKitAlternateCarouselSample")
