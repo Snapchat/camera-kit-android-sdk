@@ -1252,19 +1252,19 @@ def buildCameraKitSdkDistributionRelease(
 ) {
     def releaseBranch = cameraKitReleaseBranchFor(releaseVersion)
 
-    def getHtmlUrlForAppCenterBuild = { jobPath ->
+    def getHtmlUrlForBuild = { jobPath, fileName ->
         step([
                 $class        : 'DownloadStep',
                 credentialsId : CREDENTIALS_ID_GCS,
-                bucketUri     : "gs://${GCS_BUCKET_SNAPENGINE_BUILDER}/${jobPath}/app_center_release_info.json",
+                bucketUri     : "gs://${GCS_BUCKET_SNAPENGINE_BUILDER}/${jobPath}/${fileName}",
                 localDirectory: '.'
         ])
 
-        def filePath = "${jobPath}/app_center_release_info.json"
+        def filePath = "${jobPath}/${fileName}"
         if (fileExists(filePath)) {
             def fileContent = readFile(filePath)
-            def appCenterReleaseInfoJson = parseJsonTextAsMap(fileContent)
-            def downloadUrl = appCenterReleaseInfoJson['download_url']
+            def releaseInfoJson = parseJsonTextAsMap(fileContent)
+            def downloadUrl = releaseInfoJson['download_url']
             downloadUrl
         } else {
             null
@@ -1279,6 +1279,7 @@ def buildCameraKitSdkDistributionRelease(
                         "https://console.cloud.google.com/storage/browser/_details/" +
                                 "${GCS_BUCKET_SNAPENGINE_BUILDER}/$jobPath/camerakit-distribution.zip"
                     },
+                    getAppLiveryUrl : { null },
                     getDownloadUri: { jobPath ->
                         "gs://${GCS_BUCKET_SNAPENGINE_BUILDER}/$jobPath/camerakit-distribution.zip"
                     }
@@ -1286,13 +1287,25 @@ def buildCameraKitSdkDistributionRelease(
             [
                     name          : KEY_CAMERAKIT_DISTRIBUTION_SAMPLE_BUILD_ANDROID,
                     job           : JOB_CAMERAKIT_DISTRIBUTION_SAMPLE_PUBLISH_ANDROID,
-                    getHtmlUrl    : getHtmlUrlForAppCenterBuild,
+                    getHtmlUrl    : { jobPath -> 
+                        getHtmlUrlForBuild(jobPath, 'app_center_release_info.json')
+                    },
+                    getAppLiveryUrl : { jobPath -> 
+                        getHtmlUrlForBuild(jobPath, 'applivery_release_info.json')
+
+                    },
                     getDownloadUri: { null }
             ],
             [
-                    name          : KEY_CAMERAKIT_DISTRIBUTION_SAMPLE_BUILD_IOS,
-                    job           : JOB_CAMERAKIT_DISTRIBUTION_SAMPLE_PUBLISH_IOS,
-                    getHtmlUrl    : getHtmlUrlForAppCenterBuild,
+                    name            : KEY_CAMERAKIT_DISTRIBUTION_SAMPLE_BUILD_IOS,
+                    job             : JOB_CAMERAKIT_DISTRIBUTION_SAMPLE_PUBLISH_IOS,
+                    getHtmlUrl      : { jobPath -> 
+                        getHtmlUrlForBuild(jobPath, 'app_center_release_info.json')
+                    },
+                    getAppLiveryUrl : { jobPath -> 
+                        getHtmlUrlForBuild(jobPath, 'applivery_release_info.json')
+
+                    },
                     getDownloadUri: { null }
             ]
     ].collectEntries { parameters ->
@@ -1309,7 +1322,7 @@ def buildCameraKitSdkDistributionRelease(
                                             string(name: 'branch', value: releaseBranch),
                                             string(name: 'commit', value: commit),
                                             // Jobs started on non main/release branch must have a pull request number
-                                            // associated with them so we just use 1 that passes job script condition
+                                            // associated with them  so we just use 1 that passes job script condition
                                             // as a workaround when running in test mode:
                                             string(name: 'pull_number', value: params.TEST_MODE ? "1" : "N/A")
                                     ]
@@ -1325,6 +1338,7 @@ def buildCameraKitSdkDistributionRelease(
                     }
 
                     def htmlUrl = parameters.getHtmlUrl(jobPath)
+                    def appliveryUrl = parameters.getAppLiveryUrl(jobPath)
                     def downloadUri = parameters.getDownloadUri(jobPath)
                     def buildCommit = jobResult.buildVariables['GIT_COMMIT']
                     def buildNumber = jobResult.number
@@ -1337,6 +1351,7 @@ def buildCameraKitSdkDistributionRelease(
                             parameters.job,
                             HOST_SNAPENGINE_BUILDER,
                             htmlUrl,
+                            appliveryUrl,
                             downloadUri
                     )
 
@@ -1358,10 +1373,16 @@ static String createCameraKitSdkDistributionReleaseCandidateMessage(
     return "Release candidate builds for ${releaseVersion.toString()} " +
             "are ready for testing:\n" +
             buildsMap.collect { String name, BinaryBuild binaryBuild ->
-                "h3. $name:" +
-                        "\nVersion ${binaryBuild.version.toString()} (${binaryBuild.buildNumber}): " +
-                        "${binaryBuild.htmlUrl} built by ${binaryBuild.getBuildUrl()}\n"
-
+                def message = "h3. $name:\nVersion ${binaryBuild.version.toString()} (${binaryBuild.buildNumber}):\n"
+                
+                if (binaryBuild.appliveryUrl) {
+                    message += "1. ${binaryBuild.htmlUrl}\n2. ${binaryBuild.appliveryUrl}\n"
+                } else {
+                    message += "${binaryBuild.htmlUrl}"
+                }
+                
+                message += "built by ${binaryBuild.getBuildUrl()}\n"
+                return message 
             }.join("\n") + "\nh6. Generated in: $buildJobUrl"
 }
 
@@ -2822,6 +2843,7 @@ final class SdkBuild extends CiBuild {
 final class BinaryBuild extends CiBuild {
 
     final String htmlUrl
+    final String appliveryUrl
     final String downloadUri
 
     BinaryBuild(
@@ -2832,12 +2854,14 @@ final class BinaryBuild extends CiBuild {
             String buildJob,
             String buildHost,
             String htmlUrl,
+            String appliveryUrl,
             String downloadUri
     ) {
         super(version, branch, commit, buildNumber, buildJob, buildHost)
 
         this.htmlUrl = htmlUrl
         this.downloadUri = downloadUri
+        this.appliveryUrl = appliveryUrl
     }
 
     @NonCPS
@@ -2855,6 +2879,7 @@ final class BinaryBuild extends CiBuild {
                             value['buildJob'],
                             value['buildHost'],
                             value['htmlUrl'],
+                            value['appliveryUrl'],
                             value['downloadUri']
                     )
                 }
@@ -2870,6 +2895,7 @@ final class BinaryBuild extends CiBuild {
     String toString() {
         return "BinaryBuild{" +
                 "htmlUrl='" + htmlUrl + '\'' +
+                ", appliveryUrl='" + appliveryUrl + '\'' +
                 ", downloadUri='" + downloadUri + '\'' +
                 "} " + super.toString();
     }
@@ -2885,6 +2911,7 @@ final class BinaryBuild extends CiBuild {
 
         if (downloadUri != that.downloadUri) return false
         if (htmlUrl != that.htmlUrl) return false
+        if (appliveryUrl != that.appliveryUrl) return false
 
         return true
     }
@@ -2894,6 +2921,7 @@ final class BinaryBuild extends CiBuild {
     int hashCode() {
         int result = super.hashCode()
         result = 31 * result + (htmlUrl != null ? htmlUrl.hashCode() : 0)
+        result = 31 * result + (appliveryUrl != null ? appliveryUrl.hashCode() : 0)
         result = 31 * result + (downloadUri != null ? downloadUri.hashCode() : 0)
         return result
     }
@@ -3104,3 +3132,4 @@ class Version implements Comparable<Version> {
     }
 }
 //endregion
+

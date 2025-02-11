@@ -24,6 +24,7 @@ main() {
         echo "Publishing ipa: ${ipa_path}"
         pushd "${script_dir}/.."
         ./publish_to_appcenter.sh -a "${ipa_path}"
+        ./publish_to_applivery.sh -a "${ipa_path}"
         popd
     else
         echo "Could not find ipa build in: ${ipa_path}"
