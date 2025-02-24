@@ -69,19 +69,31 @@ function applivery_upload {
 
 main() {
     local app_binary_path=$1
-    local release_notes_prefix=$2
-    local output_dir=$3
+    local operating_system=$2
+    local release_notes_prefix=$3
+    local output_dir=$4
     
     if [[ -n "$app_binary_path" ]]; then
         local applivery_build_id=$((applivery_upload "${app_binary_path}" "${release_notes_prefix}") || true)
+
         if [[ -z $applivery_build_id ]]; then
             echo "Applivery Upload failed"
             exit 1
         fi
 
-        local download_link="https://dashboard.snap.applivery.io/snap/apps/${applivery_app_name}/builds?s=build&id=${applivery_build_id}"
-        echo "{ \"download_url\" : \"$download_link\" }" >> "${output_dir}/applivery_release_info.json"
+        IFS=',' read -r -a publications_array <<< "$applivery_publications"
 
+        if [[ -n ${publications_array[0]} && "${applivery_enable_download}" -ne 0 ]]; then
+        
+            # Getting the first publication
+            local publication=${publications_array[0]}
+ 
+            download_link="https://store.snap.applivery.io/${publication}?os=${operating_system}&build=${applivery_build_id}"
+        else
+            download_link="https://dashboard.snap.applivery.io/snap/apps/${applivery_app_name}/builds?s=build&id=${applivery_build_id}"
+        fi
+
+        echo "{ \"download_url\" : \"$download_link\" }" >> "${output_dir}/applivery_release_info.json"
     else
         echo "No app binary path provided, exiting"
         exit 1
@@ -89,6 +101,7 @@ main() {
 }
 
 app_binary_path=""
+operating_system=""
 release_notes_prefix=""
 output_dir=$(dirname -- "$PWD")
 
@@ -97,6 +110,11 @@ while [[ $# -gt 0 ]]; do
     case $key in
     -a | --app-binary-path)
         app_binary_path="$2"
+        shift
+        shift
+        ;;
+    -os | --operating-system)
+        operating_system="$2"
         shift
         shift
         ;;
@@ -117,5 +135,5 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${app_binary_path}" "${release_notes_prefix}" "${output_dir}"
+main "${app_binary_path}" "${operating_system}" "${release_notes_prefix}" "${output_dir}"
 
