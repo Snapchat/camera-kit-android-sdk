@@ -3,6 +3,7 @@ package com.snap.camerakit.sample.basic
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import com.snap.camerakit.Session
 import com.snap.camerakit.invoke
 import com.snap.camerakit.lenses.LensesComponent
 import com.snap.camerakit.lenses.whenHasFirst
+import com.snap.camerakit.sample.basic.helper.WebcamImageProcessorSource
 import com.snap.camerakit.support.camerax.CameraXImageProcessorSource
 import com.snap.camerakit.supported
 
@@ -24,8 +26,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private lateinit var imageProcessorSource: CameraXImageProcessorSource
 
     companion object {
-        const val LENS_GROUP_ID = "REPLACE-THIS-WITH-YOUR-OWN-APP-SPECIFIC-VALUE"
-        const val LENS_ID = "REPLACE-THIS-WITH-YOUR-OWN-APP-SPECIFIC-VALUE"
+        const val LENS_GROUP_ID = "04173e5e-ba23-4aae-bf1e-cefc1abe2988"
+        const val LENS_ID = "63165480878"
     }
 
     // Initialize a permission request launcher
@@ -60,8 +62,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         }
 
         cameraKitSession = Session(context = this) {
-            imageProcessorSource(imageProcessorSource)
-            attachTo(findViewById(R.id.camera_kit_stub))
+                imageProcessorSource(imageProcessorSource)
+                attachTo(findViewById(R.id.camera_kit_stub))
         }.apply {
             lenses.repository.observe(
                 LensesComponent.Repository.QueryCriteria.ById(LENS_ID, LENS_GROUP_ID)
