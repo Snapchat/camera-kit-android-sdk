@@ -28,7 +28,7 @@ _run_android(
         "ttl": "120"
     },
     secrets = [
-       spookey(name = "CameraKitAppCenterToken", env = "APPCENTER_TOKEN"),
+       spookey(name = "AppliveryAppTokenCameraKitSamplePartnerAndroid", env = "APPLIVERY_APP_TOKEN"),
    ],
     notify = [
         slack("#camkit-mobile-ops", states = ["failed"]),

@@ -37,9 +37,9 @@ function applivery_upload {
 
     local release_notes=""
     if [ "$USER" == "snapci" ]; then
-        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off test branch authored by ${committer_name}, BUILD LOGS: https://ci-portal.mesh.sc-corp.net/cp/pipelines/p/${CI_PIPELINE_ID}"
+        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off BRANCH:${branch}  authored by ${committer_name}, BUILD LOGS: https://ci-portal.mesh.sc-corp.net/cp/pipelines/p/${CI_PIPELINE_ID}"
     else
-        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off test branch authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
+        release_notes="${release_notes_prefix}COMMIT_SHA:${head_sha}, BUILD_TYPE:${job_name} build off BRANCH:${branch} authored by ${committer_name}, BUILD LOGS: https://developer-portal.sc-corp.net/log-viewer/jenkins-classic/${job_name}/${build_number}, BUILD ARTIFACTS: https://console.cloud.google.com/storage/browser/snapengine-builder-artifacts/$job_name/$build_number"
     fi
 
    local curl_cmd="curl -s --retry 3 \

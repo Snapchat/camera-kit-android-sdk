@@ -62,8 +62,7 @@ class StateTest {
                         3331,
                         'camerakit-distribution-android-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner/releases/1011',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-android/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-android-release?os=android&build=67d98ab3eef8bc53585b95a5',
                         null
                 ),
                 'SDK distribution build' : new BinaryBuild(
@@ -74,7 +73,6 @@ class StateTest {
                         'camerakit-distribution-build',
                         'snapengine-builder.sc-corp.net',
                         'https://console.cloud.google.com/storage/browser/_details/snapengine-builder-artifacts/camerakit-distribution-build/4127/camerakit-distribution.zip',
-                        null,
                         'gs://snapengine-builder-artifacts/camerakit-distribution-build/4127/camerakit-distribution.zip'
                 ),
                 'SDK distribution iOS sample app build' : new BinaryBuild(
@@ -84,8 +82,7 @@ class StateTest {
                         3329,
                         'camerakit-distribution-ios-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS/releases/925',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-ios/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-ios-release?os=ios&build=67d494005e3084a120dda2b9',
                         null
                 ),
         ]
@@ -115,8 +112,7 @@ class StateTest {
                         3332,
                         'camerakit-distribution-android-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner/releases/1012',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-android/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-android-release?os=android&build=67d98ab3eef8bc53585b95a5',
                         null
                 ),
                 'SDK distribution build' : new BinaryBuild(
@@ -127,7 +123,6 @@ class StateTest {
                         'camerakit-distribution-build',
                         'snapengine-builder.sc-corp.net',
                         'https://console.cloud.google.com/storage/browser/_details/snapengine-builder-artifacts/camerakit-distribution-build/4128/camerakit-distribution.zip',
-                        null,
                         'gs://snapengine-builder-artifacts/camerakit-distribution-build/4127/camerakit-distribution.zip'
                 ),
                 'SDK distribution iOS sample app build' : new BinaryBuild(
@@ -137,8 +132,7 @@ class StateTest {
                         3330,
                         'camerakit-distribution-ios-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS/releases/926',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-ios/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-ios-release?os=ios&build=67d494005e3084a120dda2b9',
                         null
                 )
         ]
@@ -170,8 +164,7 @@ class StateTest {
                         3335,
                         'camerakit-distribution-android-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner/releases/1013',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-android/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-android-release?os=android&build=67d98ab3eef8bc53585b95a5',
                         null
                 ),
                 'SDK distribution build' : new BinaryBuild(
@@ -182,7 +175,6 @@ class StateTest {
                         'camerakit-distribution-build',
                         'snapengine-builder.sc-corp.net',
                         'https://console.cloud.google.com/storage/browser/_details/snapengine-builder-artifacts/camerakit-distribution-build/4129/camerakit-distribution.zip',
-                        null,
                         'gs://snapengine-builder-artifacts/camerakit-distribution-build/4129/camerakit-distribution.zip'
                 ),
                 'SDK distribution iOS sample app build' : new BinaryBuild(
@@ -192,8 +184,7 @@ class StateTest {
                         3338,
                         'camerakit-distribution-ios-publish',
                         'snapengine-builder.sc-corp.net',
-                        'https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS/releases/927',
-                        'https://dashboard.snap.applivery.io/snap/apps/camera-kit-sample-partner-ios/builds?s=build&id=679c0a477c90a77863bbc3c1',
+                        'https://store.snap.applivery.io/camerakit-sample-partner-ios-release?os=ios&build=67d494005e3084a120dda2b9',
                         null
                 )
         ]

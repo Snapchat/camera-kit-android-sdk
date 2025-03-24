@@ -4,7 +4,7 @@
 export CIRCLECI=1
 export CI=1
 export JOB_NAME="$CODE_PIPELINE_STEP_NAME"
-export BUILD_NUMBER="$CI_EXECUTION_ID"
+export BUILD_NUMBER="$(date +%s)"
 export branch="$CI_BRANCH"
 
 export ANDROID_HOME=${HOME}/.android-sdk

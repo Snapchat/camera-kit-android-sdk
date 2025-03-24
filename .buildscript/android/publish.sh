@@ -42,8 +42,7 @@ main() {
     then
         echo "Publishing apk: ${apk_path}"
         pushd "${script_dir}/.."
-        ./publish_to_appcenter.sh -a "${apk_path}" -rnp "${release_notes_prefix}"
-        ./publish_to_applivery.sh -a "${apk_path}" -os "android" -rnp "${release_notes_prefix}" 
+        ./publish_to_applivery.sh -a "${apk_path}" -os "android" -rnp "${release_notes_prefix}"
         popd
     else
         echo "Could not find apk built in: ${apk_path}"

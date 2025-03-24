@@ -131,7 +131,7 @@
         "branch": "jd/camkit-pipeline-test/release/1.22.x",
         "downloadUri": null,
         "commit": "0afa4460f326178f415e375e36a8e755c439b976",
-        "htmlUrl": "https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner/releases/1015"
+        "htmlUrl": "https://store.snap.applivery.io/camerakit-sample-partner-android-release?os=android&build=67d98ab3eef8bc53585b95a5"
       },
       "SDK distribution build": {
         "buildNumber": 4134,
@@ -161,7 +161,7 @@
         "branch": "jd/camkit-pipeline-test/release/1.22.x",
         "downloadUri": null,
         "commit": "0afa4460f326178f415e375e36a8e755c439b976",
-        "htmlUrl": "https://install.appcenter.ms/orgs/app-2q6u/apps/CameraKit-Sample-Partner-iOS/releases/927"
+        "htmlUrl": "https://store.snap.applivery.io/camerakit-sample-partner-ios-release?os=ios&build=67d494005e3084a120dda2b9"
       }
     },
     "releaseGithubUrl": "https://github.sc-corp.net/Snapchat/camera-kit-distribution/releases/tag/untagged-87e08cd11e1b3ab87dd2"
