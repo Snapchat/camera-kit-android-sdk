@@ -36,7 +36,7 @@ Camera Kit brings the power of Snap's AR platform to your websites and mobile ap
 - Fetch and display your lenses
 - Capture media
 - Leverage Reference UI modules to quickly build Camera Kit based experiences
-- Supports iOS 13.0+
+- Supports iOS 14.0+
 
 ## Integration Steps
 1. [Setup](https://developers.snap.com/camera-kit/getting-started/setting-up-accounts) your Camera Kit application using [Developer Portal](https://kit.snapchat.com/manage)
