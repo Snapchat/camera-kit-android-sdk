@@ -1364,8 +1364,7 @@ static String createCameraKitSdkDistributionReleaseCandidateMessage(
             "are ready for testing:\n" +
             buildsMap.collect { String name, BinaryBuild binaryBuild ->
                 def message = "h3. $name:\nVersion ${binaryBuild.version.toString()} (${binaryBuild.buildNumber}):\n"
-                message += "${binaryBuild.htmlUrl}"
-                message += "built by ${binaryBuild.getBuildUrl()}\n"
+                message += "${binaryBuild.htmlUrl}\nbuilt by ${binaryBuild.getBuildUrl()}\n"
                 return message
             }.join("\n") + "\nh6. Generated in: $buildJobUrl"
 }
