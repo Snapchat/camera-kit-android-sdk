@@ -1,11 +1,11 @@
 image.vm(
     name = "camkit_distribution_android_image",
-    base = "snapci-linux",
+    base = "snap-ubuntu-2404",
     provision_with = ".buildscript/snapci/image/provision.sh",
 )
 
 _DEFAULT_EXEC_REQUIREMENTS = {
-    "vm_image": "#a746c7f8731a7697fcd0d961b41ce2fbb3047ce7//camkit_distribution_android_image",
+    "vm_image": "#b6be24987af8ba81556d4f5e21c14bdf9f2ff77d//camkit_distribution_android_image",
     "disk_type": "pd-ssd",
 }
 
