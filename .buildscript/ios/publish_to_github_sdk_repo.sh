@@ -98,7 +98,8 @@ main() {
     local repository_dir=$(mktemp -d -t "camerakit-ios-publish-repository-XXXXXXXXXX")
     rm -rf "${repository_dir}"
 
-    git clone --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
+    # --config credential.helper='' added to resolve issue on snapCI Mac builders when fetching credentials 
+    git clone --config credential.helper='' --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
 
     pushd "${repository_dir}"
     local branch="sync/${version_name}/${random_id}"

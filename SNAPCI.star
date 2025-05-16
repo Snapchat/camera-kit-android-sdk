@@ -35,6 +35,37 @@ _run_android(
     ],
 )
 
+run(
+    name="camerakit-distribution-android-publish-github",
+        steps = [
+        process(".buildscript/snapci/android/publish_to_github_sdk_repo.sh"),
+    ],
+    exec_requirements = {
+        "os": "macos",
+        "arch": "arm64",
+    },
+    secrets = [
+       spookey(name = "CameraKitPublicGithubUsername", env = "GITHUB_USERNAME"),
+       spookey(name = "CameraKitPublicGithubAPIKey", env = "GITHUB_APIKEY"),
+   ],
+)
+
+run(
+    name="camerakit-distribution-ios-publish-github",
+        steps = [
+        process(".buildscript/snapci/ios/publish_to_github_sdk_repo.sh"),
+    ],
+    exec_requirements = {
+        "os": "macos",
+        "arch": "arm64",
+        "xcode_version": "16.0_16A242d"
+    },
+    secrets = [
+       spookey(name = "CameraKitPublicGithubUsername", env = "GITHUB_USERNAME"),
+       spookey(name = "CameraKitPublicGithubAPIKey", env = "GITHUB_APIKEY"),
+   ],
+)
+
 on_comment(
     name = "camkit_distribution_android_publish_comment",
     body = "/publish-android",

@@ -74,8 +74,10 @@ process_samples() {
 
 main() {
     local output_dir=$(pwd)
-    local repository_dir=$(mktemp -d -t "camerakit-android-publish-repository-XXXXXXXXXX")
-    git clone --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
+    local repository_dir=$(mktemp -d -t "camerakit-android-publish-repository-XXXXXXXXXX") 
+
+    # --config credential.helper='' added to resolve issue on snapCI when fetching credentials 
+    git clone --config credential.helper='' --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
 
     pushd "${repository_dir}"
     local branch="sync/${version_name}/${random_id}"
