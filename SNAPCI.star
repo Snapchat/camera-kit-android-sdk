@@ -24,11 +24,9 @@ _run_android(
     steps = [
         process(".buildscript/snapci/android/publish.sh"),
     ],
-    exec_requirements = {
-        "ttl": "120"
-    },
     secrets = [
-       spookey(name = "AppliveryAppTokenCameraKitSamplePartnerAndroid", env = "APPLIVERY_APP_TOKEN"),
+        spookey(name = "AppliveryAppTokenCameraKitSamplePartnerAndroid", env = "APPLIVERY_APP_TOKEN"),
+        spookey(name = "CI_GITHUB_APIKEY", env = "GITHUB_APIKEY"),
    ],
     notify = [
         slack("#camkit-mobile-ops", states = ["failed"]),
@@ -36,7 +34,7 @@ _run_android(
 )
 
 run(
-    name="camerakit-distribution-android-publish-github",
+    name="camkit_distribution_android_publish_github",
         steps = [
         process(".buildscript/snapci/android/publish_to_github_sdk_repo.sh"),
     ],
@@ -51,7 +49,7 @@ run(
 )
 
 run(
-    name="camerakit-distribution-ios-publish-github",
+    name="camkit_distribution_ios_publish_github",
         steps = [
         process(".buildscript/snapci/ios/publish_to_github_sdk_repo.sh"),
     ],
@@ -66,6 +64,41 @@ run(
    ],
 )
 
+run(
+    name="camkit_distribution_publish_github",
+        steps = [
+        process(".buildscript/snapci/publish_to_github.sh"),
+    ],
+    exec_requirements = {
+        "os": "macos",
+        "arch": "arm64",
+        "xcode_version": "16.0_16A242d"
+    },
+    secrets = [
+       spookey(name = "CameraKitReferenceGithubUsername", env = "GITHUB_USERNAME"),
+       spookey(name = "CameraKitReferenceGithubAPIKey", env = "GITHUB_APIKEY"),
+   ],
+)
+
+run(
+    name="camkit_distribution_ios_publish",
+        steps = [
+        process(".buildscript/snapci/ios/publish.sh"),
+    ],
+    exec_requirements = {
+        "os": "macos",
+        "arch": "arm64",
+        "xcode_version": "16.0_16A242d"
+    },
+    secrets = [
+        spookey(name = "AppliveryAppTokenCameraKitSamplePartnerIOS", env = "APPLIVERY_APP_TOKEN"),
+        spookey(name = "CI_GITHUB_APIKEY", env = "GITHUB_APIKEY"),
+    ],
+    notify = [
+        slack("#camkit-mobile-ops", states = ["failed"]),
+    ],
+)
+
 on_comment(
     name = "camkit_distribution_android_publish_comment",
     body = "/publish-android",
@@ -73,3 +106,12 @@ on_comment(
         exec("camkit_distribution_android_publish")
     ],
 )
+
+on_comment(
+    name = "camkit_distribution_ios_publish_comment",
+    body = "/publish-ios",
+    execs = [
+        exec("camkit_distribution_ios_publish")
+    ],
+)
+

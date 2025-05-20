@@ -39,7 +39,7 @@ create_pr_draft() {
 main() {
     local output_dir=$(pwd)
     local repository_dir=$(mktemp -d -t "camerakit-publish-repository-XXXXXXXXXX")
-    git clone --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
+    git clone --config credential.helper='' --depth 1 "${camerakit_publish_repo_http_url}" "${repository_dir}"
 
     pushd "${repository_dir}"
     local branch="sync/${version_name}/${random_id}"

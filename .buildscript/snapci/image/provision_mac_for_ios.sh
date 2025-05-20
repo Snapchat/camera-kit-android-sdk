@@ -4,75 +4,145 @@ set -euo pipefail
 set -x 
 
 # CONFIG
-PYTHON_VERSION="3.9.16"
-PYTHON_SHA256="1ad539e9dbd2b42df714b69726e0693bc6b9d2d2c8e91c2e43204026605140c5"
+readonly python_version="3.9.16"
+readonly python_hash="1ad539e9dbd2b42df714b69726e0693bc6b9d2d2c8e91c2e43204026605140c5"
+readonly python_dir="$HOME/python"
 
-OPENSSL_VERSION="3.0.8"
-OPENSSL_SHA256="6c13d2bf38fdf31eac3ce2a347073673f5d63263398f1f69d0df4a41253e4b3e"
+readonly openssl_version="3.0.8"
+readonly openssl_hash="6c13d2bf38fdf31eac3ce2a347073673f5d63263398f1f69d0df4a41253e4b3e"
+readonly openssl_dir="$HOME/openssl"
 
-INSTALL_DIR="$HOME/python"
-OPENSSL_DIR="$HOME/openssl"
+readonly ruby_version=2.6.10
+readonly rbenv_hash="9a1f19c4564cc8954bca75640d320fcc98cf40187d73531156629edd36606f2f"
+readonly ruby_dir="$HOME/bin"
 
-mkdir -p /tmp/build
-pushd /tmp/build
+compareHash() {
+    local filepath=$1
+    local expected_hash=$2
 
-# Build OpenSSL from source
-curl -LO "https://github.com/openssl/openssl/releases/download/openssl-${OPENSSL_VERSION}/openssl-${OPENSSL_VERSION}.tar.gz"
+    # Compute the hash of the file
+    local computed_hash=$(shasum -a 256 "${filepath}" | awk '{ print $1 }')
 
-# Verify OpenSSL SHA256
-ACTUAL_OPENSSL_HASH=$(shasum -a 256 "openssl-${OPENSSL_VERSION}.tar.gz" | awk '{print $1}')
-if [[ "$ACTUAL_OPENSSL_HASH" != "$OPENSSL_SHA256" ]]; then
-  echo "❌ OpenSSL SHA256 hash mismatch!"
-  echo "Expected: $OPENSSL_SHA256"
-  echo "Actual:   $ACTUAL_OPENSSL_HASH"
-  exit 1
-else
-  echo "✅ OpenSSL SHA256 hash verified: $ACTUAL_OPENSSL_HASH"
-fi
+    # Compare the computed hash with the expected hash
+    if [ "$computed_hash" != "$expected_hash" ]; then
+        echo "Hash verification failed for file ${filepath}: Expected $expected_hash but got $computed_hash"
+        exit 1
+    else
+        echo "Hash verification succeeded for file ${filepath}."
+        chmod +x "${filepath}"
+    fi
+}
 
-tar -xzf "openssl-${OPENSSL_VERSION}.tar.gz"
-pushd "openssl-${OPENSSL_VERSION}"
+install_ruby() {
+    mkdir -p "$ruby_dir"
 
-./Configure darwin64-arm64-cc --prefix="$OPENSSL_DIR" no-shared
-make -j"$(sysctl -n hw.ncpu)"
-make install_sw
+    curl -fsSL -o "${ruby_dir}/rbenv-installer" https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer
+    compareHash "${ruby_dir}/rbenv-installer"  "$rbenv_hash"
 
-popd  # Back to /tmp/build
+    # Execute rbenv installer
+    "${ruby_dir}/rbenv-installer" 
 
-# Build Python from source
-curl -O "https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz"
+    export PATH="$HOME/.rbenv/bin:$PATH"
+    eval "$(rbenv init -)"
 
-# Verify Python SHA256
-ACTUAL_PYTHON_HASH=$(shasum -a 256 "Python-${PYTHON_VERSION}.tgz" | awk '{print $1}')
-if [[ "$ACTUAL_PYTHON_HASH" != "$PYTHON_SHA256" ]]; then
-  echo "❌ Python SHA256 hash mismatch!"
-  echo "Expected: $PYTHON_SHA256"
-  echo "Actual:   $ACTUAL_PYTHON_HASH"
-  exit 1
-else
-  echo "✅ Python SHA256 hash verified: $ACTUAL_PYTHON_HASH"
-fi
+    # Install Ruby inside user directory
+    rbenv install $ruby_version
+    rbenv global $ruby_version
+}
 
-tar -xzf "Python-${PYTHON_VERSION}.tgz"
-pushd "Python-${PYTHON_VERSION}"
+install_python() {
+    local tmp_dir="/tmp/build"
+    local openssl_filename="openssl-${openssl_version}.tar.gz"
+    local python_filename="Python-${python_version}.tgz"
+    
+    mkdir -p "${tmp_dir}"
+    pushd "${tmp_dir}"
 
-export PKG_CONFIG_PATH="$OPENSSL_DIR/lib/pkgconfig"
+    # Build OpenSSL from source
+    curl -LO "https://github.com/openssl/openssl/releases/download/openssl-${openssl_version}/openssl-${openssl_version}.tar.gz"
 
-./configure \
-  --prefix="$INSTALL_DIR" \
-  --enable-optimizations \
-  --with-openssl="$OPENSSL_DIR" \
-  CPPFLAGS="-I$OPENSSL_DIR/include" \
-  LDFLAGS="-L$OPENSSL_DIR/lib"
+    compareHash "${tmp_dir}/${openssl_filename}" $openssl_hash
 
-make -j"$(sysctl -n hw.ncpu)"
-make install
+    tar -xzf $openssl_filename
+    pushd "openssl-${openssl_version}"
 
-popd  # Back to /tmp/build
-popd  # Return to original working directory
+    ./Configure darwin64-arm64-cc --prefix="$openssl_dir" no-shared
+    make -j"$(sysctl -n hw.ncpu)"
+    make install_sw
 
-export PATH="$INSTALL_DIR/bin:$PATH"
+    popd  # Back to tmp_dir
 
-# Install packages inside the venv
-python -m pip install --upgrade pip
-python -m pip install grip
+    # Build Python from source
+    curl -O "https://www.python.org/ftp/python/${python_version}/${python_filename}"
+
+    compareHash "${tmp_dir}/${python_filename}" $python_hash
+
+    tar -xzf $python_filename
+    pushd "Python-${python_version}"
+
+    export PKG_CONFIG_PATH="$openssl_dir/lib/pkgconfig"
+
+    ./configure \
+    --prefix="$python_dir" \
+    --enable-optimizations \
+    --with-openssl="$openssl_dir" \
+    CPPFLAGS="-I$openssl_dir/include" \
+    LDFLAGS="-L$openssl_dir/lib"
+
+    make -j"$(sysctl -n hw.ncpu)"
+    make install
+
+    popd  # Back to tmp_dir
+    popd  # Return to original working directory
+
+    echo "export PATH=\"$python_dir/bin:\$PATH\"" >> ~/.bash_profile
+    echo "export PKG_CONFIG_PATH=\"$openssl_dir/lib/pkgconfig\"" >> ~/.bash_profile
+
+    source ~/.bash_profile
+
+    # Install packages inside the venv
+    python -m pip install --upgrade pip
+    python -m pip install grip
+}
+
+main() {
+    local skip_python=$1
+    local skip_ruby=$2
+
+    if [[ "$skip_python" == "false" ]]; then
+        install_python
+    else
+        echo "Skipping Python install..."
+    fi
+
+    if [[ "$skip_ruby" == "false" ]]; then
+        install_ruby
+    else 
+        echo "Skipping Ruby install..."
+    fi
+}
+
+skip_python=false
+skip_ruby=false
+
+# Parse arguments
+while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    -sp | --skip-python)
+        skip_python=true
+        shift
+        ;;
+    -sr | --skip-ruby)
+        skip_ruby=true
+        shift
+        ;;
+    *)
+        echo "Usage: $0 [--skip-python] [--skip-ruby]"
+        exit 1
+        ;;
+    esac
+done
+
+main "${skip_python}" "${skip_ruby}"
+

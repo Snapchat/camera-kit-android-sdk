@@ -30,6 +30,7 @@ readonly applivery_api_path_apps_release_uploads="https://upload.snap.applivery.
 # CI environment
 readonly job_name="${JOB_NAME}"
 readonly build_number="${BUILD_NUMBER}"
+readonly gcs_upload_path="gs://snapengine-builder-artifacts/${job_name}/${build_number}}"
 
 function applivery_upload {
     local app_binary_path=$1
@@ -72,6 +73,7 @@ main() {
     local operating_system=$2
     local release_notes_prefix=$3
     local output_dir=$4
+    local output_file="${output_dir}/applivery_release_info.json"
     
     if [[ -n "$app_binary_path" ]]; then
         local applivery_build_id=$((applivery_upload "${app_binary_path}" "${release_notes_prefix}") || true)
@@ -93,7 +95,19 @@ main() {
             download_link="https://dashboard.snap.applivery.io/snap/apps/${applivery_app_name}/builds?s=build&id=${applivery_build_id}"
         fi
 
-        echo "{ \"download_url\" : \"$download_link\" }" >> "${output_dir}/applivery_release_info.json"
+
+        if [ -n "$pull_number" ]; then
+            curl    -H "Authorization: token ${GITHUB_APIKEY}" \
+                    -H "Content-Type: application/json" \
+                    https://github.sc-corp.net/api/v3/repos/Snapchat/camera-kit-distribution/issues/${pull_number}/comments \
+                    --verbose -d "{\"body\": \"Download links for the '${job_name}' build requested:\n\n- Applivery: ${download_link}\"}"
+        fi
+
+        echo "{ \"download_url\" : \"$download_link\" }" >> "${output_file}"
+
+        if [ "$USER" == "snapci" ]; then
+            gsutil cp "${output_file}" "${gcs_upload_path}"
+        fi
     else
         echo "No app binary path provided, exiting"
         exit 1
@@ -103,7 +117,7 @@ main() {
 app_binary_path=""
 operating_system=""
 release_notes_prefix=""
-output_dir=$(dirname -- "$PWD")
+output_dir="${CI_OUTPUTS:-$(dirname -- "$PWD")}"
 
 while [[ $# -gt 0 ]]; do
     key="$1"
