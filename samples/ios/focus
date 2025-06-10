@@ -15,6 +15,8 @@ readonly repo_root="${script_dir}/../.."
 readonly version_file="${repo_root}/VERSION"
 readonly version_name=$( cat "${version_file}" | tr -d " \t\n\r" )
 
+valid_sample_names=("CameraKitBasicSample" "CameraKitSample" "CameraKitAlternateCarouselSample")
+
 generate_podfile() {
     local flavor=$1
     local podfile="Podfile"
@@ -26,24 +28,44 @@ generate_podfile() {
         sed -i "" "s/@camkit_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@refui_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@swiftui_path/'${version_name}'/g" "${podfile}"
-        sed -i "" "s/@base_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@pushtodevice_path/'${version_name}'/g" "${podfile}"
         sed -i "" "s/@auth_path/'${version_name}'/g" "${podfile}"
     else
         sed -i "" "s^@camkit_path^:path => '../${camera_kit_artifacts_dir}/CameraKit'^g" "${podfile}"
         sed -i "" "s^@refui_path^:path => '../${camera_kit_artifacts_dir}/CameraKitReferenceUI'^g" "${podfile}"
         sed -i "" "s^@swiftui_path^:path => '../${camera_kit_artifacts_dir}/CameraKitReferenceSwiftUI'^g" "${podfile}"
-        sed -i "" "s^@base_path^:path => '../${camera_kit_artifacts_dir}/CameraKitBaseExtension'^g" "${podfile}"
         sed -i "" "s^@pushtodevice_path^:path => '../${camera_kit_artifacts_dir}/CameraKitPushToDeviceExtension'^g" "${podfile}"
         sed -i "" "s^@auth_path^:path => '../${camera_kit_artifacts_dir}/CameraKitLoginKitAuth'^g" "${podfile}"
 
     fi
 }
 
+validate_sample_name() {
+    local sample_name=$1
+    if [[ ! " ${valid_sample_names[@]} " =~ " ${sample_name} " ]]; then
+        echo "Error: Invalid sample name '${sample_name}'. Must be one of: ${valid_sample_names[*]}"
+        exit 1
+    fi
+}
+
+usage() {
+    echo "usage: ${0} [--skip-xcode] [-f | --flavor <flavor>] [-s | --sample <sample_name>] [--use-spm]"
+    echo "  --skip-xcode          Skip opening Xcode after setup (default: NO)" 
+    echo "  -f, --flavor          Specify the flavor of the samples (default: partner)"
+    echo "  -s, --sample          Specify which sample to open in Xcode (default: CameraKitSample)"
+    echo "  --use-spm             Use Swift Package Manager instead of CocoaPods (default: NO)"
+}
+
 main() {
     local skip_xcode=$1
     local flavor=$2
+    local open_sample_name=$3
+    local use_spm=$4
+
     pushd "${script_dir}"
+
+    # Validate the sample name
+    validate_sample_name "${open_sample_name}"
 
     if [[ "${flavor}" == "partner" ]]; then
         ./ck_fetch "${camera_kit_artifacts_dir}"
@@ -52,15 +74,13 @@ main() {
     bundle add concurrent-ruby -v 1.3.4
     bundle install --path .gem-out
 
-    local sample_names=("CameraKitBasicSample" "CameraKitSample" "CameraKitAlternateCarouselSample")
-    for sample_name in "${sample_names[@]}"; do
-        local sample_dir="${script_dir}/${sample_name}"
+    # focus specifc prject
+    local sample_dir="${script_dir}/${open_sample_name}"
 
-        pushd "${sample_dir}"
-        generate_podfile "${flavor}"
-        bundle exec --gemfile=../Gemfile pod install
-        popd                     
-    done
+    pushd "${sample_dir}"
+    generate_podfile "${flavor}"
+    bundle exec --gemfile=../Gemfile pod install
+    popd   
 
     if [[ $skip_xcode == "0" ]]; then
         if [[ $use_spm == "0" ]]; then
@@ -107,4 +127,4 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-main "${skip_xcode_param}" "${flavor}"
+main "${skip_xcode_param}" "${flavor}" "${open_sample_name}" "${use_spm}"

@@ -12,7 +12,6 @@ target 'CameraKitSample' do
 
 	# Only include Push to Device in non-App Store configurations using `, :configurations => ['Debug']`, eg:
   # pod 'SCCameraKitPushToDeviceExtension', @base_path, :configurations => ['Debug']
-	pod 'SCCameraKitBaseExtension', @base_path
 	pod 'SCCameraKitPushToDeviceExtension', @pushtodevice_path
 	pod 'SCCameraKitLoginKitAuth', @auth_path
 

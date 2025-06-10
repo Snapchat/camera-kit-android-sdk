@@ -26,7 +26,7 @@ ck_fetch_latest() {
 
     pushd "${camera_kit_artifacts_dir}"
 
-    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*" "CameraKitBaseExtension/*" "CameraKitPushToDeviceExtension/*" "CameraKitLoginKitAuth/*"
+    unzip -q "${packages_zip}" "CameraKit/*" "CameraKitReferenceUI/*" "CameraKitReferenceSwiftUI/*" "CameraKitPushToDeviceExtension/*" "CameraKitLoginKitAuth/*"
 
     find . -name "Package.swift" -type f -delete
 
