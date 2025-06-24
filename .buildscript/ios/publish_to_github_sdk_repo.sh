@@ -122,7 +122,7 @@ main() {
 
     # for each  binary xcframework: zip + checksum + upload + fill Package.swift
 
-    local sdk_names=("CameraKit" "CameraKitBaseExtension" "CameraKitLoginKitAuth" "CameraKitPushToDeviceExtension")
+    local sdk_names=("CameraKit" "CameraKitLoginKitAuth" "CameraKitPushToDeviceExtension")
 
     for sdk_name in "${sdk_names[@]}"; do
         process_framework "${sdk_name}" "${package_swift_path}"
@@ -137,7 +137,6 @@ main() {
 
     # copy Wrappers
     local camera_support_dir="${repo_root}/samples/ios/__CameraKitSupport"
-    cp -R "${camera_support_dir}/CameraKitBaseExtension_Wrapper" "${repository_dir}/Sources/"
     cp -R "${camera_support_dir}/CameraKitLoginKitAuth_Wrapper" "${repository_dir}/Sources/"
     cp -R "${camera_support_dir}/CameraKitPushToDeviceExtension_Wrapper" "${repository_dir}/Sources/"
 
