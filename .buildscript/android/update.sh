@@ -19,8 +19,7 @@ readonly samples_android_root_build="${samples_android_root}/build.gradle"
 readonly samples_android_root_properties="${samples_android_root}/gradle.properties"
 readonly github_api_repos_url="https://github.sc-corp.net/api/v3/repos"
 readonly camerakit_distro_repo_base_path="Snapchat/camera-kit-distribution"
-readonly android_repo_base_path="Snapchat/android"
-readonly android_repo_camerakit_sdk_path="snapchat/sdks/camerakit"
+readonly android_repo_base_path="Snapchat/camera-kit-android-sdk"
 
 usage() {
     echo "usage: ${program_name} [-v, --version] [-p, --create-pr]"
@@ -37,16 +36,17 @@ usage() {
 
 fetch_commit() {
     local sha=$1
-    curl -s -X "GET" -H "Authorization: token ${GITHUB_APIKEY}" "${github_api_repos_url}/${android_repo_base_path}/commits/${sha}"
+    local response
+    response=$(curl -s -X "GET" -H "Authorization: token ${GITHUB_APIKEY}" "${github_api_repos_url}/${android_repo_base_path}/commits/${sha}")
+    echo "${response}"
 }
 
 fetch_commit_list() {
     local sha=$1
     local page=$2
-    local path=$3
-    local since=$4
+    local since=$3
     #  Not using GET /repos/:owner/:repo/compare/:base...:head as it does not support pagination.
-    curl -s -X "GET" -H "Authorization: token ${GITHUB_APIKEY}" "${github_api_repos_url}/${android_repo_base_path}/commits?sha=${sha}&path=${path}&per_page=100&page=${page}&since=${since}"
+    curl -s -X "GET" -H "Authorization: token ${GITHUB_APIKEY}" "${github_api_repos_url}/${android_repo_base_path}/commits?sha=${sha}&per_page=100&page=${page}&since=${since}"
 }
 
 create_pr_draft() {
@@ -81,7 +81,7 @@ main() {
 
         local included_sdk_commits=()
         local current_version_rev_element=$( fetch_commit $current_version_rev )
-
+    
         if [[ -n "$current_version_rev_element" ]]
         then
             local current_version_rev_date=$( echo "${current_version_rev_element}" | jq -r .commit.author.date )
@@ -92,7 +92,7 @@ main() {
             do
                 local included_commits_count_per_page=${#included_sdk_commits[@]}
 
-                local commit_list=$(fetch_commit_list $next_version_rev $current_page $android_repo_camerakit_sdk_path $current_version_rev_date)
+                local commit_list=$(fetch_commit_list $next_version_rev $current_page $current_version_rev_date)
 
                 for row in $(echo "${commit_list}" | jq -r '.[] | @base64'); do
                     decode_row() {
@@ -261,3 +261,4 @@ else
     usage
     exit 1
 fi
+

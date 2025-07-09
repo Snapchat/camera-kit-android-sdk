@@ -10,3 +10,4 @@ source .venv/bin/activate
 source "${CI_WORKSPACE}/.buildscript/snapci/image/provision_mac_for_ios.sh"
 bash "${CI_WORKSPACE}/.buildscript/publish_to_github.sh"
 
+gsutil cp "./pr_request_response.json" "${CI_OUTPUTS}/" 

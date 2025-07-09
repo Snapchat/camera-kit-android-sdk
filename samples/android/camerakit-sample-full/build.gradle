@@ -133,8 +133,14 @@ dependencies {
     androidTestImplementation "org.jetbrains.kotlin:kotlin-test:$kotlinVersion"
 }
 //dev>
-def karmaServiceAccount = System.getenv('KARMA_SERVICE_ACCOUNT')
-        ?: 'gcloud auth list --filter=status:ACTIVE --format=value(account)'.execute().text.trim()
+def accountEmail() {
+    return 'gcloud auth list --filter=status:ACTIVE --format=value(account)'.execute().text.trim()
+}
+
+def karmaServiceAccountPropertyName = 'karmaServiceAccount'
+def karmaServiceAccount = System.getenv('KARMA_SERVICE_ACCOUNT') ?:
+        (project.hasProperty(karmaServiceAccountPropertyName) ?
+                project.getProperty(karmaServiceAccountPropertyName) : accountEmail())
 
 karma {
     initiator karmaServiceAccount

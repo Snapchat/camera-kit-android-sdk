@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -euo pipefail
-set -x 
+# set -x 
 
 # CONFIG
 readonly python_version="3.9.16"
@@ -100,9 +100,8 @@ install_python() {
 
     source ~/.bash_profile
 
-    # Install packages inside the venv
-    python -m pip install --upgrade pip
-    python -m pip install grip
+    python3 -m pip install --upgrade pip
+    pip3 install -r .buildscript/snapci/release_pipeline/requirements.txt
 }
 
 main() {

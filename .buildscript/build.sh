@@ -61,10 +61,15 @@ main() {
     local docs_eject_dir="${eject_dir}/docs"
     mkdir -p "${docs_eject_dir}"
 
-    pushd "${script_dir}/jenkins-pipeline"
-    # This runs a build of the Camera Kit pipeline project which includes quick sanity tests on the release pipeline script.
-    ./gradlew build --info
-    popd
+     if [[ "$USER" == "snapci" ]]; then
+        pushd "${script_dir}/snapci/release_pipeline/tests"    
+            pytest
+        popd
+    else
+        pushd "${script_dir}/jenkins-pipeline"    
+        ./gradlew build --info
+        popd
+    fi
 
     for platform in ${platforms//,/ }
     do

@@ -15,8 +15,9 @@ readonly script_dir=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 main() {
     local uri=$1
     local eject_dir=$(mktemp -d -t "camerakit-eject-XXXXXXXXXX")
+    local build_script="${script_dir}/build.sh"
 
-    "${script_dir}/build.sh" -k false -z false -e "${eject_dir}" -f "public" --docs-only true
+    "${build_script}" -k false -z false -e "${eject_dir}" -f "public" --docs-only true
 
     gsutil -o GSUtil:parallel_process_count=1 -o GSUtil:parallel_thread_count=24 cp -R "${eject_dir}/docs/api/*" "${uri}"
 }

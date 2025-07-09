@@ -1,3 +1,7 @@
 # Mac-specific
 .DS_Store
 .idea/workspace.xml
+/.buildscript/snapci/release-pipeline/__pycache__
+*.pyc
+/.idea
+.buildscript/snapci/release_pipeline/pipeline_app/release_state.json

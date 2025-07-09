@@ -92,7 +92,7 @@ main() {
             -configuration Enterprise \
             -archivePath ${archive_path} \
             CODE_SIGN_IDENTITY='iPhone Distribution: Snapchat Inc' \
-            PROVISIONING_PROFILE_SPECIFIER='2025-2026 Dev Tools Wildcard Provisioning Profile' \g 
+            PROVISIONING_PROFILE_SPECIFIER='2025-2026 Dev Tools Wildcard Provisioning Profile' \
             DEVELOPMENT_TEAM='RRXKNUJYAH'
 
         xcodebuild -exportArchive \

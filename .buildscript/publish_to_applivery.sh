@@ -30,7 +30,6 @@ readonly applivery_api_path_apps_release_uploads="https://upload.snap.applivery.
 # CI environment
 readonly job_name="${JOB_NAME}"
 readonly build_number="${BUILD_NUMBER}"
-readonly gcs_upload_path="gs://snapengine-builder-artifacts/${job_name}/${build_number}}"
 
 function applivery_upload {
     local app_binary_path=$1
@@ -106,7 +105,7 @@ main() {
         echo "{ \"download_url\" : \"$download_link\" }" >> "${output_file}"
 
         if [ "$USER" == "snapci" ]; then
-            gsutil cp "${output_file}" "${gcs_upload_path}"
+            gsutil cp "${output_file}" "gs://snapengine-builder-artifacts/${job_name}/${CI_PIPELINE_ID}/applivery_release_info.json"
         fi
     else
         echo "No app binary path provided, exiting"

@@ -1,0 +1,8 @@
+requests>=2.0.0
+dacite>=1.8.0
+
+# For rendering markdown
+grip
+
+# For running tests
+pytest

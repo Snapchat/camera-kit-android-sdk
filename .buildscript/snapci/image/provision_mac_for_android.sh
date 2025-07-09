@@ -31,3 +31,6 @@ bash "${CI_WORKSPACE}/.buildscript/android/install_sdk.sh" "${ANDROID_HOME}"
 
 export PATH=${ANDROID_HOME}/tools:${PATH}
 
+echo "export KARMA_SERVICE_ACCOUNT=autopilotcli@autopilot-prod.iam.gserviceaccount.com" >> ~/.bash_profile
+source ~/.bash_profile
+
