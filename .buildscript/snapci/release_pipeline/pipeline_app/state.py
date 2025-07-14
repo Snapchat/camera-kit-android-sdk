@@ -330,4 +330,4 @@ class PipelineState:
             delattr(self, name)
 
 def is_test_mode() -> bool: 
-    return os.environ.get("TEST_MODE", "true").lower() in ("1", "true", "yes")
+    return os.environ.get("test_mode", "true").lower() in ("1", "true", "yes")
