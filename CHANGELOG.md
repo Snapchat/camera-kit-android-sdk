@@ -8,6 +8,14 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 <a name="unreleased"></a>
 ## [Unreleased]
 
+<a name="1.42.0"></a>
+## [1.42.0] - 2025-07-23
+### Features
+- Lens Studio 5.12 support
+
+### Updates
+- 16KB page size support
+
 <a name="1.41.0"></a>
 ## [1.41.0] - 2025-06-23
 ### Features
@@ -15,7 +23,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 ### Bug Fixes
 - Fixed memory leak related to lens keyboard
-- Minor fixes
+- **Android/iOS:** Minor fixes
 
 <a name="1.40.0"></a>
 ## [1.40.0] - 2025-04-03
