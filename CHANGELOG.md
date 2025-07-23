@@ -746,4 +746,4 @@ webpSequence.values.forEach { imageUri ->
 - Add camera flip button
 - Open side drawer on lens button click
 - Add next/previous lens buttons to the sample app
-- Use Lens name in side bar listing
+- Use Lens name in side bar listing 
