@@ -52,6 +52,11 @@ run(
         "os": "macos",
         "arch": "arm64",
     },
+    params = {
+        "GITHUB_ANDROID_SDK_REPO": param.string(
+            default="Snapchat/camera-kit-android-sdk"
+        )
+    },
     secrets = [
        spookey(name = "CameraKitPublicGithubUsername", env = "GITHUB_USERNAME"),
        spookey(name = "CameraKitPublicGithubAPIKey", env = "GITHUB_APIKEY"),
@@ -63,6 +68,11 @@ run(
         steps = [
         process(".buildscript/snapci/ios/publish_to_github_sdk_repo.sh"),
     ],
+    params = {
+        "GITHUB_IOS_SDK_REPO": param.string(
+            default="Snapchat/camera-kit-ios-sdk"
+        )
+    },
     exec_requirements = {
         "os": "macos",
         "arch": "arm64",
