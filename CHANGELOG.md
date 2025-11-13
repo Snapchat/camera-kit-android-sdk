@@ -44,7 +44,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 ### Bug Fixes
 - Fixed memory leak related to lens keyboard
-- **Android/iOS:** Minor fixes
+- **Android:** Minor fixes
 
 <a name="1.40.0"></a>
 ## [1.40.0] - 2025-04-03
@@ -52,7 +52,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - Lens Studio 5.8 support
 
 ### Updates
-- **Android/iOS:** Improvement for HTTP request validation, now accepting empty optional parameters
+- **Android:** Improvement for HTTP request validation, now accepting empty optional parameters
 <a name="1.39.0"></a>
 ## [1.39.0] - 2025-03-05
 ### Features
