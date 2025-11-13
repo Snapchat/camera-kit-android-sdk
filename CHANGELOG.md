@@ -52,7 +52,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 - Lens Studio 5.8 support
 
 ### Updates
-- **Android:** Improvement for HTTP request validation, now accepting empty optional parameters
+- Improvement for HTTP request validation, now accepting empty optional parameters
 <a name="1.39.0"></a>
 ## [1.39.0] - 2025-03-05
 ### Features
