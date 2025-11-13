@@ -44,7 +44,7 @@ and the Camera Kit SDK adheres to [Semantic Versioning](https://semver.org/spec/
 
 ### Bug Fixes
 - Fixed memory leak related to lens keyboard
-- **Android:** Minor fixes
+- Minor fixes
 
 <a name="1.40.0"></a>
 ## [1.40.0] - 2025-04-03
